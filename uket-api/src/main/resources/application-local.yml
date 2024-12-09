@@ -19,3 +19,10 @@ spring:
     properties:
       hibernate:
         show_sql: true
+
+app:
+  token:
+    secret-key: testestsetsetsetsetsetsetsetsetestset
+    expiration:
+      access-token-expiration: 600_000
+      refresh-token-expiration: 7_200_000
