@@ -15,7 +15,7 @@ spring:
         default_batch_fetch_size: 100
 
 springdoc:
-  packages-to-scan: com.uket
+  packages-to-scan: uket
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
