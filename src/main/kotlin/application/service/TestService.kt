@@ -5,8 +5,4 @@ import uket.application.port.TestPort
 import uket.application.usecase.TestUseCase
 
 @Component
-internal class TestService(
-    private val testPort: TestPort
-): TestUseCase {
-
-}
+internal class TestService(private val testPort: TestPort) : TestUseCase

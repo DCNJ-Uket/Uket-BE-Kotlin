@@ -1,3 +1,3 @@
 package uket.application.usecase
 
-interface TestUseCase {}
+interface TestUseCase

@@ -4,4 +4,4 @@ import org.springframework.stereotype.Component
 import uket.application.port.TestPort
 
 @Component
-class TestAdapter: TestPort {}
+class TestAdapter : TestPort

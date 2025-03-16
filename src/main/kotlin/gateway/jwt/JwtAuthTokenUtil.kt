@@ -3,7 +3,8 @@ package uket.gateway.jwt
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import java.security.SignatureException
-import java.util.*
+import java.util.Date
+import java.util.UUID
 import javax.crypto.SecretKey
 
 class JwtAuthTokenUtil(

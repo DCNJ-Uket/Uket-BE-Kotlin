@@ -1,3 +1,3 @@
 package uket.application.port
 
-interface TestPort {}
+interface TestPort
