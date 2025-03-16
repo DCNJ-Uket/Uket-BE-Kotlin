@@ -7,8 +7,14 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "payment_id"))
 class PaymentEntity(
-    var organizationId: Long = 0L,
-    var accountNo: String = "",
-    var depositLink: String = ""
+    organizationId: Long,
+    accountNo: String,
+    depositLink: String
 ) : BaseTimeEntity() {
+    var organizationId: Long = organizationId
+        protected set
+    var accountNo: String = accountNo
+        protected set
+    var depositLink: String = depositLink
+        protected set
 }

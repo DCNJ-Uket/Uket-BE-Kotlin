@@ -7,9 +7,17 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "document_id"))
 class DocumentEntity(
-    var documentNo: Long = 0L,
-    var name: String = "",
-    var link: String = "",
-    var version: Long = 0L
+    documentNo: Long,
+    name: String,
+    link: String,
+    version: Long
 ) : BaseTimeEntity() {
+    var documentNo: Long = documentNo
+        protected set
+    var name: String = name
+        protected set
+    var link: String = link
+        protected set
+    var version: Long = version
+        protected set
 }

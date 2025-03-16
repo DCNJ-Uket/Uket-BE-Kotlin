@@ -7,11 +7,23 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "entry_group_id"))
 class EntryGroupEntity(
-    var uketEventRoundId: Long = 0L,
-    var name: String = "",
-    var entryStartTime: LocalDateTime = LocalDateTime.now(),
-    var entryEndTime: LocalDateTime = LocalDateTime.now(),
-    var reservationCount: Int = 0,
-    var totalCount: Int = 0
+    uketEventRoundId: Long,
+    name: String,
+    entryStartTime: LocalDateTime,
+    entryEndTime: LocalDateTime,
+    reservationCount: Int,
+    totalCount: Int
 ) : BaseTimeEntity() {
+    var uketEventRoundId: Long = uketEventRoundId
+        protected set
+    var name: String = name
+        protected set
+    var entryStartTime: LocalDateTime = entryStartTime
+        protected set
+    var entryEndTime: LocalDateTime = entryEndTime
+        protected set
+    var reservationCount: Int = reservationCount
+        protected set
+    var totalCount: Int = totalCount
+        protected set
 }

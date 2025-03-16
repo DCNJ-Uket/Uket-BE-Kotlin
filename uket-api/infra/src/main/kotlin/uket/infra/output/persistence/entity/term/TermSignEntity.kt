@@ -7,9 +7,20 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "term_sign_id"))
 class TermSignEntity(
-    var useId: Long = 0L,
-    var termId: Long = 0L,
-    var isAgreed: Boolean = false,
-    var agreeAt: LocalDateTime = LocalDateTime.now()
+    userId: Long,
+    termId: Long,
+    isAgreed: Boolean,
+    agreeAt: LocalDateTime
 ) : BaseTimeEntity() {
+    var useId: Long = userId
+        protected set
+
+    var termId: Long = termId
+        protected set
+
+    var isAgreed: Boolean = isAgreed
+        protected set
+
+    var agreeAt: LocalDateTime = agreeAt
+        protected set
 }

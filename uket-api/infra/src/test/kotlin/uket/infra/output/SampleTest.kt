@@ -18,7 +18,7 @@ class SampleTest {
     @Test
     @Transactional
     fun test() {
-        val user = UserEntity(name = "nameA")
+        val user = UserEntity(null, 0L, "nameA", "emailA", "", "", "", false)
         val id = user.id
         em.persist(user)
 

@@ -7,9 +7,17 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "uket_event_round_entity"))
 class UketEventRoundEntity(
-    var uketEventId: Long = 0L,
-    var name: String = "",
-    var eventDate: LocalDateTime = LocalDateTime.now(),
-    var ticketingDateTime: LocalDateTime = LocalDateTime.now()
+    uketEventId: Long,
+    name: String,
+    eventDate: LocalDateTime,
+    ticketingDateTime: LocalDateTime
 ) : BaseTimeEntity() {
+    var uketEventId: Long = uketEventId
+        protected set
+    var name: String = name
+        protected set
+    var eventDate: LocalDateTime = eventDate
+        protected set
+    var ticketingDateTime: LocalDateTime = ticketingDateTime
+        protected set
 }

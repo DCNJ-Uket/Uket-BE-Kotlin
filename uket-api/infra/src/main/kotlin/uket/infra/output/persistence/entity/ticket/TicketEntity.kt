@@ -7,9 +7,20 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "ticket_id"))
 class TicketEntity(
-    var userId: Long = 0L,
-    var entryGroupId: Long = 0L,
-    var status: TicketStatus? = null,
-    var ticketNo: String = ""
+    userId: Long,
+    entryGroupId: Long,
+    status: TicketStatus?,
+    ticketNo: String
 ) : BaseTimeEntity() {
+    var userId: Long = userId
+        protected set
+
+    var entryGroupId: Long = entryGroupId
+        protected set
+
+    var status: TicketStatus? = status
+        protected set
+
+    var ticketNo: String = ticketNo
+        protected set
 }

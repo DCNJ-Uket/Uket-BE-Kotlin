@@ -11,9 +11,17 @@ import java.time.LocalDateTime
 @Entity
 @AttributeOverride(name = "id", column = Column(name = "term_id"))
 class TermsEntity(
-    var name: String = "",
-    var termsType: TermsType? = null,
-    var documentNo: Long = 0L,
-    var isActive: Boolean = false
+    name: String,
+    termsType: TermsType?,
+    documentNo: Long,
+    isActive: Boolean
 ) : BaseTimeEntity() {
+    var name: String = name
+        protected set
+    var termsType: TermsType? = termsType
+        protected set
+    var documentNo: Long = documentNo
+        protected set
+    var isActive: Boolean = isActive
+        protected set
 }
