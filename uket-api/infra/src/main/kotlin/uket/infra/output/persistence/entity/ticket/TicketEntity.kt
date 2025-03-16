@@ -9,18 +9,23 @@ import java.time.LocalDateTime
 class TicketEntity(
     userId: Long,
     entryGroupId: Long,
-    status: TicketStatus?,
+    status: TicketStatus,
     ticketNo: String
 ) : BaseTimeEntity() {
+
+    @Column(nullable = false)
     var userId: Long = userId
         protected set
 
+    @Column(nullable = false)
     var entryGroupId: Long = entryGroupId
         protected set
 
-    var status: TicketStatus? = status
+    @Column(nullable = false)
+    var status: TicketStatus = status
         protected set
 
+    @Column(nullable = false)
     var ticketNo: String = ticketNo
         protected set
 }

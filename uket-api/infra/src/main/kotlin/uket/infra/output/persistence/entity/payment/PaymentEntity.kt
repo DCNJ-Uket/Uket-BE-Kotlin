@@ -11,10 +11,16 @@ class PaymentEntity(
     accountNo: String,
     depositLink: String
 ) : BaseTimeEntity() {
+
+    @Column(nullable = false)
     var organizationId: Long = organizationId
         protected set
+
+    @Column(nullable = false)
     var accountNo: String = accountNo
         protected set
+
+    @Column(nullable = false)
     var depositLink: String = depositLink
         protected set
 }

@@ -8,10 +8,13 @@ import java.time.LocalDateTime
 @AttributeOverride(name = "id", column = Column(name = "organization_id"))
 class OrganizationEntity(
     name: String,
-    organizationImagePath: String
+    organizationImagePath: String?
 ) : BaseTimeEntity() {
+
+    @Column(nullable = false)
     var name: String = name
         protected set
-    var organizationImagePath: String = organizationImagePath
+
+    var organizationImagePath: String? = organizationImagePath
         protected set
 }

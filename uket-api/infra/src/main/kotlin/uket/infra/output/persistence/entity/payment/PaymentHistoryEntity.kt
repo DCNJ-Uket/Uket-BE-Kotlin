@@ -10,23 +10,36 @@ class PaymentHistoryEntity(
     organizationId: Long,
     userId: Long,
     price: Int,
-    status: PaymentStatus?,
+    status: PaymentStatus,
     category: String,
-    manner: PaymentManner?,
-    description: String
+    manner: PaymentManner,
+    description: String?
 ) : BaseTimeEntity() {
+
+    @Column(nullable = false)
     var organizationId: Long = organizationId
         protected set
+
+    @Column(nullable = false)
     var userId: Long = userId
         protected set
+
+    @Column(nullable = false)
     var price: Int = price
         protected set
-    var status: PaymentStatus? = status
+
+    @Column(nullable = false)
+    var status: PaymentStatus = status
         protected set
+
+    @Column(nullable = false)
     var category: String = category
         protected set
-    var manner: PaymentManner? = manner
+
+    @Column(nullable = false)
+    var manner: PaymentManner = manner
         protected set
-    var description: String = description
+
+    var description: String? = description
         protected set
 }
