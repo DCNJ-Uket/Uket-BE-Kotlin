@@ -4,6 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
+import uket.infra.output.persistence.entity.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
@@ -14,10 +15,8 @@ class UketEventEntity(
     var location: String = "",
     var eventImagePath: String = "",
     var displayEndDate: LocalDateTime = LocalDateTime.now(),
-    var ticketPrice: Int = 0,
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-    var updatedAt: LocalDateTime = LocalDateTime.now()
-) {
+    var ticketPrice: Int = 0
+) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "uket_event_id")
