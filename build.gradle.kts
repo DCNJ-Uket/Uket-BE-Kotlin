@@ -18,14 +18,14 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // test
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("org.jeasy:easy-random-core:5.0.0")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-    implementation("org.springframework.boot:spring-boot-starter-security")
 
     // jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
@@ -35,7 +35,13 @@ dependencies {
     // swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
+    // security
+    implementation("org.springframework.boot:spring-boot-starter-security")
     testImplementation("org.springframework.security:spring-security-test")
+
+    // DB
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 tasks.test {
