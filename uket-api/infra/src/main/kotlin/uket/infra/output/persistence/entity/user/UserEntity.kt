@@ -1,13 +1,12 @@
 package uket.infra.output.persistence.entity.user
 
+import jakarta.persistence.AttributeOverride
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
 import uket.infra.output.persistence.entity.BaseTimeEntity
-import java.time.LocalDateTime
 
 @Entity
+@AttributeOverride(name = "id", column = Column(name = "user_id"))
 class UserEntity(
     var platform: Platform? = null,
     var playformId: Long = 0L,
@@ -18,8 +17,4 @@ class UserEntity(
     var phoneNumber: String = "",
     var isRegistered: Boolean = false
 ) : BaseTimeEntity() {
-    @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private var id: Long = 0L
 }

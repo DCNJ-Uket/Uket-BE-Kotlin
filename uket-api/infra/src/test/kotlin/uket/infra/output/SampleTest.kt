@@ -19,9 +19,10 @@ class SampleTest {
     @Transactional
     fun test() {
         val user = UserEntity(name = "nameA")
+        val id = user.id
         em.persist(user)
 
-        val findUser = em.find(UserEntity::class.java, 1L)
+        val findUser = em.find(UserEntity::class.java, id)
         Assertions.assertThat(findUser.name).isEqualTo(user.name)
     }
 
