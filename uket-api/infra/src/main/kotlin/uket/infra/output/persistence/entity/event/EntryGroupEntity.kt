@@ -5,6 +5,7 @@ import uket.infra.output.persistence.entity.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "entry_group")
 @AttributeOverride(name = "id", column = Column(name = "entry_group_id"))
 class EntryGroupEntity(
     uketEventRoundEntity: UketEventRoundEntity,

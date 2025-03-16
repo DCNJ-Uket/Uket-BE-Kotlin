@@ -5,6 +5,7 @@ import uket.infra.output.persistence.entity.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "payment_history")
 @AttributeOverride(name = "id", column = Column(name = "payment_history_id"))
 class PaymentHistoryEntity(
     organizationId: Long,

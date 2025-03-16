@@ -5,6 +5,7 @@ import uket.infra.output.persistence.entity.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "document")
 @AttributeOverride(name = "id", column = Column(name = "document_id"))
 class DocumentEntity(
     documentNo: Long,

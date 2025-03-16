@@ -1,14 +1,11 @@
 package uket.infra.output.persistence.entity.term
 
-import jakarta.persistence.AttributeOverride
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import uket.infra.output.persistence.entity.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "terms")
 @AttributeOverride(name = "id", column = Column(name = "term_id"))
 class TermsEntity(
     name: String,

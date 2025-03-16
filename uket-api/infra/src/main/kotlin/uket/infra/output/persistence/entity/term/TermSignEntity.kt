@@ -6,6 +6,7 @@ import uket.infra.output.persistence.entity.user.UserEntity
 import java.time.LocalDateTime
 
 @Entity
+@Table(name = "term_sign")
 @AttributeOverride(name = "id", column = Column(name = "term_sign_id"))
 class TermSignEntity(
     userEntity: UserEntity,
