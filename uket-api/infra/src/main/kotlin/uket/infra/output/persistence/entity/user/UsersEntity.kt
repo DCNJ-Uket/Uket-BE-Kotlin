@@ -25,7 +25,7 @@ class UsersEntity(
         protected set
 
     @Column(nullable = false)
-    var playformId: Long = platformId
+    var platformId: Long = platformId
         protected set
 
     @Column(nullable = false)
