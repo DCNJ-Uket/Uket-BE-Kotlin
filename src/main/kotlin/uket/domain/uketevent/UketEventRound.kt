@@ -13,31 +13,18 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "uket_event_round")
 class UketEventRound(
-    id: Long,
-    uketEvent: UketEvent,
-    name: String,
-    eventDate: LocalDateTime,
-    ticketingDateTime: LocalDateTime,
+    _id: Long,
+    _uketEvent: UketEvent,
+    val name: String,
+    val eventDate: LocalDateTime,
+    val ticketingDateTime: LocalDateTime,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "uket_event_round_id")
-    var id: Long = id
+    val id: Long = _id
 
     @ManyToOne
     @JoinColumn(name = "uket_event_id", nullable = false)
-    var uketEvent: UketEvent = uketEvent
-        protected set
-
-    @Column(nullable = false)
-    var name: String = name
-        protected set
-
-    @Column(nullable = false)
-    var eventDate: LocalDateTime = eventDate
-        protected set
-
-    @Column(nullable = false)
-    var ticketingDateTime: LocalDateTime = ticketingDateTime
-        protected set
+    val uketEvent: UketEvent = _uketEvent
 }

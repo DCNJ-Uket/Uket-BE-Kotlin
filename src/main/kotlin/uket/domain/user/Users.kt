@@ -11,48 +11,17 @@ import uket.uket.domain.BaseTimeEntity
 @Table(name = "users")
 class Users(
     id: Long,
-    platform: Platform,
-    platformId: Long,
-    name: String,
-    email: String,
-    profileImage: String? = null,
-    depositorName: String,
-    phoneNumber: String,
-    isRegistered: Boolean,
+    val platform: Platform,
+    val platformId: Long,
+    val name: String,
+    val email: String,
+    val profileImage: String? = null,
+    val depositorName: String,
+    val phoneNumber: String,
+    val isRegistered: Boolean,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "users_id")
-    var id: Long = id
-
-    @Column(nullable = false)
-    var platform: Platform = platform
-        protected set
-
-    @Column(nullable = false)
-    var platformId: Long = platformId
-        protected set
-
-    @Column(nullable = false)
-    var name: String = name
-        protected set
-
-    @Column(nullable = false)
-    var email: String = email
-        protected set
-
-    var profileImage: String? = profileImage
-        protected set
-
-    @Column(nullable = false)
-    var depositorName: String = depositorName
-        protected set
-
-    @Column(nullable = false)
-    var phoneNumber: String = phoneNumber
-        protected set
-
-    @Column(nullable = false)
-    var isRegistered: Boolean = isRegistered
-        protected set
+    val id: Long = id
 }

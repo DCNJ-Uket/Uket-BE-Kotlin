@@ -12,32 +12,19 @@ import uket.uket.domain.BaseTimeEntity
 @Entity
 @Table(name = "admin")
 class Admin(
-    id: Long,
-    organization: Organization,
-    name: String,
-    email: String,
-    password: String,
-    isSuperAdmin: String,
+    _id: Long,
+    _organization: Organization,
+    val name: String,
+    val email: String,
+    val password: String,
+    val isSuperAdmin: String,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "admin_id")
-    var id: Long = id
+    val id: Long = _id
 
     @OneToOne
     @JoinColumn(name = "organization_id", nullable = false)
-    var organization: Organization = organization
-        protected set
-
-    var name: String = name
-        protected set
-
-    var email: String = email
-        protected set
-
-    var password: String = password
-        protected set
-
-    var isSuperAdmin: String = isSuperAdmin
-        protected set
+    val organization: Organization = _organization
 }

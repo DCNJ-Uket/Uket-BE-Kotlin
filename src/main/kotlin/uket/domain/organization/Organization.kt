@@ -10,19 +10,12 @@ import uket.uket.domain.BaseTimeEntity
 @Entity
 @Table(name = "organization")
 class Organization(
-    id: Long,
-    name: String,
-    organizationImagePath: String?,
+    _id: Long,
+    val name: String,
+    val organizationImagePath: String?,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "organization_id")
-    var id: Long = id
-
-    @Column(nullable = false)
-    var name: String = name
-        protected set
-
-    var organizationImagePath: String? = organizationImagePath
-        protected set
+    val id: Long = _id
 }

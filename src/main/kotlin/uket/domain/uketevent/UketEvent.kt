@@ -11,44 +11,17 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "uket_event")
 class UketEvent(
-    id: Long,
-    organizationId: Long,
-    name: String,
-    eventType: EventType,
-    location: String,
-    eventImagePath: String?,
-    displayEndDate: LocalDateTime,
-    ticketPrice: Int,
+    _id: Long,
+    val organizationId: Long,
+    val name: String,
+    val eventType: EventType,
+    val location: String,
+    val eventImagePath: String?,
+    val displayEndDate: LocalDateTime,
+    val ticketPrice: Int,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "uket_event_id")
-    var id: Long = id
-
-    @Column(nullable = false)
-    var organizationId: Long = organizationId
-        protected set
-
-    @Column(nullable = false)
-    var name: String = name
-        protected set
-
-    @Column(nullable = false)
-    var eventType: EventType = eventType
-        protected set
-
-    @Column(nullable = false)
-    var location: String = location
-        protected set
-
-    var eventImagePath: String? = eventImagePath
-        protected set
-
-    @Column(nullable = false)
-    var displayEndDate: LocalDateTime = displayEndDate
-        protected set
-
-    @Column(nullable = false)
-    var ticketPrice: Int = ticketPrice
-        protected set
+    val id: Long = _id
 }

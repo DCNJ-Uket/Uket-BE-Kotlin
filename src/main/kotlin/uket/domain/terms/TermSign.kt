@@ -13,30 +13,18 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "term_sign")
 class TermSign(
-    id: Long,
-    terms: Terms,
-    usersId: Long,
-    isAgreed: Boolean,
-    agreeAt: LocalDateTime,
+    _id: Long,
+    _terms: Terms,
+    val usersId: Long,
+    val isAgreed: Boolean,
+    val agreeAt: LocalDateTime,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
     @Column(name = "term_sign_id")
-    var id: Long = id
+    val id: Long = _id
 
     @ManyToOne
     @JoinColumn(name = "terms_id", nullable = false)
-    var terms: Terms = terms
-
-    @Column(nullable = false)
-    var usersId: Long = usersId
-        protected set
-
-    @Column(nullable = false)
-    var isAgreed: Boolean = isAgreed
-        protected set
-
-    @Column(nullable = false)
-    var agreeAt: LocalDateTime = agreeAt
-        protected set
+    val terms: Terms = _terms
 }
