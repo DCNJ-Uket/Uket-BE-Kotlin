@@ -4,29 +4,28 @@ import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
-@Table(name = "terms")
-@AttributeOverride(name = "id", column = Column(name = "term_id"))
-class TermsEntity(
-    name: String,
-    termsType: TermsType,
+@Table(name = "document")
+@AttributeOverride(name = "id", column = Column(name = "document_id"))
+class Document(
     documentNo: Long,
-    isActive: Boolean
+    name: String,
+    link: String,
+    version: Long
 ) : BaseTimeEntity() {
-
-    @Column(nullable = false)
-    var name: String = name
-        protected set
-
-    @Column(nullable = false)
-    var termsType: TermsType = termsType
-        protected set
 
     @Column(nullable = false)
     var documentNo: Long = documentNo
         protected set
 
     @Column(nullable = false)
-    var isActive: Boolean = isActive
+    var name: String = name
         protected set
 
+    @Column(nullable = false)
+    var link: String = link
+        protected set
+
+    @Column(nullable = false)
+    var version: Long = version
+        protected set
 }

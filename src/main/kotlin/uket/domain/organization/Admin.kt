@@ -6,8 +6,8 @@ import uket.uket.domain.BaseTimeEntity
 @Entity
 @Table(name = "admin")
 @AttributeOverride(name = "id", column = Column(name = "admin_id"))
-class AdminEntity(
-    organizationEntity: OrganizationEntity,
+class Admin(
+    organization: Organization,
     name: String,
     email: String,
     password: String,
@@ -16,7 +16,7 @@ class AdminEntity(
 
     @OneToOne
     @JoinColumn(name = "organization_id", nullable = false)
-    var organizationEntity: OrganizationEntity = organizationEntity
+    var organization: Organization = organization
         protected set
 
     var name: String = name

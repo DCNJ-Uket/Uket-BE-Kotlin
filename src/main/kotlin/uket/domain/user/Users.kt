@@ -1,15 +1,12 @@
 package uket.uket.domain.user
 
-import jakarta.persistence.AttributeOverride
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "users")
-@AttributeOverride(name = "id", column = Column(name = "user_id"))
-class UsersEntity(
+@AttributeOverride(name = "id", column = Column(name = "users_id"))
+class Users(
     platform: Platform,
     platformId: Long,
     name: String,

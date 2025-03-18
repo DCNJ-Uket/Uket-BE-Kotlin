@@ -6,9 +6,9 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "uket_event_round")
-@AttributeOverride(name = "id", column = Column(name = "uket_event_round_entity"))
-class UketEventRoundEntity(
-    uketEventEntity: UketEventEntity,
+@AttributeOverride(name = "id", column = Column(name = "uket_event_round_id"))
+class UketEventRound(
+    uketEvent: UketEvent,
     name: String,
     eventDate: LocalDateTime,
     ticketingDateTime: LocalDateTime
@@ -16,7 +16,7 @@ class UketEventRoundEntity(
 
     @ManyToOne
     @JoinColumn(name = "uket_event_id", nullable = false)
-    var uketEntity: UketEventEntity = uketEventEntity
+    var uketEvent: UketEvent = uketEvent
         protected set
 
     @Column(nullable = false)

@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "uket_event")
 @AttributeOverride(name = "id", column = Column(name = "uket_event_id"))
-class UketEventEntity(
+class UketEvent(
     organizationId: Long,
     name: String,
     eventType: EventType,

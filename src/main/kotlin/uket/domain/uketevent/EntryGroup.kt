@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "entry_group")
 @AttributeOverride(name = "id", column = Column(name = "entry_group_id"))
-class EntryGroupEntity(
-    uketEventRoundEntity: UketEventRoundEntity,
+class EntryGroup(
+    uketEventRound: UketEventRound,
     name: String,
     entryStartTime: LocalDateTime,
     entryEndTime: LocalDateTime,
@@ -18,7 +18,7 @@ class EntryGroupEntity(
 
     @ManyToOne
     @JoinColumn(name = "uket_event_round_id", nullable = false)
-    var uketEventRoundEntity: UketEventRoundEntity = uketEventRoundEntity
+    var uketEventRound: UketEventRound = uketEventRound
         protected set
 
     @Column(nullable = false)

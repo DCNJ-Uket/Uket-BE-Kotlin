@@ -6,7 +6,7 @@ import uket.uket.domain.BaseTimeEntity
 @Entity
 @Table(name = "payment")
 @AttributeOverride(name = "id", column = Column(name = "payment_id"))
-class PaymentEntity(
+class Payment(
     organizationId: Long,
     accountNo: String,
     depositLink: String

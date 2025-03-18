@@ -6,15 +6,15 @@ import uket.uket.domain.BaseTimeEntity
 @Entity
 @Table(name = "ticket")
 @AttributeOverride(name = "id", column = Column(name = "ticket_id"))
-class TicketEntity(
-    userId: Long,
+class Ticket(
+    usersId: Long,
     entryGroupId: Long,
     status: TicketStatus,
     ticketNo: String
 ) : BaseTimeEntity() {
 
     @Column(nullable = false)
-    var userId: Long = userId
+    var userId: Long = usersId
         protected set
 
     @Column(nullable = false)

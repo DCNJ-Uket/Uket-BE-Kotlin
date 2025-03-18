@@ -6,9 +6,9 @@ import uket.uket.domain.BaseTimeEntity
 @Entity
 @Table(name = "payment_history")
 @AttributeOverride(name = "id", column = Column(name = "payment_history_id"))
-class PaymentHistoryEntity(
+class PaymentHistory(
     organizationId: Long,
-    userId: Long,
+    usersId: Long,
     price: Int,
     status: PaymentStatus,
     category: String,
@@ -21,7 +21,7 @@ class PaymentHistoryEntity(
         protected set
 
     @Column(nullable = false)
-    var userId: Long = userId
+    var userId: Long = usersId
         protected set
 
     @Column(nullable = false)
