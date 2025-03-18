@@ -17,7 +17,7 @@ class Admin(
     val name: String,
     val email: String,
     val password: String,
-    val isSuperAdmin: String,
+    val isSuperAdmin: Boolean,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
