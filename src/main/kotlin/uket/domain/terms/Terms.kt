@@ -1,6 +1,10 @@
 package uket.uket.domain.terms
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
@@ -10,10 +14,10 @@ class Terms(
     name: String,
     termsType: TermsType,
     documentNo: Long,
-    isActive: Boolean
+    isActive: Boolean,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "terms_id")
     var id: Long = id
 
@@ -32,5 +36,4 @@ class Terms(
     @Column(nullable = false)
     var isActive: Boolean = isActive
         protected set
-
 }

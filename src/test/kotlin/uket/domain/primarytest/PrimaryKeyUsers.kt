@@ -1,6 +1,9 @@
 package uket.uket.domain.primarykeys
 
-import jakarta.persistence.*
+import jakarta.persistence.AttributeOverride
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import uket.uket.domain.user.Platform
 
 @Entity
@@ -14,9 +17,8 @@ class PrimaryKeyUsers(
     profileImage: String? = null,
     depositorName: String,
     phoneNumber: String,
-    isRegistered: Boolean
+    isRegistered: Boolean,
 ) : PrimaryKeyEntity() {
-
     @Column(nullable = false)
     var platform: Platform = platform
         protected set

@@ -1,6 +1,10 @@
 package uket.uket.domain.payment
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
@@ -13,10 +17,10 @@ class PaymentHistory(
     status: PaymentStatus,
     category: String,
     manner: PaymentManner,
-    description: String?
+    description: String?,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "payment_history_id")
     var id: Long = id
 

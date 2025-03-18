@@ -1,6 +1,10 @@
 package uket.uket.domain.terms
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
@@ -10,10 +14,10 @@ class Document(
     documentNo: Long,
     name: String,
     link: String,
-    version: Long
+    version: Long,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "document_id")
     var id: Long = id
 

@@ -1,6 +1,12 @@
 package uket.uket.domain.uketevent
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
@@ -11,10 +17,10 @@ class UketEventRound(
     uketEvent: UketEvent,
     name: String,
     eventDate: LocalDateTime,
-    ticketingDateTime: LocalDateTime
+    ticketingDateTime: LocalDateTime,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "uket_event_round_id")
     var id: Long = id
 

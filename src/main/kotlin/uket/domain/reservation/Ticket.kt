@@ -1,6 +1,10 @@
 package uket.uket.domain.reservation
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
@@ -10,10 +14,10 @@ class Ticket(
     usersId: Long,
     entryGroupId: Long,
     status: TicketStatus,
-    ticketNo: String
+    ticketNo: String,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "ticket_id")
     var id: Long = id
 

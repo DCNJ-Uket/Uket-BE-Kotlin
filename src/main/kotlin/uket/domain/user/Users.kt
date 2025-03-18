@@ -1,6 +1,10 @@
 package uket.uket.domain.user
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
@@ -14,10 +18,10 @@ class Users(
     profileImage: String? = null,
     depositorName: String,
     phoneNumber: String,
-    isRegistered: Boolean
+    isRegistered: Boolean,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "users_id")
     var id: Long = id
 

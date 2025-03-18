@@ -1,8 +1,13 @@
 package uket.uket.domain.terms
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
-import uket.uket.domain.user.Users
 import java.time.LocalDateTime
 
 @Entity
@@ -12,10 +17,10 @@ class TermSign(
     terms: Terms,
     usersId: Long,
     isAgreed: Boolean,
-    agreeAt: LocalDateTime
+    agreeAt: LocalDateTime,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "term_sign_id")
     var id: Long = id
 

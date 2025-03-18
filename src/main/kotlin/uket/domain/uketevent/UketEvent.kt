@@ -1,6 +1,10 @@
 package uket.uket.domain.uketevent
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
@@ -14,10 +18,10 @@ class UketEvent(
     location: String,
     eventImagePath: String?,
     displayEndDate: LocalDateTime,
-    ticketPrice: Int
+    ticketPrice: Int,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "uket_event_id")
     var id: Long = id
 

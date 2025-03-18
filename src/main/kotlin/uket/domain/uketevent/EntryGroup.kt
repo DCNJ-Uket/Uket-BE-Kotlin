@@ -1,6 +1,12 @@
 package uket.uket.domain.uketevent
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
@@ -13,10 +19,10 @@ class EntryGroup(
     entryStartTime: LocalDateTime,
     entryEndTime: LocalDateTime,
     reservationCount: Int,
-    totalCount: Int
+    totalCount: Int,
 ) : BaseTimeEntity() {
-
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "entry_group_id")
     var id: Long = id
 
