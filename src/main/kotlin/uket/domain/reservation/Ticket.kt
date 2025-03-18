@@ -5,13 +5,17 @@ import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "ticket")
-@AttributeOverride(name = "id", column = Column(name = "ticket_id"))
 class Ticket(
+    id: Long,
     usersId: Long,
     entryGroupId: Long,
     status: TicketStatus,
     ticketNo: String
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "ticket_id")
+    var id: Long = id
 
     @Column(nullable = false)
     var userId: Long = usersId

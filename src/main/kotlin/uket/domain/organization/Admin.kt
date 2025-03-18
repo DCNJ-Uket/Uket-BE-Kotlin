@@ -5,14 +5,18 @@ import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "admin")
-@AttributeOverride(name = "id", column = Column(name = "admin_id"))
 class Admin(
+    id: Long,
     organization: Organization,
     name: String,
     email: String,
     password: String,
     isSuperAdmin: String
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "admin_id")
+    var id: Long = id
 
     @OneToOne
     @JoinColumn(name = "organization_id", nullable = false)

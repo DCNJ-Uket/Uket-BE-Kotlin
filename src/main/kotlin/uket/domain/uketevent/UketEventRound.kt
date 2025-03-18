@@ -6,13 +6,17 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "uket_event_round")
-@AttributeOverride(name = "id", column = Column(name = "uket_event_round_id"))
 class UketEventRound(
+    id: Long,
     uketEvent: UketEvent,
     name: String,
     eventDate: LocalDateTime,
     ticketingDateTime: LocalDateTime
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "uket_event_round_id")
+    var id: Long = id
 
     @ManyToOne
     @JoinColumn(name = "uket_event_id", nullable = false)

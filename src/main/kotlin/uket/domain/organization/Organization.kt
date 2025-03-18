@@ -5,11 +5,15 @@ import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "organization")
-@AttributeOverride(name = "id", column = Column(name = "organization_id"))
 class Organization(
+    id: Long,
     name: String,
     organizationImagePath: String?
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "organization_id")
+    var id: Long = id
 
     @Column(nullable = false)
     var name: String = name

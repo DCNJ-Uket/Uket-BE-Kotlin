@@ -5,13 +5,17 @@ import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "document")
-@AttributeOverride(name = "id", column = Column(name = "document_id"))
 class Document(
+    id: Long,
     documentNo: Long,
     name: String,
     link: String,
     version: Long
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "document_id")
+    var id: Long = id
 
     @Column(nullable = false)
     var documentNo: Long = documentNo

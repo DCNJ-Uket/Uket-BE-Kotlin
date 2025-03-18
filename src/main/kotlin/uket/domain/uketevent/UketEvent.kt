@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "uket_event")
-@AttributeOverride(name = "id", column = Column(name = "uket_event_id"))
 class UketEvent(
+    id: Long,
     organizationId: Long,
     name: String,
     eventType: EventType,
@@ -16,6 +16,10 @@ class UketEvent(
     displayEndDate: LocalDateTime,
     ticketPrice: Int
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "uket_event_id")
+    var id: Long = id
 
     @Column(nullable = false)
     var organizationId: Long = organizationId

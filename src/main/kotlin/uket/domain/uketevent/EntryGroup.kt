@@ -6,8 +6,8 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "entry_group")
-@AttributeOverride(name = "id", column = Column(name = "entry_group_id"))
 class EntryGroup(
+    id: Long,
     uketEventRound: UketEventRound,
     name: String,
     entryStartTime: LocalDateTime,
@@ -15,6 +15,10 @@ class EntryGroup(
     reservationCount: Int,
     totalCount: Int
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "entry_group_id")
+    var id: Long = id
 
     @ManyToOne
     @JoinColumn(name = "uket_event_round_id", nullable = false)

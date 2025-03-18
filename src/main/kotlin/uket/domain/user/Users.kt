@@ -5,8 +5,8 @@ import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "users")
-@AttributeOverride(name = "id", column = Column(name = "users_id"))
 class Users(
+    id: Long,
     platform: Platform,
     platformId: Long,
     name: String,
@@ -16,6 +16,10 @@ class Users(
     phoneNumber: String,
     isRegistered: Boolean
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "users_id")
+    var id: Long = id
 
     @Column(nullable = false)
     var platform: Platform = platform

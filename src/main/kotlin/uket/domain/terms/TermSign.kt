@@ -7,13 +7,17 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "term_sign")
-@AttributeOverride(name = "id", column = Column(name = "term_sign_id"))
 class TermSign(
+    id: Long,
     terms: Terms,
     usersId: Long,
     isAgreed: Boolean,
     agreeAt: LocalDateTime
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "term_sign_id")
+    var id: Long = id
 
     @ManyToOne
     @JoinColumn(name = "terms_id", nullable = false)

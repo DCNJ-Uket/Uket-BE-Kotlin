@@ -5,12 +5,16 @@ import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "payment")
-@AttributeOverride(name = "id", column = Column(name = "payment_id"))
 class Payment(
+    id: Long,
     organizationId: Long,
     accountNo: String,
     depositLink: String
 ) : BaseTimeEntity() {
+
+    @Id @GeneratedValue
+    @Column(name = "payment_id")
+    var id: Long = id
 
     @Column(nullable = false)
     var organizationId: Long = organizationId
