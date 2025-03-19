@@ -1,11 +1,12 @@
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
-plugins {
+plugins { // 플러그인
     kotlin("jvm") version "1.9.25"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.4.0"
-    id("io.spring.dependency-management") version "1.1.6"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    kotlin("plugin.jpa") version "1.9.25"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.9.25" // 스프링 어노테이션 처리 지원(open 관련)
+    id("org.springframework.boot") version "3.4.0" // 스프링 부트
+    id("io.spring.dependency-management") version "1.1.6" // 스프링 의존성 관리
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0" // 린트
 }
 
 group = "uket"
@@ -26,6 +27,7 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("org.jeasy:easy-random-core:5.0.0")
+    testImplementation("com.h2database:h2:2.2.224")
 
     // jwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
@@ -42,17 +44,18 @@ dependencies {
     // DB
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("com.github.f4b6a3:ulid-creator:5.2.3")
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useJUnitPlatform() // 테스트 시, JUnit 사용
 }
 
 kotlin {
     jvmToolchain(21)
 }
 
-allOpen {
+allOpen { // 해당 어노테이션이 붙은 클래스는 자동으로 open 처리
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.Embeddable")
     annotation("javax.persistence.MappedSuperclass")

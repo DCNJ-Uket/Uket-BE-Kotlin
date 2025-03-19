@@ -12,9 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
-import uket.uket.auth.filter.JwtAccessDeniedHandler
-import uket.uket.auth.filter.JwtAuthenticationEntryPoint
-import uket.uket.auth.filter.JwtFilter
+import uket.auth.filter.JwtAccessDeniedHandler
+import uket.auth.filter.JwtAuthenticationEntryPoint
+import uket.auth.filter.JwtFilter
 
 @Configuration
 @EnableWebSecurity

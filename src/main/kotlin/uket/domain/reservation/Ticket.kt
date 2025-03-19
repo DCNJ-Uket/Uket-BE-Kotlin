@@ -1,4 +1,4 @@
-package uket.uket.domain.organization
+package uket.uket.domain.reservation
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -8,14 +8,16 @@ import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
-@Table(name = "organization")
-class Organization(
+@Table(name = "ticket")
+class Ticket(
     _id: Long,
-    val name: String,
-    val organizationImagePath: String?,
+    val usersId: Long,
+    val entryGroupId: Long,
+    val status: TicketStatus,
+    val ticketNo: String,
 ) : BaseTimeEntity() {
     @Id
     @GeneratedValue
-    @Column(name = "organization_id")
+    @Column(name = "ticket_id")
     val id: Long = _id
 }
