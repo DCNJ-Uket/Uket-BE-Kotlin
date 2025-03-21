@@ -1,9 +1,9 @@
 package uket.auth.filter
 
 import org.springframework.stereotype.Component
-import uket.auth.exception.BaseException
-import uket.auth.exception.ErrorCode
 import uket.uket.auth.jwt.JwtAuthTokenUtil
+import uket.uket.common.BaseException
+import uket.uket.common.ErrorCode
 
 @Component
 class TokenValidator(

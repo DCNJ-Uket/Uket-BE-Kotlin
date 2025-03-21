@@ -1,10 +1,10 @@
 package uket.auth.interceptor
 
 import jakarta.servlet.http.HttpServletRequest
-import uket.auth.exception.BaseException
-import uket.auth.exception.ErrorCode
 import uket.uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_HEADER
 import uket.uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_VALUE_PREFIX
+import uket.uket.common.BaseException
+import uket.uket.common.ErrorCode
 
 object AuthorizationExtractor {
     @JvmStatic

@@ -7,11 +7,11 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
-import uket.auth.exception.BaseException
-import uket.auth.exception.ErrorCode
-import uket.auth.exception.ErrorResponse
 import uket.auth.filter.TokenValidator
 import uket.auth.interceptor.AuthorizationExtractor.extractAccessToken
+import uket.uket.common.BaseException
+import uket.uket.common.ErrorCode
+import uket.uket.common.ErrorResponse
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 
@@ -50,7 +50,5 @@ class LoginInterceptor(
         return uri.contains("swagger") || uri.contains("api-docs") || uri.contains("webjars")
     }
 
-    private fun isPreflight(request: HttpServletRequest): Boolean {
-        return request.method == HttpMethod.OPTIONS.toString()
-    }
+    private fun isPreflight(request: HttpServletRequest): Boolean = request.method == HttpMethod.OPTIONS.toString()
 }
