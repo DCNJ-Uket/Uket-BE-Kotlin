@@ -1,4 +1,4 @@
-package uket.uket.domain.user
+package uket.uket.domain.user.enums
 
 enum class Platform {
     KAKAO,

@@ -22,8 +22,8 @@ import uket.uket.domain.uketevent.EntryGroup
 import uket.uket.domain.uketevent.EventType
 import uket.uket.domain.uketevent.UketEvent
 import uket.uket.domain.uketevent.UketEventRound
-import uket.uket.domain.user.Platform
-import uket.uket.domain.user.Users
+import uket.uket.domain.user.entity.User
+import uket.uket.domain.user.enums.Platform
 import java.time.LocalDateTime
 
 @DataJpaTest
@@ -35,21 +35,21 @@ class DomainEntityTest {
     @DisplayName("테스트 디비와 연동이 잘 되는 지 확인")
     fun testDBIntegration() {
         // given
-        val users = Users(0L, Platform.KAKAO, 0L, "nameA", "emailA", null, "depositorNameA", "phoneNumberA", true)
-        em.persist(users)
+        val user = User(0L, Platform.KAKAO, "platformIdA", "nameA", "emailA", "profileImageA", "depositorNameA", "phoneNumberA", true)
+        em.persist(user)
 
         // when
-        val findUsers = em.find(Users::class.java, users.id)
+        val findUser = em.find(User::class.java, user.id)
 
         // then
-        Assertions.assertThat(findUsers.id).isEqualTo(users.id)
+        Assertions.assertThat(findUser.id).isEqualTo(user.id)
     }
 
     @Test
     @DisplayName("각 엔티티 생성 및 조회 테스트(누락 필드 확인)")
     fun test() {
         // given
-        val users = Users(0L, Platform.KAKAO, 0L, "nameA", "emailA", null, "depositorNameA", "phoneNumberA", true)
+        val user = User(0L, Platform.KAKAO, "platformIdA", "nameA", "emailA", "profileImageA", "depositorNameA", "phoneNumberA", true)
 
         val organization = Organization(0L, "OrganiationA", null)
         val admin = Admin(0L, organization, "nameA", "emailA", "password123", true)
@@ -68,7 +68,7 @@ class DomainEntityTest {
         val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 100)
 
         // when
-        em.persist(users)
+        em.persist(user)
 
         em.persist(organization)
         em.persist(admin)
@@ -87,8 +87,8 @@ class DomainEntityTest {
         em.persist(entryGroup)
 
         // then
-        val findUsers = em.find(Users::class.java, 1L)
-        println("findUsers id : ${findUsers.id}")
+        val findUser = em.find(User::class.java, 1L)
+        println("findUsers id : ${findUser.id}")
 
         val findOrganization = em.find(Organization::class.java, 1L)
         println("findOrganization id : ${findOrganization.id}")
