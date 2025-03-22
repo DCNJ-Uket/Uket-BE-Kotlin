@@ -6,8 +6,6 @@ import org.springframework.transaction.annotation.Transactional
 import uket.uket.common.ErrorCode
 import uket.uket.domain.user.dto.CreateUserDto
 import uket.uket.domain.user.dto.RegisterUserDto
-import uket.uket.domain.user.dto.UserDeleteDto
-import uket.uket.domain.user.dto.UserDto
 import uket.uket.domain.user.entity.User
 import uket.uket.domain.user.exception.UserException
 import uket.uket.domain.user.repository.UserRepository
@@ -20,24 +18,24 @@ class UserService(
     /*
         유저 조회
      */
-    fun findById(userId: Long): UserDto {
+    fun findById(userId: Long): User {
         val user = userRepository.findByIdOrNull(userId)
             ?: throw UserException(ErrorCode.NOT_FOUND_USER)
-        return UserDto.from(user)
+        return user
     }
 
     /*
         유저 생성 또는 업데이트
      */
     @Transactional
-    fun saveUser(createUserDto: CreateUserDto): UserDto {
+    fun saveUser(createUserDto: CreateUserDto) {
         val existUser = userRepository.findByPlatformAndPlatformId(
             createUserDto.platform,
             createUserDto.platformId,
         )
 
         if (existUser != null) {
-            return updateProfileOfExistUser(createUserDto, existUser)
+            updateProfileOfExistUser(createUserDto, existUser)
         }
 
         val newUser: User = User(
@@ -49,9 +47,7 @@ class UserService(
             profileImage = createUserDto.profileImage,
         )
 
-        val saveUser = userRepository.save(newUser)
-
-        return UserDto.from(saveUser)
+        userRepository.save(newUser)
     }
 
     /*
@@ -61,17 +57,17 @@ class UserService(
     fun register(registerUserDto: RegisterUserDto) {
         val user = userRepository.findByIdOrNull(registerUserDto.userId)
             ?: throw UserException(ErrorCode.NOT_FOUND_USER)
+        user.register(registerUserDto.depositorName, registerUserDto.phoneNumber)
     }
 
     /*
         유저 삭제
      */
     @Transactional
-    fun deleteUser(userId: Long): UserDeleteDto {
+    fun deleteUser(userId: Long) {
         val user = userRepository.findByIdOrNull(userId)
             ?: throw UserException(ErrorCode.NOT_FOUND_USER)
         userRepository.delete(user)
-        return UserDeleteDto.from(user)
     }
 
     /*
@@ -83,9 +79,8 @@ class UserService(
         }
     }
 
-    private fun updateProfileOfExistUser(createUserDto: CreateUserDto, existUser: User): UserDto {
+    private fun updateProfileOfExistUser(createUserDto: CreateUserDto, existUser: User) {
         existUser.updateProfile(createUserDto.email, createUserDto.name, createUserDto.profileImage)
         userRepository.save(existUser)
-        return UserDto.from(existUser)
     }
 }
