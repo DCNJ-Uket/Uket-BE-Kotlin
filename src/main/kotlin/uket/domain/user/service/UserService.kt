@@ -4,8 +4,8 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.uket.common.ErrorCode
-import uket.uket.domain.user.dto.CreateUserDto
-import uket.uket.domain.user.dto.RegisterUserDto
+import uket.uket.domain.user.dto.CreateUserCommand
+import uket.uket.domain.user.dto.RegisterUserCommand
 import uket.uket.domain.user.entity.User
 import uket.uket.domain.user.exception.UserException
 import uket.uket.domain.user.repository.UserRepository
@@ -28,23 +28,23 @@ class UserService(
         유저 생성 또는 업데이트
      */
     @Transactional
-    fun createUser(createUserDto: CreateUserDto) {
+    fun createUser(createUserCommand: CreateUserCommand) {
         val existUser = userRepository.findByPlatformAndPlatformId(
-            createUserDto.platform,
-            createUserDto.platformId,
+            createUserCommand.platform,
+            createUserCommand.platformId,
         )
 
         if (existUser != null) {
-            updateProfileOfExistUser(createUserDto, existUser)
+            updateProfileOfExistUser(createUserCommand, existUser)
         }
 
         val newUser: User = User(
             _id = 0L,
-            platform = createUserDto.platform,
-            platformId = createUserDto.platformId,
-            name = createUserDto.name,
-            email = createUserDto.email,
-            profileImage = createUserDto.profileImage,
+            platform = createUserCommand.platform,
+            platformId = createUserCommand.platformId,
+            name = createUserCommand.name,
+            email = createUserCommand.email,
+            profileImage = createUserCommand.profileImage,
         )
 
         userRepository.save(newUser)
@@ -54,10 +54,10 @@ class UserService(
         유저 정보 등록
      */
     @Transactional
-    fun register(registerUserDto: RegisterUserDto) {
-        val user = userRepository.findByIdOrNull(registerUserDto.userId)
+    fun register(registerUserCommand: RegisterUserCommand) {
+        val user = userRepository.findByIdOrNull(registerUserCommand.userId)
             ?: throw UserException(ErrorCode.NOT_FOUND_USER)
-        user.register(registerUserDto.depositorName, registerUserDto.phoneNumber)
+        user.register(registerUserCommand.depositorName, registerUserCommand.phoneNumber)
     }
 
     /*
@@ -79,8 +79,8 @@ class UserService(
         }
     }
 
-    private fun updateProfileOfExistUser(createUserDto: CreateUserDto, existUser: User) {
-        existUser.updateProfile(createUserDto.email, createUserDto.name, createUserDto.profileImage)
+    private fun updateProfileOfExistUser(createUserCommand: CreateUserCommand, existUser: User) {
+        existUser.updateProfile(createUserCommand.email, createUserCommand.name, createUserCommand.profileImage)
         userRepository.save(existUser)
     }
 }

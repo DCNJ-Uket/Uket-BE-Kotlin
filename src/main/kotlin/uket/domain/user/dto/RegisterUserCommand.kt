@@ -1,6 +1,6 @@
 package uket.uket.domain.user.dto
 
-data class RegisterUserDto(
+data class RegisterUserCommand(
     val userId: Long,
     val depositorName: String,
     val phoneNumber: String,
