@@ -39,7 +39,7 @@ class UserService(
         }
 
         val newUser: User = User(
-            id = 0L,
+            _id = 0L,
             platform = createUserDto.platform,
             platformId = createUserDto.platformId,
             name = createUserDto.name,

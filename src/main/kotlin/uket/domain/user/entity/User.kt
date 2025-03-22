@@ -11,7 +11,7 @@ import uket.uket.domain.user.enums.Platform
 @Entity
 @Table(name = "users")
 class User(
-    id: Long,
+    _id: Long,
     val platform: Platform,
     val platformId: String,
     var name: String,
@@ -24,7 +24,7 @@ class User(
     @Id
     @GeneratedValue
     @Column(name = "user_id")
-    val id: Long = id
+    val id: Long = _id
 
     fun updateProfile(email: String, name: String, profileImage: String) {
         this.email = email
