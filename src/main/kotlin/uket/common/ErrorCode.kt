@@ -32,12 +32,13 @@ enum class ErrorCode(
     NOT_MATCHED_AUTH_CODE(400, "AU0012", "올바르지 않은 인증 코드입니다."),
 
     /**
-     * Admin Errors
+     * Organization Errors
      */
     NOT_FOUND_EMAIL_OF_ADMIN(404, "AD0001", "어드민의 이메일을 찾을 수 없습니다."),
     NOT_MATCH_PASSWORD(400, "AD0002", "올바르지 않은 비밀번호입니다."),
     ALREADY_EXIST_ADMIN(400, "AD0003", "이미 가입된 어드민입니다."),
     NOT_REGISTERED_ADMIN(400, "AD0004", "인가되지 않은 어드민입니다."),
+    NOT_FOUND_ORGANIZATION(404, "AD0005", "단체를 찾을 수 없습니다."),
 
     /**
      * User Errors

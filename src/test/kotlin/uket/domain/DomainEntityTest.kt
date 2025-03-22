@@ -6,8 +6,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import uket.uket.domain.organization.Admin
-import uket.uket.domain.organization.Organization
+import uket.uket.domain.organization.entity.Admin
+import uket.uket.domain.organization.entity.Organization
 import uket.uket.domain.payment.Payment
 import uket.uket.domain.payment.PaymentHistory
 import uket.uket.domain.payment.PaymentManner

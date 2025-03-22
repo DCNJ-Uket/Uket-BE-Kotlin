@@ -1,4 +1,4 @@
-package uket.uket.domain.organization
+package uket.uket.domain.organization.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -16,7 +16,7 @@ class Admin(
     _organization: Organization,
     val name: String,
     val email: String,
-    val password: String,
+    var password: String?,
     val isSuperAdmin: Boolean,
 ) : BaseTimeEntity() {
     @Id
