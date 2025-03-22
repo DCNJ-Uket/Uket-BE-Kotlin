@@ -28,7 +28,7 @@ class UserService(
         유저 생성 또는 업데이트
      */
     @Transactional
-    fun saveUser(createUserDto: CreateUserDto) {
+    fun createUser(createUserDto: CreateUserDto) {
         val existUser = userRepository.findByPlatformAndPlatformId(
             createUserDto.platform,
             createUserDto.platformId,
