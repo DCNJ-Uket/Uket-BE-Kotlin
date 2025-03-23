@@ -18,10 +18,10 @@ import uket.uket.domain.terms.Document
 import uket.uket.domain.terms.TermSign
 import uket.uket.domain.terms.Terms
 import uket.uket.domain.terms.TermsType
-import uket.uket.domain.uketevent.EntryGroup
-import uket.uket.domain.uketevent.EventType
-import uket.uket.domain.uketevent.UketEvent
-import uket.uket.domain.uketevent.UketEventRound
+import uket.uket.domain.uketevent.entity.EntryGroup
+import uket.uket.domain.uketevent.entity.UketEvent
+import uket.uket.domain.uketevent.entity.UketEventRound
+import uket.uket.domain.uketevent.enums.EventType
 import uket.uket.domain.user.entity.User
 import uket.uket.domain.user.enums.Platform
 import java.time.LocalDateTime

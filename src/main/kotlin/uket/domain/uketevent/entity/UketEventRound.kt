@@ -1,4 +1,4 @@
-package uket.uket.domain.uketevent
+package uket.uket.domain.uketevent.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

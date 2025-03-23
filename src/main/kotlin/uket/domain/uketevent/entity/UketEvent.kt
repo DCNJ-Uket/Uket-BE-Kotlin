@@ -1,4 +1,4 @@
-package uket.uket.domain.uketevent
+package uket.uket.domain.uketevent.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
+import uket.uket.domain.uketevent.enums.EventType
 import java.time.LocalDateTime
 
 @Entity

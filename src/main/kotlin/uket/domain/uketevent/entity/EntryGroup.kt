@@ -1,12 +1,6 @@
-package uket.uket.domain.uketevent
+package uket.uket.domain.uketevent.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
@@ -18,7 +12,7 @@ class EntryGroup(
     val name: String,
     val entryStartTime: LocalDateTime,
     val entryEndTime: LocalDateTime,
-    val reservationCount: Int,
+    var reservationCount: Int,
     val totalCount: Int,
 ) : BaseTimeEntity() {
     @Id
@@ -29,4 +23,22 @@ class EntryGroup(
     @ManyToOne
     @JoinColumn(name = "uket_event_round_id", nullable = false)
     val uketEventRound: UketEventRound = _uketEventRound
+
+    fun increaseReservedCount(): Boolean {
+        if (this.reservationCount + 1 > this.totalCount) {
+            return false
+        }
+
+        this.reservationCount += 1
+        return true
+    }
+
+    fun decreaseReservedCount(): Boolean {
+        if (this.reservationCount < 1) {
+            return false
+        }
+
+        this.reservationCount -= 1
+        return true
+    }
 }
