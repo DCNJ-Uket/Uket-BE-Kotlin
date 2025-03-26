@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import uket.uket.domain.organization.entity.Admin
 import uket.uket.domain.organization.entity.Organization
-import uket.uket.domain.payment.Payment
-import uket.uket.domain.payment.PaymentHistory
-import uket.uket.domain.payment.PaymentManner
-import uket.uket.domain.payment.PaymentStatus
+import uket.uket.domain.payment.entity.Payment
+import uket.uket.domain.payment.entity.PaymentHistory
+import uket.uket.domain.payment.enums.PaymentManner
+import uket.uket.domain.payment.enums.PaymentStatus
 import uket.uket.domain.reservation.Ticket
 import uket.uket.domain.reservation.TicketStatus
 import uket.uket.domain.terms.entity.Document

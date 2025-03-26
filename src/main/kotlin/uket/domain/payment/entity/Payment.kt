@@ -1,4 +1,4 @@
-package uket.uket.domain.payment
+package uket.uket.domain.payment.entity
 
 import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
