@@ -3,11 +3,9 @@ package uket.uket.domain.user.service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.common.ErrorCode
 import uket.uket.domain.user.dto.CreateUserCommand
 import uket.uket.domain.user.dto.RegisterUserCommand
 import uket.uket.domain.user.entity.User
-import uket.uket.domain.user.exception.UserException
 import uket.uket.domain.user.repository.UserRepository
 
 @Service
@@ -20,7 +18,7 @@ class UserService(
      */
     fun findById(userId: Long): User {
         val user = userRepository.findByIdOrNull(userId)
-            ?: throw UserException(ErrorCode.NOT_FOUND_USER)
+            ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
         return user
     }
 
@@ -39,7 +37,6 @@ class UserService(
         }
 
         val newUser: User = User(
-            _id = 0L,
             platform = createUserCommand.platform,
             platformId = createUserCommand.platformId,
             name = createUserCommand.name,
@@ -56,7 +53,7 @@ class UserService(
     @Transactional
     fun register(registerUserCommand: RegisterUserCommand) {
         val user = userRepository.findByIdOrNull(registerUserCommand.userId)
-            ?: throw UserException(ErrorCode.NOT_FOUND_USER)
+            ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
         user.register(registerUserCommand.depositorName, registerUserCommand.phoneNumber)
     }
 
@@ -66,7 +63,7 @@ class UserService(
     @Transactional
     fun deleteUser(userId: Long) {
         val user = userRepository.findByIdOrNull(userId)
-            ?: throw UserException(ErrorCode.NOT_FOUND_USER)
+            ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
         userRepository.delete(user)
     }
 
@@ -75,7 +72,7 @@ class UserService(
      */
     fun checkDuplicateEmail(email: String) {
         if (java.lang.Boolean.TRUE == userRepository.existsByEmail(email)) {
-            throw UserException(ErrorCode.ALREADY_EXIST_USER)
+            throw IllegalStateException("이미 가입된 사용자입니다.")
         }
     }
 
