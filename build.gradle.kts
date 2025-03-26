@@ -1,8 +1,10 @@
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
-plugins { // 플러그인
+plugins {
+    // 플러그인
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.jpa") version "1.9.25"
+    kotlin("kapt") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.spring") version "1.9.25" // 스프링 어노테이션 처리 지원(open 관련)
     id("org.springframework.boot") version "3.4.0" // 스프링 부트
     id("io.spring.dependency-management") version "1.1.6" // 스프링 의존성 관리
@@ -45,6 +47,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("com.github.f4b6a3:ulid-creator:5.2.3")
+
+    // QueryDSL
+    // querydsl
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    implementation("com.querydsl:querydsl-apt:5.1.0:jakarta")
+    implementation("jakarta.persistence:jakarta.persistence-api")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks.test {
@@ -55,7 +67,8 @@ kotlin {
     jvmToolchain(21)
 }
 
-allOpen { // 해당 어노테이션이 붙은 클래스는 자동으로 open 처리
+allOpen {
+    // 해당 어노테이션이 붙은 클래스는 자동으로 open 처리
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.Embeddable")
     annotation("javax.persistence.MappedSuperclass")

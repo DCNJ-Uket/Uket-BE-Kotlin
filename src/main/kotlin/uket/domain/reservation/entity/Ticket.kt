@@ -1,6 +1,12 @@
 package uket.uket.domain.reservation.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.DeletableEntity
 import uket.uket.domain.reservation.enums.TicketStatus
 import java.time.LocalDateTime

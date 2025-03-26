@@ -1,6 +1,12 @@
 package uket.uket.domain.payment.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import uket.uket.domain.BaseTimeEntity
 import uket.uket.domain.payment.enums.PaymentManner
 import uket.uket.domain.payment.enums.PaymentStatus
