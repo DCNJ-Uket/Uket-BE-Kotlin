@@ -14,10 +14,10 @@ import uket.uket.domain.payment.PaymentManner
 import uket.uket.domain.payment.PaymentStatus
 import uket.uket.domain.reservation.Ticket
 import uket.uket.domain.reservation.TicketStatus
-import uket.uket.domain.terms.Document
-import uket.uket.domain.terms.TermSign
-import uket.uket.domain.terms.Terms
-import uket.uket.domain.terms.TermsType
+import uket.uket.domain.terms.entity.Document
+import uket.uket.domain.terms.entity.TermSign
+import uket.uket.domain.terms.entity.Terms
+import uket.uket.domain.terms.enums.TermsType
 import uket.uket.domain.uketevent.entity.EntryGroup
 import uket.uket.domain.uketevent.entity.UketEvent
 import uket.uket.domain.uketevent.entity.UketEventRound

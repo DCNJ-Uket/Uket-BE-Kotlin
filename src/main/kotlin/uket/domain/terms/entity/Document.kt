@@ -1,4 +1,4 @@
-package uket.uket.domain.terms
+package uket.uket.domain.terms.entity
 
 import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
