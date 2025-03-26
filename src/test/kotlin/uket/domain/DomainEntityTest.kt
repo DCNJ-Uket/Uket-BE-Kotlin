@@ -57,11 +57,11 @@ class DomainEntityTest {
         val payment = Payment(0L, 0L, "123-12-123457", "linkA")
         val paymentHistory = PaymentHistory(0L, 0L, 0L, 0, PaymentStatus.PURCHASED, "categoryA", PaymentManner.DEPOSIT_LINK, null)
 
-        val ticket = Ticket(0L, 0L, 0L, TicketStatus.BEFORE_ENTER, "123456789")
+        val ticket = Ticket(0L, 0L, 0L, TicketStatus.BEFORE_ENTER, "123456789", null)
 
         val document = Document(0L, 0L, "nameA", "linkA", 0L)
         val terms = Terms(0L, "nameA", TermsType.MANDATORY, 0L, true)
-        val termSign = TermSign(0L, terms, 0L, true, LocalDateTime.now())
+        val termSign = TermSign(0L, 0L, 0L, true, LocalDateTime.now())
 
         val uketEvent = UketEvent(0L, 0L, "nameA", EventType.FESTIVAL, "00시00구", null, LocalDateTime.now(), 0)
         val uketEventRound = UketEventRound(0L, uketEvent, "nameA", LocalDateTime.now(), LocalDateTime.now())
