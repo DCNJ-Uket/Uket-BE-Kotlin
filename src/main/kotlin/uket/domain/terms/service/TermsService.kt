@@ -9,7 +9,7 @@ import uket.uket.domain.terms.repository.TermsRepository
 @Service
 @Transactional(readOnly = true)
 class TermsService(
-    val termsRepository: TermsRepository,
+    private val termsRepository: TermsRepository,
 ) {
     fun findById(termsId: Long): Terms {
         val terms = termsRepository.findByIdOrNull(termsId)

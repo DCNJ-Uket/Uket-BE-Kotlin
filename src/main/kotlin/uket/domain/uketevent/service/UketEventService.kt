@@ -9,7 +9,7 @@ import uket.uket.domain.uketevent.repository.UketEventRepository
 @Service
 @Transactional(readOnly = true)
 class UketEventService(
-    val uketEventRepository: UketEventRepository,
+    private val uketEventRepository: UketEventRepository,
 ) {
     fun findById(uketEventId: Long): UketEvent {
         val uketEvent = uketEventRepository.findByIdOrNull(uketEventId)

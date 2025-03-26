@@ -9,7 +9,7 @@ import uket.uket.domain.uketevent.repository.EntryGroupRepository
 @Service
 @Transactional(readOnly = true)
 class EntryGroupService(
-    val entryGroupRepository: EntryGroupRepository,
+    private val entryGroupRepository: EntryGroupRepository,
 ) {
     fun findById(entryGroupId: Long): EntryGroup {
         val entryGroup = entryGroupRepository.findByIdOrNull(entryGroupId)

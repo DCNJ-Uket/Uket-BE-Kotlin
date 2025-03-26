@@ -10,7 +10,7 @@ import java.util.stream.Collectors
 @Service
 @Transactional(readOnly = true)
 class TermSignService(
-    val termSignRepository: TermSignRepository,
+    private val termSignRepository: TermSignRepository,
 ) {
     fun findById(termSignId: Long): TermSign {
         val termSign = termSignRepository.findByIdOrNull(termSignId)

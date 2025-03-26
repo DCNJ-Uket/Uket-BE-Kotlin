@@ -14,7 +14,7 @@ import java.util.UUID
 @Service
 @Transactional(readOnly = true)
 class TicketService(
-    val ticketRepository: TicketRepository,
+    private val ticketRepository: TicketRepository,
 ) {
     fun findById(ticketId: Long): Ticket {
         val ticket = ticketRepository.findByIdOrNull(ticketId)

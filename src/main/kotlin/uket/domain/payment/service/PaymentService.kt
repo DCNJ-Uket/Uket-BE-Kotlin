@@ -9,7 +9,7 @@ import uket.uket.domain.payment.repository.PaymentRepository
 @Service
 @Transactional(readOnly = true)
 class PaymentService(
-    val paymentRepository: PaymentRepository,
+    private val paymentRepository: PaymentRepository,
 ) {
     fun findById(paymentId: Long): Payment {
         val payment = paymentRepository.findByIdOrNull(paymentId)

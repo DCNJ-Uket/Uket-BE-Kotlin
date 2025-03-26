@@ -10,7 +10,7 @@ import uket.uket.domain.uketevent.repository.UketEventRoundRepository
 @Service
 @Transactional(readOnly = true)
 class UketEventRoundService(
-    val uketEventRoundRepository: UketEventRoundRepository,
+    private val uketEventRoundRepository: UketEventRoundRepository,
     private val uketEventRepository: UketEventRepository,
 ) {
     fun findById(uketEventRoundId: Long): UketEventRound {

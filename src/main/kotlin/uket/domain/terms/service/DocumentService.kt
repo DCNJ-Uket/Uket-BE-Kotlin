@@ -9,7 +9,7 @@ import java.util.stream.Collectors
 @Service
 @Transactional(readOnly = true)
 class DocumentService(
-    val documentRepository: DocumentRepository,
+    private val documentRepository: DocumentRepository,
 ) {
     fun getLinkMap(documentNos: List<Long>): Map<Long, String> = documentRepository
         .findLatestDocumentsByDocumentNos(documentNos)

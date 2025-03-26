@@ -11,7 +11,7 @@ import uket.uket.domain.user.repository.UserRepository
 @Service
 @Transactional(readOnly = true)
 class UserService(
-    val userRepository: UserRepository,
+    private val userRepository: UserRepository,
 ) {
     /*
         유저 조회

@@ -7,7 +7,7 @@ import uket.uket.domain.organization.repository.OrganizationRepository
 
 @Service
 class OrganizationService(
-    val organizationRepository: OrganizationRepository,
+    private val organizationRepository: OrganizationRepository,
 ) {
     fun findById(organizationId: Long): Organization {
         val organization = organizationRepository.findByIdOrNull(organizationId)
