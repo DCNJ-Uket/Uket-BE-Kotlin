@@ -3,15 +3,15 @@ package uket.uket.domain.organization.service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.organization.dto.CreateAdminCommand
-import uket.uket.domain.organization.dto.CreateAdminWithoutPasswordCommand
+import uket.uket.domain.organization.dto.RegisterAdminCommand
+import uket.uket.domain.organization.dto.RegisterAdminWithoutPasswordCommand
 import uket.uket.domain.organization.entity.Admin
 import uket.uket.domain.organization.repository.AdminRepository
 
 @Service
 @Transactional(readOnly = true)
 class AdminService(
-    val adminRepository: AdminRepository,
+    private val adminRepository: AdminRepository,
 ) {
     fun findById(adminId: Long): Admin {
         val admin = adminRepository.findByIdOrNull(adminId)
@@ -20,44 +20,44 @@ class AdminService(
     }
 
     fun findByEmail(email: String): Admin = adminRepository.findByEmail(email)
-        ?: throw IllegalStateException("어드민의 이메일을 찾을 수 없습니다.")
+        ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
     @Transactional
-    fun createAdmin(createAdminCommand: CreateAdminCommand) {
-        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(createAdminCommand.email)) {
+    fun registerAdmin(registerAdminCommand: RegisterAdminCommand) {
+        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminCommand.email)) {
             throw IllegalStateException("이미 가입된 어드민입니다.")
         }
 
         val admin = Admin(
-            organization = createAdminCommand.organization,
-            name = createAdminCommand.name,
-            email = createAdminCommand.email,
+            organization = registerAdminCommand.organization,
+            name = registerAdminCommand.name,
+            email = registerAdminCommand.email,
             isSuperAdmin = false,
-            password = createAdminCommand.password,
+            password = registerAdminCommand.password,
         )
 
         adminRepository.save(admin)
     }
 
     @Transactional
-    fun delete(adminId: Long) {
-        adminRepository.deleteById(adminId)
-    }
-
-    @Transactional
-    fun createAdminWithoutPassword(createAdminWithoutPasswordCommand: CreateAdminWithoutPasswordCommand) {
-        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(createAdminWithoutPasswordCommand.email)) {
+    fun registerAdminWithoutPassword(registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand) {
+        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email)) {
             throw IllegalStateException("이미 가입된 어드민입니다.")
         }
 
         val admin = Admin(
-            organization = createAdminWithoutPasswordCommand.organization,
-            name = createAdminWithoutPasswordCommand.name,
-            email = createAdminWithoutPasswordCommand.email,
+            organization = registerAdminWithoutPasswordCommand.organization,
+            name = registerAdminWithoutPasswordCommand.name,
+            email = registerAdminWithoutPasswordCommand.email,
             isSuperAdmin = false,
             password = null,
         )
 
         adminRepository.save(admin)
+    }
+
+    @Transactional
+    fun deleteAdmin(adminId: Long) {
+        adminRepository.deleteById(adminId)
     }
 }
