@@ -1,8 +1,8 @@
-package uket.uket.domain.reservation
+package uket.uket.domain.reservation.enums
 
 enum class TicketStatus(
-    value: String,
-    msg: String,
+    val value: String,
+    val msg: String,
 ) {
     BEFORE_ENTER("예매 완료", "예매가 완료되었습니다."),
     FINISH_ENTER("입장 완료", "예매가 성공적으로 이루어졌습니다. 공연을 즐겨보세요!"),

@@ -6,7 +6,7 @@ import uket.uket.domain.uketevent.service.UketEventService
 
 @Service
 @Transactional(readOnly = true)
-class UketEventOrganizationService(
+class UketEventOrganizationFacade(
     val uketEventService: UketEventService,
     val organizationService: UketEventService,
 ) {

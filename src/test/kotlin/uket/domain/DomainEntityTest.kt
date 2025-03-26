@@ -12,8 +12,8 @@ import uket.uket.domain.payment.entity.Payment
 import uket.uket.domain.payment.entity.PaymentHistory
 import uket.uket.domain.payment.enums.PaymentManner
 import uket.uket.domain.payment.enums.PaymentStatus
-import uket.uket.domain.reservation.Ticket
-import uket.uket.domain.reservation.TicketStatus
+import uket.uket.domain.reservation.entity.Ticket
+import uket.uket.domain.reservation.enums.TicketStatus
 import uket.uket.domain.terms.entity.Document
 import uket.uket.domain.terms.entity.TermSign
 import uket.uket.domain.terms.entity.Terms

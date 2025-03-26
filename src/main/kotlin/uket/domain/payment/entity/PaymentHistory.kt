@@ -12,7 +12,7 @@ class PaymentHistory(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
     val organizationId: Long,
-    val usersId: Long,
+    val userId: Long,
     val price: Int,
     @Enumerated(EnumType.STRING)
     val status: PaymentStatus,
