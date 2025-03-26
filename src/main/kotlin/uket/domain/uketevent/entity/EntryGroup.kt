@@ -7,23 +7,18 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "entry_group")
 class EntryGroup(
-    _id: Long,
-    _uketEventRound: UketEventRound,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
+    @ManyToOne
+    @JoinColumn(name = "uket_event_round_id", nullable = false)
+    val uketEventRound: UketEventRound,
     val name: String,
     val entryStartTime: LocalDateTime,
     val entryEndTime: LocalDateTime,
     var reservationCount: Int,
     val totalCount: Int,
 ) : BaseTimeEntity() {
-    @Id
-    @GeneratedValue
-    @Column(name = "entry_group_id")
-    val id: Long = _id
-
-    @ManyToOne
-    @JoinColumn(name = "uket_event_round_id", nullable = false)
-    val uketEventRound: UketEventRound = _uketEventRound
-
     fun increaseReservedCount(): Boolean {
         if (this.reservationCount + 1 > this.totalCount) {
             return false

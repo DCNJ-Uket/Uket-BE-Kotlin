@@ -1,26 +1,21 @@
 package uket.uket.domain.payment
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "payment_history")
 class PaymentHistory(
-    _id: Long,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
     val organizationId: Long,
     val usersId: Long,
     val price: Int,
+    @Enumerated(EnumType.STRING)
     val status: PaymentStatus,
     val category: String,
+    @Enumerated(EnumType.STRING)
     val manner: PaymentManner,
     val description: String?,
-) : BaseTimeEntity() {
-    @Id
-    @GeneratedValue
-    @Column(name = "payment_history_id")
-    val id: Long = _id
-}
+) : BaseTimeEntity()

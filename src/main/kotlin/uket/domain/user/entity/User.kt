@@ -1,17 +1,16 @@
 package uket.uket.domain.user.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
 import uket.uket.domain.user.enums.Platform
 
 @Entity
 @Table(name = "users")
 class User(
-    _id: Long,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
+    @Enumerated(EnumType.STRING)
     val platform: Platform,
     val platformId: String,
     var name: String,
@@ -21,11 +20,6 @@ class User(
     var phoneNumber: String? = null,
     var isRegistered: Boolean = false,
 ) : BaseTimeEntity() {
-    @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    val id: Long = _id
-
     fun updateProfile(email: String, name: String, profileImage: String) {
         this.email = email
         this.name = name

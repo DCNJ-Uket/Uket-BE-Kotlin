@@ -1,23 +1,17 @@
 package uket.uket.domain.reservation
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import uket.uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "ticket")
 class Ticket(
-    _id: Long,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
     val usersId: Long,
     val entryGroupId: Long,
+    @Enumerated(EnumType.STRING)
     val status: TicketStatus,
     val ticketNo: String,
-) : BaseTimeEntity() {
-    @Id
-    @GeneratedValue
-    @Column(name = "ticket_id")
-    val id: Long = _id
-}
+) : BaseTimeEntity()
