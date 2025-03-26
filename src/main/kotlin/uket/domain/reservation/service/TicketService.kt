@@ -23,7 +23,7 @@ class TicketService(
     }
 
     @Transactional
-    fun save(createTicketCommand: CreateTicketCommand): Ticket {
+    fun createTicket(createTicketCommand: CreateTicketCommand): Ticket {
         val ticket: Ticket = Ticket(
             userId = createTicketCommand.userId,
             entryGroupId = createTicketCommand.entryGroupId,
@@ -68,8 +68,24 @@ class TicketService(
         ticketRepository.save(ticket)
     }
 
-//    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-//        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
-//        return ticketRepository.findValidTicketsByUserId(userId, excludedStatuses)
-//    }
+    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
+        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
+        return ticketRepository.findValidTicketsByUserId(userId, excludedStatuses)
+    }
+
+    @Transactional
+    fun saveTicket(ticket: Ticket) {
+        ticketRepository.save(ticket)
+    }
+
+    @Transactional
+    fun deleteAllByUserId(userId: Long) {
+        ticketRepository.deleteAllByUserId(userId)
+    }
+
+    @Transactional
+    fun findAllByUserIdAndStatusNotWithEntryGroup(
+        userId: Long,
+        ticketStatus: TicketStatus,
+    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
 }
