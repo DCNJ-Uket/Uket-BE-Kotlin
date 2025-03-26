@@ -3,9 +3,7 @@ package uket.uket.domain.uketevent.service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.common.ErrorCode
 import uket.uket.domain.uketevent.entity.EntryGroup
-import uket.uket.domain.uketevent.exception.UketEventException
 import uket.uket.domain.uketevent.repository.EntryGroupRepository
 
 @Service
@@ -15,11 +13,11 @@ class EntryGroupService(
 ) {
     fun findById(entryGroupId: Long): EntryGroup {
         val entryGroup = entryGroupRepository.findByIdOrNull(entryGroupId)
-            ?: throw UketEventException(ErrorCode.NOT_FOUND_ENTRY_GROUP)
+            ?: throw IllegalStateException("해당 입장 그룹을 찾을 수 없습니다.")
         return entryGroup
     }
 
-    fun findByUketEventRound(uketEventRoundId: Long): List<EntryGroup> =
+    fun findByUketEventRoundId(uketEventRoundId: Long): List<EntryGroup> =
         entryGroupRepository.findByUketEventRoundId(uketEventRoundId, EntryGroup::class.java)
 
     @Transactional
@@ -28,7 +26,7 @@ class EntryGroupService(
         val isSuccess: Boolean = entryGroup.increaseReservedCount()
 
         if (java.lang.Boolean.FALSE == isSuccess) {
-            throw UketEventException(ErrorCode.FAIL_RESERVATION_COUNT)
+            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
         }
         entryGroupRepository.save(entryGroup)
     }
