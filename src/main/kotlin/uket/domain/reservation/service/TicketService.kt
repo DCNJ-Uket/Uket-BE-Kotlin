@@ -1,14 +1,14 @@
-package uket.uket.domain.reservation.service
+package uket.domain.reservation.service
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.reservation.dto.CreateTicketCommand
-import uket.uket.domain.reservation.entity.Ticket
-import uket.uket.domain.reservation.enums.TicketStatus
-import uket.uket.domain.reservation.repository.TicketRepository
+import uket.domain.reservation.dto.CreateTicketCommand
+import uket.domain.reservation.entity.Ticket
+import uket.domain.reservation.enums.TicketStatus
+import uket.domain.reservation.repository.TicketRepository
 import java.util.UUID
 
 @Service

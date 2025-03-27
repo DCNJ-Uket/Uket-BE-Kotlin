@@ -1,9 +1,9 @@
-package uket.uket.domain.terms.service
+package uket.domain.terms.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.terms.entity.Document
-import uket.uket.domain.terms.repository.DocumentRepository
+import uket.domain.terms.entity.Document
+import uket.domain.terms.repository.DocumentRepository
 import java.util.stream.Collectors
 
 @Service

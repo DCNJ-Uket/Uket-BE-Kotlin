@@ -1,4 +1,4 @@
-package uket.uket.domain.reservation.enums
+package uket.domain.reservation.enums
 
 enum class TicketStatus(
     val value: String,

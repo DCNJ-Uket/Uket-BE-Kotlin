@@ -1,17 +1,17 @@
-package uket.uket.domain.reservation.repository
+package uket.domain.reservation.repository
 
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
-import uket.uket.domain.reservation.entity.QTicket.ticket
-import uket.uket.domain.reservation.entity.Ticket
-import uket.uket.domain.reservation.enums.TicketStatus
-import uket.uket.domain.uketevent.entity.QEntryGroup.entryGroup
-import uket.uket.domain.uketevent.entity.QUketEvent.uketEvent
-import uket.uket.domain.uketevent.entity.QUketEventRound.uketEventRound
-import uket.uket.domain.user.entity.QUser.user
+import uket.domain.reservation.entity.QTicket.ticket
+import uket.domain.reservation.entity.Ticket
+import uket.domain.reservation.enums.TicketStatus
+import uket.domain.uketevent.entity.QEntryGroup.entryGroup
+import uket.domain.uketevent.entity.QUketEvent.uketEvent
+import uket.domain.uketevent.entity.QUketEventRound.uketEventRound
+import uket.domain.user.entity.QUser.user
 import java.time.LocalDateTime
 
 class TicketRepositoryCustomImpl(

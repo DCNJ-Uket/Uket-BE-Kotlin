@@ -1,9 +1,9 @@
-package uket.uket.domain.terms.repository
+package uket.domain.terms.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import uket.uket.domain.terms.entity.TermSign
+import uket.domain.terms.entity.TermSign
 
 interface TermSignRepository : JpaRepository<TermSign, Long> {
     @Query(

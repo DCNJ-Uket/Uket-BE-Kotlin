@@ -1,4 +1,4 @@
-package uket.uket.domain.payment.enums
+package uket.domain.payment.enums
 
 enum class PaymentManner {
     ACCOUNT_NUMBER,

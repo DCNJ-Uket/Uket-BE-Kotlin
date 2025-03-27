@@ -1,4 +1,4 @@
-package uket.uket.domain.payment.entity
+package uket.domain.payment.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -7,9 +7,9 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import uket.uket.domain.BaseTimeEntity
-import uket.uket.domain.payment.enums.PaymentManner
-import uket.uket.domain.payment.enums.PaymentStatus
+import uket.domain.BaseTimeEntity
+import uket.domain.payment.enums.PaymentManner
+import uket.domain.payment.enums.PaymentStatus
 
 @Entity
 @Table(name = "payment_history")

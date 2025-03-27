@@ -9,12 +9,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.data.repository.findByIdOrNull
-import uket.uket.domain.organization.dto.RegisterAdminCommand
-import uket.uket.domain.organization.dto.RegisterAdminWithoutPasswordCommand
-import uket.uket.domain.organization.entity.Admin
-import uket.uket.domain.organization.entity.Organization
-import uket.uket.domain.organization.repository.AdminRepository
-import uket.uket.domain.organization.service.AdminService
+import uket.domain.organization.dto.RegisterAdminCommand
+import uket.domain.organization.dto.RegisterAdminWithoutPasswordCommand
+import uket.domain.organization.entity.Admin
+import uket.domain.organization.entity.Organization
+import uket.domain.organization.repository.AdminRepository
+import uket.domain.organization.service.AdminService
 
 class AdminServiceTest :
     DescribeSpec({

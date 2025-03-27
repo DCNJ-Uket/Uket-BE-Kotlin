@@ -1,4 +1,4 @@
-package uket.uket.common
+package uket.common
 
 enum class ErrorCode(
     val status: Int,

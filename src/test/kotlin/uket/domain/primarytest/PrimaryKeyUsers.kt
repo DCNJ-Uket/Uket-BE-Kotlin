@@ -1,10 +1,10 @@
-package uket.uket.domain.primarykeys
+package uket.domain.primarykeys
 
 import jakarta.persistence.AttributeOverride
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
-import uket.uket.domain.user.enums.Platform
+import uket.domain.user.enums.Platform
 
 @Entity
 @Table(name = "prmiary_key_users")

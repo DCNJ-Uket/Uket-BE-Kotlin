@@ -1,10 +1,10 @@
-package uket.uket.domain.terms.service
+package uket.domain.terms.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.terms.entity.Terms
-import uket.uket.domain.terms.repository.TermsRepository
+import uket.domain.terms.entity.Terms
+import uket.domain.terms.repository.TermsRepository
 
 @Service
 @Transactional(readOnly = true)

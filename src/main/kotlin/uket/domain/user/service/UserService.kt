@@ -1,12 +1,12 @@
-package uket.uket.domain.user.service
+package uket.domain.user.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.user.dto.CreateUserCommand
-import uket.uket.domain.user.dto.RegisterUserCommand
-import uket.uket.domain.user.entity.User
-import uket.uket.domain.user.repository.UserRepository
+import uket.domain.user.dto.CreateUserCommand
+import uket.domain.user.dto.RegisterUserCommand
+import uket.domain.user.entity.User
+import uket.domain.user.repository.UserRepository
 
 @Service
 @Transactional(readOnly = true)

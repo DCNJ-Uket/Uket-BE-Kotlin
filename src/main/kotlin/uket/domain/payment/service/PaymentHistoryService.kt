@@ -1,10 +1,10 @@
-package uket.uket.domain.payment.service
+package uket.domain.payment.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.payment.entity.Payment
-import uket.uket.domain.payment.repository.PaymentHistoryRepository
+import uket.domain.payment.entity.Payment
+import uket.domain.payment.repository.PaymentHistoryRepository
 
 @Service
 @Transactional(readOnly = true)

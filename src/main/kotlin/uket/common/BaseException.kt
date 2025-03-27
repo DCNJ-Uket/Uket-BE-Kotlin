@@ -1,4 +1,4 @@
-package uket.uket.common
+package uket.common
 
 open class BaseException(
     val errorCode: ErrorCode,

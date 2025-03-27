@@ -1,6 +1,6 @@
-package uket.uket.domain.reservation.dto
+package uket.domain.reservation.dto
 
-import uket.uket.domain.reservation.enums.TicketStatus
+import uket.domain.reservation.enums.TicketStatus
 
 data class CreateTicketCommand(
     val userId: Long,

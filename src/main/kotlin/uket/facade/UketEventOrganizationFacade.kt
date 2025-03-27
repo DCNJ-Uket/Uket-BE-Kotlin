@@ -1,8 +1,8 @@
-package uket.uket.facade
+package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.uketevent.service.UketEventService
+import uket.domain.uketevent.service.UketEventService
 
 @Service
 @Transactional(readOnly = true)

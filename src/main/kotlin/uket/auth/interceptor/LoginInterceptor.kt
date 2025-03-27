@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 import uket.auth.filter.TokenValidator
 import uket.auth.interceptor.AuthorizationExtractor.extractAccessToken
-import uket.uket.common.BaseException
-import uket.uket.common.ErrorCode
-import uket.uket.common.ErrorResponse
+import uket.common.BaseException
+import uket.common.ErrorCode
+import uket.common.ErrorResponse
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 

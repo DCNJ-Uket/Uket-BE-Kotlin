@@ -1,9 +1,9 @@
-package uket.uket.domain.reservation.repository
+package uket.domain.reservation.repository
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import uket.uket.domain.reservation.entity.Ticket
-import uket.uket.domain.reservation.enums.TicketStatus
+import uket.domain.reservation.entity.Ticket
+import uket.domain.reservation.enums.TicketStatus
 import java.time.LocalDateTime
 
 interface TicketRepositoryCustom {

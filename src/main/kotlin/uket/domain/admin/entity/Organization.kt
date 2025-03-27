@@ -1,11 +1,11 @@
-package uket.uket.domain.organization.entity
+package uket.domain.organization.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import uket.uket.domain.BaseTimeEntity
+import uket.domain.BaseTimeEntity
 
 @Entity
 @Table(name = "organization")

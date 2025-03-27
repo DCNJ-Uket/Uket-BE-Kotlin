@@ -1,11 +1,11 @@
-package uket.uket.facade
+package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.reservation.entity.Ticket
-import uket.uket.domain.reservation.enums.TicketStatus
-import uket.uket.domain.reservation.service.TicketService
-import uket.uket.domain.uketevent.service.EntryGroupService
+import uket.domain.reservation.entity.Ticket
+import uket.domain.reservation.enums.TicketStatus
+import uket.domain.reservation.service.TicketService
+import uket.domain.uketevent.service.EntryGroupService
 
 @Service
 @Transactional(readOnly = true)

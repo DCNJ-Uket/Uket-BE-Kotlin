@@ -1,6 +1,6 @@
-package uket.uket.domain.organization.dto
+package uket.domain.organization.dto
 
-import uket.uket.domain.organization.entity.Organization
+import uket.domain.organization.entity.Organization
 
 data class RegisterAdminCommand(
     val organization: Organization,

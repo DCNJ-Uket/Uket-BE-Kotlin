@@ -1,6 +1,6 @@
-package uket.uket.domain.user.dto
+package uket.domain.user.dto
 
-import uket.uket.domain.user.enums.Platform
+import uket.domain.user.enums.Platform
 
 data class CreateUserCommand(
     val platform: Platform,

@@ -1,4 +1,4 @@
-package uket.uket.domain.user.dto
+package uket.domain.user.dto
 
 data class RegisterUserCommand(
     val userId: Long,

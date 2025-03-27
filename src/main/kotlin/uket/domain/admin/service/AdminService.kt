@@ -1,12 +1,12 @@
-package uket.uket.domain.organization.service
+package uket.domain.organization.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.organization.dto.RegisterAdminCommand
-import uket.uket.domain.organization.dto.RegisterAdminWithoutPasswordCommand
-import uket.uket.domain.organization.entity.Admin
-import uket.uket.domain.organization.repository.AdminRepository
+import uket.domain.organization.dto.RegisterAdminCommand
+import uket.domain.organization.dto.RegisterAdminWithoutPasswordCommand
+import uket.domain.organization.entity.Admin
+import uket.domain.organization.repository.AdminRepository
 
 @Service
 @Transactional(readOnly = true)

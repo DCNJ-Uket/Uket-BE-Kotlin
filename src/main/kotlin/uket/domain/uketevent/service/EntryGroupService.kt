@@ -1,10 +1,10 @@
-package uket.uket.domain.uketevent.service
+package uket.domain.uketevent.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.uket.domain.uketevent.entity.EntryGroup
-import uket.uket.domain.uketevent.repository.EntryGroupRepository
+import uket.domain.uketevent.entity.EntryGroup
+import uket.domain.uketevent.repository.EntryGroupRepository
 
 @Service
 @Transactional(readOnly = true)

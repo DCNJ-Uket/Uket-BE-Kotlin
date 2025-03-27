@@ -1,4 +1,4 @@
-package uket.uket
+package uket
 
 import com.querydsl.jpa.JPQLTemplates
 import com.querydsl.jpa.impl.JPAQueryFactory

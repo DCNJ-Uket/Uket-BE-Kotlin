@@ -1,7 +1,7 @@
-package uket.uket.domain.organization.repository
+package uket.domain.organization.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
-import uket.uket.domain.organization.entity.Admin
+import uket.domain.organization.entity.Admin
 
 interface AdminRepository : JpaRepository<Admin, Long> {
     fun findByEmail(email: String): Admin?
