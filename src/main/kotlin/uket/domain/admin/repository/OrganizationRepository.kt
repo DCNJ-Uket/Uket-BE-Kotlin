@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import uket.uket.domain.organization.entity.Organization
 
 interface OrganizationRepository : JpaRepository<Organization, Long> {
-    fun findOrganizationByEventId(): Organization
+//    fun findOrganizationNameByUketEventId(): String
 }
