@@ -32,9 +32,11 @@ class TicketEntryGroupFacade(
 
         if (ticketStatus === TicketStatus.FINISH_ENTER) {
             ticket.enter()
-            ticketService.saveTicket(ticket)
+            ticketService.updateTicket(ticket)
+            return
         }
+
         val updatedTicket = ticket.updateStatus(ticketStatus)
-        ticketService.saveTicket(updatedTicket)
+        ticketService.updateTicket(updatedTicket)
     }
 }

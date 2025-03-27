@@ -31,6 +31,7 @@ class EntryGroupService(
         entryGroupRepository.save(entryGroup)
     }
 
+    // @DistributedLock(key = "#reservationId")
     fun decreaseReservedCount(entryGroupId: Long) {
         val entryGroup = this.findById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()

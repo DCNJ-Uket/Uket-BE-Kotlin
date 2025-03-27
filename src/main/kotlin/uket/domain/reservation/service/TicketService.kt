@@ -22,8 +22,23 @@ class TicketService(
         return ticket
     }
 
+    fun findAllByUserIdAndStatusNotWithEntryGroup(
+        userId: Long,
+        ticketStatus: TicketStatus,
+    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
+
+    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
+        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
+        return ticketRepository.findValidTicketsByUserId(userId, excludedStatuses)
+    }
+
+    fun searchAllTickets(pageable: Pageable): Page<Ticket> {
+        val tickets = ticketRepository.findAll(pageable)
+        return tickets
+    }
+
     @Transactional
-    fun createTicket(createTicketCommand: CreateTicketCommand): Ticket {
+    fun publishTicket(createTicketCommand: CreateTicketCommand): Ticket {
         val ticket: Ticket = Ticket(
             userId = createTicketCommand.userId,
             entryGroupId = createTicketCommand.entryGroupId,
@@ -33,6 +48,26 @@ class TicketService(
         )
 
         return ticketRepository.save(ticket)
+    }
+
+    @Transactional
+    fun updateTicket(ticket: Ticket) {
+        ticketRepository.save(ticket)
+    }
+
+    @Transactional
+    fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
+        val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
+            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다. 티켓 아이디를 다시 확인해주세요.")
+
+        ticket.cancel()
+        ticket.updateDeletedAt()
+        ticketRepository.save(ticket)
+    }
+
+    @Transactional
+    fun deleteAllByUserId(userId: Long) {
+        ticketRepository.deleteAllByUserId(userId)
     }
 
     fun validateTicketStatus(ticketId: Long) {
@@ -47,45 +82,9 @@ class TicketService(
         }
     }
 
-    fun searchAllTickets(pageable: Pageable): Page<Ticket> {
-        val tickets = ticketRepository.findAll(pageable)
-        return tickets
-    }
-
     fun checkTicketOwner(userId: Long, ticketId: Long) {
         if (java.lang.Boolean.FALSE == ticketRepository.existsByUserIdAndId(userId, ticketId)) {
             throw IllegalStateException("해당 사용자는 해당 티켓을 소유하고 있지 않습니다.")
         }
     }
-
-    @Transactional
-    fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
-        val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
-            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다. 티켓 아이디를 다시 확인해주세요.")
-
-        ticket.cancel()
-        ticket.updateDeletedAt()
-        ticketRepository.save(ticket)
-    }
-
-    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
-        return ticketRepository.findValidTicketsByUserId(userId, excludedStatuses)
-    }
-
-    @Transactional
-    fun saveTicket(ticket: Ticket) {
-        ticketRepository.save(ticket)
-    }
-
-    @Transactional
-    fun deleteAllByUserId(userId: Long) {
-        ticketRepository.deleteAllByUserId(userId)
-    }
-
-    @Transactional
-    fun findAllByUserIdAndStatusNotWithEntryGroup(
-        userId: Long,
-        ticketStatus: TicketStatus,
-    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
 }

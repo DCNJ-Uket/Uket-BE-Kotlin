@@ -51,7 +51,7 @@ class UserService(
         유저 정보 등록
      */
     @Transactional
-    fun register(registerUserCommand: RegisterUserCommand) {
+    fun registerUser(registerUserCommand: RegisterUserCommand) {
         val user = userRepository.findByIdOrNull(registerUserCommand.userId)
             ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
         user.register(registerUserCommand.depositorName, registerUserCommand.phoneNumber)
