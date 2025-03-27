@@ -1,9 +1,9 @@
-package uket.domain.organization.service
+package uket.domain.admin.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import uket.domain.organization.entity.Organization
-import uket.domain.organization.repository.OrganizationRepository
+import uket.domain.admin.entity.Organization
+import uket.domain.admin.repository.OrganizationRepository
 
 @Service
 class OrganizationService(

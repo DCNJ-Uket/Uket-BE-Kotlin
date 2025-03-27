@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.context.annotation.Import
 import uket.QueryDslConfig
-import uket.domain.organization.entity.Admin
-import uket.domain.organization.entity.Organization
+import uket.domain.admin.entity.Admin
+import uket.domain.admin.entity.Organization
 import uket.domain.payment.entity.Payment
 import uket.domain.payment.entity.PaymentHistory
 import uket.domain.payment.enums.PaymentManner

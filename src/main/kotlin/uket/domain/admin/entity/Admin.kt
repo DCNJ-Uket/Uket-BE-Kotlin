@@ -1,4 +1,4 @@
-package uket.domain.organization.entity
+package uket.domain.admin.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
