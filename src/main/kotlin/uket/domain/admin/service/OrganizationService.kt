@@ -14,4 +14,10 @@ class OrganizationService(
             ?: throw IllegalStateException("단체를 찾을 수 없습니다.")
         return organization
     }
+
+    fun findByName(name: String): Organization {
+        val organization = organizationRepository.findByName(name)
+            ?: throw IllegalStateException("단체를 찾을 수 없습니다.")
+        return organization
+    }
 }

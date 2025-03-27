@@ -16,4 +16,9 @@ class UketEventService(
             ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
         return uketEvent
     }
+
+    fun findOrganizationNameByUketEventIid(uketEventId: Long): String {
+        val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId)
+        return name
+    }
 }
