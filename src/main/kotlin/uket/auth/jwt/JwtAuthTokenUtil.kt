@@ -1,4 +1,4 @@
-package uket.uket.auth.jwt
+package uket.auth.jwt
 
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
@@ -11,35 +11,51 @@ class JwtAuthTokenUtil(
     private val tokenProperties: TokenProperties,
     private val secretKey: SecretKey,
 ) {
-    fun getCategory(token: String?): String {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
-            .payload[JwtValues.JWT_PAYLOAD_KEY_CATEGORY] as String
-    }
+    fun getCategory(token: String?): String = Jwts
+        .parser()
+        .verifyWith(secretKey)
+        .build()
+        .parseSignedClaims(token)
+        .payload[JwtValues.JWT_PAYLOAD_KEY_CATEGORY] as String
 
     fun getId(token: String?): Long {
-        val id = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+        val id = Jwts
+            .parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
             .payload[JwtValues.JWT_PAYLOAD_KEY_ID] as Int
         return id.toLong()
     }
 
-    fun getName(token: String?): String {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
-            .payload[JwtValues.JWT_PAYLOAD_KEY_NAME] as String
-    }
+    fun getName(token: String?): String = Jwts
+        .parser()
+        .verifyWith(secretKey)
+        .build()
+        .parseSignedClaims(token)
+        .payload[JwtValues.JWT_PAYLOAD_KEY_NAME] as String
 
-    fun getRole(token: String?): String {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
-            .payload[JwtValues.JWT_PAYLOAD_KEY_ROLE] as String
-    }
+    fun getRole(token: String?): String = Jwts
+        .parser()
+        .verifyWith(secretKey)
+        .build()
+        .parseSignedClaims(token)
+        .payload[JwtValues.JWT_PAYLOAD_KEY_ROLE] as String
 
-    fun isRegistered(token: String?): Boolean {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
-            .payload[JwtValues.JWT_PAYLOAD_KEY_REGISTERED] as Boolean
-    }
+    fun isRegistered(token: String?): Boolean = Jwts
+        .parser()
+        .verifyWith(secretKey)
+        .build()
+        .parseSignedClaims(token)
+        .payload[JwtValues.JWT_PAYLOAD_KEY_REGISTERED] as Boolean
 
     fun isExpired(token: String?): Boolean {
         try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+            Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
                 .payload
                 .expiration
         } catch (e: ExpiredJwtException) {
@@ -50,7 +66,11 @@ class JwtAuthTokenUtil(
 
     fun isValidToken(token: String?): Boolean {
         try {
-            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+            Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
         } catch (e: SignatureException) {
             return false
         }
@@ -60,7 +80,8 @@ class JwtAuthTokenUtil(
     fun createAccessToken(userId: Long?, name: String?, role: String?, isRegistered: Boolean?): String {
         val now = System.currentTimeMillis()
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .claim(JwtValues.JWT_PAYLOAD_KEY_CATEGORY, JwtValues.JWT_PAYLOAD_VALUE_ACCESS)
             .claim(JwtValues.JWT_PAYLOAD_KEY_ID, userId)
             .claim(JwtValues.JWT_PAYLOAD_KEY_NAME, name)
@@ -75,7 +96,8 @@ class JwtAuthTokenUtil(
     fun createAccessToken(userId: Long?, name: String?, role: String?, isRegistered: Boolean?, expiration: Long?): String {
         val now = System.currentTimeMillis()
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .claim(JwtValues.JWT_PAYLOAD_KEY_CATEGORY, JwtValues.JWT_PAYLOAD_VALUE_ACCESS)
             .claim(JwtValues.JWT_PAYLOAD_KEY_ID, userId)
             .claim(JwtValues.JWT_PAYLOAD_KEY_NAME, name)
@@ -91,7 +113,8 @@ class JwtAuthTokenUtil(
         val now = System.currentTimeMillis()
         val uuid = UUID.randomUUID()
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .claim(JwtValues.JWT_PAYLOAD_KEY_CATEGORY, JwtValues.JWT_PAYLOAD_VALUE_REFRESH)
             .claim(JwtValues.JWT_PAYLOAD_KEY_UUID, uuid)
             .issuedAt(Date(now))
@@ -104,7 +127,8 @@ class JwtAuthTokenUtil(
         val now = System.currentTimeMillis()
         val uuid = UUID.randomUUID()
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .claim(JwtValues.JWT_PAYLOAD_KEY_CATEGORY, JwtValues.JWT_PAYLOAD_VALUE_REFRESH)
             .claim(JwtValues.JWT_PAYLOAD_KEY_UUID, uuid)
             .issuedAt(Date(now))
@@ -113,11 +137,7 @@ class JwtAuthTokenUtil(
             .compact()
     }
 
-    private fun getAccessTokenExpiration(now: Long): Date {
-        return Date(now + (tokenProperties.expiration.accessTokenExpiration))
-    }
+    private fun getAccessTokenExpiration(now: Long): Date = Date(now + (tokenProperties.expiration.accessTokenExpiration))
 
-    private fun getRefreshTokenExpiration(now: Long): Date {
-        return Date(now + (tokenProperties.expiration.refreshTokenExpiration))
-    }
+    private fun getRefreshTokenExpiration(now: Long): Date = Date(now + (tokenProperties.expiration.refreshTokenExpiration))
 }

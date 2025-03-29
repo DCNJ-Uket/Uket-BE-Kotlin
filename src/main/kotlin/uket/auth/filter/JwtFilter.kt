@@ -10,13 +10,13 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import uket.auth.exception.BaseException
-import uket.auth.exception.ErrorCode
-import uket.auth.exception.ErrorResponse
-import uket.uket.auth.jwt.JwtAuthTokenUtil
-import uket.uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_HEADER
-import uket.uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_VALUE_PREFIX
-import uket.uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_ACCESS
+import uket.auth.jwt.JwtAuthTokenUtil
+import uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_HEADER
+import uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_VALUE_PREFIX
+import uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_ACCESS
+import uket.common.BaseException
+import uket.common.ErrorCode
+import uket.common.ErrorResponse
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 

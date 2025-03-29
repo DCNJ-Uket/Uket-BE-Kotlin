@@ -1,8 +1,8 @@
-package uket.uket.auth
+package uket.auth
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import uket.uket.auth.jwt.JwtAuthTokenUtil
+import uket.auth.jwt.JwtAuthTokenUtil
 
 @RestController
 class DevController(

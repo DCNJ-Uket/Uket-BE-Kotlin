@@ -1,4 +1,4 @@
-package uket.uket.domain
+package uket.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

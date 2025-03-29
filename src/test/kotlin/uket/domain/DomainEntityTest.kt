@@ -6,27 +6,30 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import uket.uket.domain.organization.Admin
-import uket.uket.domain.organization.Organization
-import uket.uket.domain.payment.Payment
-import uket.uket.domain.payment.PaymentHistory
-import uket.uket.domain.payment.PaymentManner
-import uket.uket.domain.payment.PaymentStatus
-import uket.uket.domain.reservation.Ticket
-import uket.uket.domain.reservation.TicketStatus
-import uket.uket.domain.terms.Document
-import uket.uket.domain.terms.TermSign
-import uket.uket.domain.terms.Terms
-import uket.uket.domain.terms.TermsType
-import uket.uket.domain.uketevent.EntryGroup
-import uket.uket.domain.uketevent.EventType
-import uket.uket.domain.uketevent.UketEvent
-import uket.uket.domain.uketevent.UketEventRound
-import uket.uket.domain.user.Platform
-import uket.uket.domain.user.Users
+import org.springframework.context.annotation.Import
+import uket.QueryDslConfig
+import uket.domain.admin.entity.Admin
+import uket.domain.admin.entity.Organization
+import uket.domain.payment.entity.Payment
+import uket.domain.payment.entity.PaymentHistory
+import uket.domain.payment.enums.PaymentManner
+import uket.domain.payment.enums.PaymentStatus
+import uket.domain.reservation.entity.Ticket
+import uket.domain.reservation.enums.TicketStatus
+import uket.domain.terms.entity.Document
+import uket.domain.terms.entity.TermSign
+import uket.domain.terms.entity.Terms
+import uket.domain.terms.enums.TermsType
+import uket.domain.uketevent.entity.EntryGroup
+import uket.domain.uketevent.entity.UketEvent
+import uket.domain.uketevent.entity.UketEventRound
+import uket.domain.uketevent.enums.EventType
+import uket.domain.user.entity.User
+import uket.domain.user.enums.Platform
 import java.time.LocalDateTime
 
 @DataJpaTest
+@Import(QueryDslConfig::class)
 class DomainEntityTest {
     @Autowired
     lateinit var em: EntityManager
@@ -35,21 +38,21 @@ class DomainEntityTest {
     @DisplayName("테스트 디비와 연동이 잘 되는 지 확인")
     fun testDBIntegration() {
         // given
-        val users = Users(0L, Platform.KAKAO, 0L, "nameA", "emailA", null, "depositorNameA", "phoneNumberA", true)
-        em.persist(users)
+        val user = User(0L, Platform.KAKAO, "platformIdA", "nameA", "emailA", "profileImageA", "depositorNameA", "phoneNumberA", true)
+        em.persist(user)
 
         // when
-        val findUsers = em.find(Users::class.java, users.id)
+        val findUser = em.find(User::class.java, user.id)
 
         // then
-        Assertions.assertThat(findUsers.id).isEqualTo(users.id)
+        Assertions.assertThat(findUser.id).isEqualTo(user.id)
     }
 
     @Test
     @DisplayName("각 엔티티 생성 및 조회 테스트(누락 필드 확인)")
     fun test() {
         // given
-        val users = Users(0L, Platform.KAKAO, 0L, "nameA", "emailA", null, "depositorNameA", "phoneNumberA", true)
+        val user = User(0L, Platform.KAKAO, "platformIdA", "nameA", "emailA", "profileImageA", "depositorNameA", "phoneNumberA", true)
 
         val organization = Organization(0L, "OrganiationA", null)
         val admin = Admin(0L, organization, "nameA", "emailA", "password123", true)
@@ -57,18 +60,18 @@ class DomainEntityTest {
         val payment = Payment(0L, 0L, "123-12-123457", "linkA")
         val paymentHistory = PaymentHistory(0L, 0L, 0L, 0, PaymentStatus.PURCHASED, "categoryA", PaymentManner.DEPOSIT_LINK, null)
 
-        val ticket = Ticket(0L, 0L, 0L, TicketStatus.BEFORE_ENTER, "123456789")
+        val ticket = Ticket(0L, 0L, 0L, TicketStatus.BEFORE_ENTER, "123456789", null)
 
         val document = Document(0L, 0L, "nameA", "linkA", 0L)
         val terms = Terms(0L, "nameA", TermsType.MANDATORY, 0L, true)
-        val termSign = TermSign(0L, terms, 0L, true, LocalDateTime.now())
+        val termSign = TermSign(0L, 0L, 0L, true, LocalDateTime.now())
 
         val uketEvent = UketEvent(0L, 0L, "nameA", EventType.FESTIVAL, "00시00구", null, LocalDateTime.now(), 0)
         val uketEventRound = UketEventRound(0L, uketEvent, "nameA", LocalDateTime.now(), LocalDateTime.now())
         val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 100)
 
         // when
-        em.persist(users)
+        em.persist(user)
 
         em.persist(organization)
         em.persist(admin)
@@ -87,8 +90,8 @@ class DomainEntityTest {
         em.persist(entryGroup)
 
         // then
-        val findUsers = em.find(Users::class.java, 1L)
-        println("findUsers id : ${findUsers.id}")
+        val findUser = em.find(User::class.java, 1L)
+        println("findUsers id : ${findUser.id}")
 
         val findOrganization = em.find(Organization::class.java, 1L)
         println("findOrganization id : ${findOrganization.id}")

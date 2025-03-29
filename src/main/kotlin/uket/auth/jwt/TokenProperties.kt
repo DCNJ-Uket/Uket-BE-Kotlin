@@ -1,4 +1,4 @@
-package uket.uket.auth.jwt
+package uket.auth.jwt
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding
