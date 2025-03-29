@@ -22,6 +22,10 @@ class AdminService(
     fun findByEmail(email: String): Admin = adminRepository.findByEmail(email)
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
+    fun findAll(): List<Admin> {
+        return adminRepository.findAll();
+    }
+
     @Transactional
     fun registerAdmin(registerAdminCommand: RegisterAdminCommand) {
         if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminCommand.email)) {
