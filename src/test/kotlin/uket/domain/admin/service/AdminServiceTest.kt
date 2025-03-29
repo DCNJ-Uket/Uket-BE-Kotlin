@@ -26,31 +26,38 @@ class AdminServiceTest :
             name = "organizationA",
             organizationImagePath = "imagePath",
         )
-        val admin: Admin = Admin(
+        val admin1: Admin = Admin(
             organization = organization,
             name = "adminA",
             email = "emailA",
             password = "passwordA",
             isSuperAdmin = false,
         )
+        val admin2: Admin = Admin(
+            organization = organization,
+            name = "adminB",
+            email = "emailB",
+            password = "passwordB",
+            isSuperAdmin = false,
+        )
 
         describe("Admin을 ID로 조회") {
 
             context("Admin이 있으면") {
-                every { adminRepository.findByIdOrNull(admin.id) } returns admin
+                every { adminRepository.findByIdOrNull(admin1.id) } returns admin1
 
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findById(admin.id)
-                    admin.shouldNotBeNull()
-                    findAdmin.name shouldBe admin.name
+                    val findAdmin = adminService.findById(admin1.id)
+                    admin1.shouldNotBeNull()
+                    findAdmin.name shouldBe admin1.name
                 }
             }
 
             context("Admin이 없으면") {
-                every { adminRepository.findByIdOrNull(admin.id) } returns null
+                every { adminRepository.findByIdOrNull(admin1.id) } returns null
 
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findById(admin.id) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.findById(admin1.id) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }
@@ -58,18 +65,44 @@ class AdminServiceTest :
 
         describe("Admin을 email로 조회") {
             context("Admin이 있으면") {
-                every { adminRepository.findByEmail(admin.email) } returns admin
+                every { adminRepository.findByEmail(admin1.email) } returns admin1
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findByEmail(admin.email)
-                    admin.shouldNotBeNull()
-                    findAdmin.email shouldBe admin.email
+                    val findAdmin = adminService.findByEmail(admin1.email)
+                    admin1.shouldNotBeNull()
+                    findAdmin.email shouldBe admin1.email
                 }
             }
             context("Admin이 없으면") {
-                every { adminRepository.findByEmail(admin.email) } returns null
+                every { adminRepository.findByEmail(admin1.email) } returns null
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findByEmail(admin.email) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.findByEmail(admin1.email) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
+                }
+            }
+        }
+
+        describe("Admin 전체 조회") {
+            context("Admin이 2개 이상이면") {
+                every { adminRepository.findAll() } returns listOf(admin1, admin2)
+                it("어드민 전체 목록을 반환한다") {
+                    val findAdmins = adminService.findAll()
+                    findAdmins.size shouldBe 2
+                    findAdmins.get(0).name shouldBe "adminA"
+                }
+            }
+            context("Admin이 1개면") {
+                every { adminRepository.findAll() } returns listOf(admin1)
+                it("어드민 전체 목록(이지만 1개)을 반환한다") {
+                    val findAdmins = adminService.findAll()
+                    findAdmins.size shouldBe 1
+                    findAdmins.get(0).name shouldBe "adminA"
+                }
+            }
+            context("Admin이 0개면") {
+                every { adminRepository.findAll() } returns listOf()
+                it("어드민 전체 목록(이지만 빈 리스트)을 반환한다") {
+                    val findAdmins = adminService.findAll()
+                    findAdmins.size shouldBe 0
                 }
             }
         }
@@ -77,9 +110,9 @@ class AdminServiceTest :
         describe("Admin 생성 요청") {
             val registerAdminCommand: RegisterAdminCommand = RegisterAdminCommand(
                 organization = organization,
-                name = "adminB",
-                email = "emailB",
-                password = "passwordB",
+                name = "newAdmin",
+                email = "newEmail",
+                password = "newPassword",
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminCommand.email) } returns false
@@ -101,8 +134,8 @@ class AdminServiceTest :
         describe("비밀번호가 없는 Admin 생성 요청") {
             val registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand = RegisterAdminWithoutPasswordCommand(
                 organization = organization,
-                name = "adminB",
-                email = "emailB",
+                name = "newAdmin",
+                email = "newEmail",
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
@@ -128,16 +161,16 @@ class AdminServiceTest :
 
         describe("Admin 삭제 요청") {
             context("Admin이 있으면") {
-                every { adminRepository.deleteById(admin.id) } returns Unit
+                every { adminRepository.deleteById(admin1.id) } returns Unit
                 it("해당 Admin이 삭제됨") {
-                    adminService.deleteAdmin(admin.id)
-                    verify(exactly = 1) { adminRepository.deleteById(admin.id) }
+                    adminService.deleteAdmin(admin1.id)
+                    verify(exactly = 1) { adminRepository.deleteById(admin1.id) }
                 }
             }
             context("Admin이 없으면") {
-                every { adminRepository.deleteById(admin.id) } throws IllegalStateException()
+                every { adminRepository.deleteById(admin1.id) } throws IllegalStateException()
                 it("예외를 반환함") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.deleteAdmin(admin.id) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.deleteAdmin(admin1.id) }
                     println(exception)
                 }
             }
