@@ -20,4 +20,6 @@ class OrganizationService(
             ?: throw IllegalStateException("단체를 찾을 수 없습니다.")
         return organization
     }
+
+    fun findAll(): List<Organization> = organizationRepository.findAll()
 }
