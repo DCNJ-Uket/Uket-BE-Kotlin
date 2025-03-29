@@ -62,6 +62,7 @@ class AdminService(
 
     @Transactional
     fun deleteAdmin(adminId: Long) {
+        this.findById(adminId)
         adminRepository.deleteById(adminId)
     }
 }
