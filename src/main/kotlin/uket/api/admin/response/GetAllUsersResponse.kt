@@ -1,4 +1,4 @@
-package uket.uket.api.admin
+package uket.uket.api.admin.response
 
 import uket.domain.admin.entity.Admin
 
