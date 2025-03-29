@@ -1,7 +1,7 @@
 package uket.uket.api.admin.response
 
-import uket.domain.admin.entity.Admin
+import uket.uket.api.admin.dto.AdminDto
 
 data class GetAllUsersResponse(
-    val users: List<Admin>,
+    val users: List<AdminDto>,
 )

@@ -2,16 +2,15 @@ package uket.uket.api.admin.impl
 
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
 import uket.domain.admin.service.OrganizationService
+import uket.uket.api.admin.OrganizationApi
 import uket.uket.api.admin.response.GetAllOrganizationResponse
 
 @Controller
 class OrganizationController(
     private val organizationService: OrganizationService,
-) {
-    @GetMapping("/organizations")
-    fun getAllOrganizations(): ResponseEntity<GetAllOrganizationResponse> {
+) : OrganizationApi {
+    override fun getAllOrganizations(): ResponseEntity<GetAllOrganizationResponse> {
         val organizations = organizationService.findAll()
         return ResponseEntity.ok(GetAllOrganizationResponse(organizations))
     }

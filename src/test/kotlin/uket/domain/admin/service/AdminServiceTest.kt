@@ -83,25 +83,25 @@ class AdminServiceTest :
 
         describe("Admin 전체 조회") {
             context("Admin이 2개 이상이면") {
-                every { adminRepository.findAll() } returns listOf(admin1, admin2)
+                every { adminRepository.findAllWithOrganizationName() } returns listOf(admin1, admin2)
                 it("어드민 전체 목록을 반환한다") {
-                    val findAdmins = adminService.findAll()
+                    val findAdmins = adminService.findAllAdminsWithOrganizationId()
                     findAdmins.size shouldBe 2
                     findAdmins.get(0).name shouldBe "adminA"
                 }
             }
             context("Admin이 1개면") {
-                every { adminRepository.findAll() } returns listOf(admin1)
+                every { adminRepository.findAllWithOrganizationName() } returns listOf(admin1)
                 it("어드민 전체 목록(이지만 1개)을 반환한다") {
-                    val findAdmins = adminService.findAll()
+                    val findAdmins = adminService.findAllAdminsWithOrganizationId()
                     findAdmins.size shouldBe 1
                     findAdmins.get(0).name shouldBe "adminA"
                 }
             }
             context("Admin이 0개면") {
-                every { adminRepository.findAll() } returns listOf()
+                every { adminRepository.findAllWithOrganizationName() } returns listOf()
                 it("어드민 전체 목록(이지만 빈 리스트)을 반환한다") {
-                    val findAdmins = adminService.findAll()
+                    val findAdmins = adminService.findAllAdminsWithOrganizationId()
                     findAdmins.size shouldBe 0
                 }
             }
@@ -161,6 +161,7 @@ class AdminServiceTest :
 
         describe("Admin 삭제 요청") {
             context("Admin이 있으면") {
+                every { adminRepository.findByIdOrNull(admin1.id) } returns admin1
                 every { adminRepository.deleteById(admin1.id) } returns Unit
                 it("해당 Admin이 삭제됨") {
                     adminService.deleteAdmin(admin1.id)
@@ -168,6 +169,7 @@ class AdminServiceTest :
                 }
             }
             context("Admin이 없으면") {
+                every { adminRepository.findByIdOrNull(admin1.id) } returns null
                 every { adminRepository.deleteById(admin1.id) } throws IllegalStateException()
                 it("예외를 반환함") {
                     val exception = shouldThrow<IllegalStateException> { adminService.deleteAdmin(admin1.id) }
