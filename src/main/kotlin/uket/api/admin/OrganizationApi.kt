@@ -11,10 +11,10 @@ import uket.uket.api.admin.response.GetAllOrganizationResponse
 
 @Tag(name = "소속 관련 API", description = "소속 관련 API 입니다.")
 @RestController
-@RequestMapping("/organizations")
-@ApiResponse(responseCode = "200", description = "OK")
+@RequestMapping("/admin/organizations")
+@ApiResponse(responseCode = "200", description = "단체")
 interface OrganizationApi {
-    @Operation(summary = "전체 소속 조회 API", description = "모든 소속 목록을 조회합니다.")
+    @Operation(summary = "모든 단체 조회 API", description = "모든 단 목록을 조회합니다.")
     @GetMapping("")
     fun getAllOrganizations(): ResponseEntity<GetAllOrganizationResponse>
 }

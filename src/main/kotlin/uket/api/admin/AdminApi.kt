@@ -15,7 +15,7 @@ import uket.uket.api.admin.response.GetAdminsResponse
 
 @Tag(name = "어드민 멤버 관련 API", description = "어드민 멤버 관련 API 입니다.")
 @RestController
-@RequestMapping("/admins")
+@RequestMapping("/admin/users")
 @ApiResponse(responseCode = "200", description = "OK")
 interface AdminApi {
     @Operation(summary = "어드민 멤버 목록 조회", description = "어드민 목록을 페이지로 조회합니다.")
