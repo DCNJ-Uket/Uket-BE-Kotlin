@@ -24,7 +24,7 @@ class AdminController(
         return ResponseEntity.ok(
             GetAdminsResponse(
                 adminDtos,
-                adminPage.number,
+                adminPage.number + 1,
                 adminPage.numberOfElements,
                 adminPage.isFirst,
                 adminPage.isLast,
