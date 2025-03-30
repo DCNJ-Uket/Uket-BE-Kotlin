@@ -1,5 +1,8 @@
 package uket.domain.admin.service
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,8 +25,11 @@ class AdminService(
     fun findByEmail(email: String): Admin = adminRepository.findByEmail(email)
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
-    fun findAllAdminsWithOrganizationId(): List<Admin> {
-        return adminRepository.findAllWithOrganizationName();
+    fun findAdminsByPage(pageRequest: PageRequest): Page<Admin> {
+        val ids = adminRepository.findAdminIds(pageRequest)
+        val admins = adminRepository.findAllByIdsOrderByCreatedAtDesc(ids)
+        val count = adminRepository.count()
+        return PageImpl(admins, pageRequest, count)
     }
 
     @Transactional

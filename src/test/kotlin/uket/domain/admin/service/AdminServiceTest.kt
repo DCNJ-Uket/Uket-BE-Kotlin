@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
@@ -82,27 +83,38 @@ class AdminServiceTest :
         }
 
         describe("Admin 전체 조회") {
+            val pageRequset = PageRequest.of(1, 2)
             context("Admin이 2개 이상이면") {
-                every { adminRepository.findAllWithOrganizationName() } returns listOf(admin1, admin2)
+                val list = listOf(admin1.id, admin2.id)
+                every { adminRepository.findAdminIds(pageRequset) } returns list
+                every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf(admin2, admin1)
+                every { adminRepository.count() } returns 2
                 it("어드민 전체 목록을 반환한다") {
-                    val findAdmins = adminService.findAllAdminsWithOrganizationId()
-                    findAdmins.size shouldBe 2
-                    findAdmins.get(0).name shouldBe "adminA"
+                    val adminPage = adminService.findAdminsByPage(pageRequset)
+                    adminPage.content.size shouldBe 2
+                    adminPage.content.get(0).name shouldBe "adminB"
+                    adminPage.content.get(1).name shouldBe "adminA"
                 }
             }
             context("Admin이 1개면") {
-                every { adminRepository.findAllWithOrganizationName() } returns listOf(admin1)
+                val list = listOf(admin1.id)
+                every { adminRepository.findAdminIds(pageRequset) } returns list
+                every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf(admin1)
+                every { adminRepository.count() } returns 1
                 it("어드민 전체 목록(이지만 1개)을 반환한다") {
-                    val findAdmins = adminService.findAllAdminsWithOrganizationId()
-                    findAdmins.size shouldBe 1
-                    findAdmins.get(0).name shouldBe "adminA"
+                    val adminPage = adminService.findAdminsByPage(pageRequset)
+                    adminPage.content.size shouldBe 1
+                    adminPage.content.get(0).name shouldBe "adminA"
                 }
             }
             context("Admin이 0개면") {
-                every { adminRepository.findAllWithOrganizationName() } returns listOf()
+                val list: List<Long> = listOf()
+                every { adminRepository.findAdminIds(pageRequset) } returns list
+                every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf()
+                every { adminRepository.count() } returns 0
                 it("어드민 전체 목록(이지만 빈 리스트)을 반환한다") {
-                    val findAdmins = adminService.findAllAdminsWithOrganizationId()
-                    findAdmins.size shouldBe 0
+                    val adminPage = adminService.findAdminsByPage(pageRequset)
+                    adminPage.content.size shouldBe 0
                 }
             }
         }
@@ -125,18 +137,20 @@ class AdminServiceTest :
             context("Admin이 이미 존재하면") {
                 every { adminRepository.existsByEmail(registerAdminCommand.email) } returns true
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.registerAdmin(registerAdminCommand) }
+                    val exception =
+                        shouldThrow<IllegalStateException> { adminService.registerAdmin(registerAdminCommand) }
                     exception.message shouldBe "이미 가입된 어드민입니다."
                 }
             }
         }
 
         describe("비밀번호가 없는 Admin 생성 요청") {
-            val registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand = RegisterAdminWithoutPasswordCommand(
-                organization = organization,
-                name = "newAdmin",
-                email = "newEmail",
-            )
+            val registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand =
+                RegisterAdminWithoutPasswordCommand(
+                    organization = organization,
+                    name = "newAdmin",
+                    email = "newEmail",
+                )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
                 every { adminRepository.save(any()) } returns null
