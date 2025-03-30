@@ -1,4 +1,4 @@
-package uket.uket.auth
+package uket.uket.api
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
