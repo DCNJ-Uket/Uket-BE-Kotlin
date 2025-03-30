@@ -1,6 +1,7 @@
 package uket.uket.api.admin.impl
 
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,7 +16,7 @@ class AdminController(
     val adminService: AdminService,
 ) : AdminApi {
     override fun getAdmins(page: Int, size: Int): ResponseEntity<GetAdminsResponse> {
-        val pageRequest = PageRequest.of(page - 1, size)
+        val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
         val adminPage = adminService.findAdminsByPage(pageRequest)
         val adminDtos = adminPage.content
             .stream()
