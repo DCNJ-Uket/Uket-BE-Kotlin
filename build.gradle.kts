@@ -62,6 +62,9 @@ dependencies {
 
     kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
+
+    //mail
+    implementation ("org.springframework.boot:spring-boot-starter-mail")
 }
 
 tasks.test {
