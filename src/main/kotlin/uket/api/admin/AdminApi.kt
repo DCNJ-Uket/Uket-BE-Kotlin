@@ -25,5 +25,5 @@ interface AdminApi {
     @DeleteMapping("/{adminId}")
     fun deleteAdmin(
         @PathVariable("adminId") adminId: Long,
-    ): ResponseEntity<DeleteUserResponse>
+    ): ResponseEntity<DeleteAdminResponse>
 }

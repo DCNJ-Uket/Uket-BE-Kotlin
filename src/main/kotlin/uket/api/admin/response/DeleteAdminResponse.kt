@@ -1,6 +1,6 @@
 package uket.uket.api.admin.response
 
-data class DeleteUserResponse(
+data class DeleteAdminResponse(
     val adminId: Long,
     val name: String,
 )
