@@ -1,4 +1,4 @@
-package uket.uket.auth.jwt
+package uket.auth.jwt
 
 object JwtValues {
     const val JWT_PAYLOAD_KEY_CATEGORY: String = "category"

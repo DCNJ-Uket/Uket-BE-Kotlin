@@ -1,4 +1,4 @@
-package uket.uket.auth.jwt
+package uket.auth.jwt
 
 import io.jsonwebtoken.Jwts
 import org.springframework.context.annotation.Bean
@@ -13,11 +13,12 @@ class JwtConfig(
 ) {
     private var secretKey: SecretKey = SecretKeySpec(
         tokenProperties.secretKey.toByteArray(StandardCharsets.UTF_8),
-        Jwts.SIG.HS256.key().build().algorithm,
+        Jwts.SIG.HS256
+            .key()
+            .build()
+            .algorithm,
     )
 
     @Bean
-    fun jwtAuthTokenUtil(): JwtAuthTokenUtil {
-        return JwtAuthTokenUtil(tokenProperties, secretKey)
-    }
+    fun jwtAuthTokenUtil(): JwtAuthTokenUtil = JwtAuthTokenUtil(tokenProperties, secretKey)
 }
