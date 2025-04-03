@@ -13,9 +13,10 @@ spring:
     hikari:
       maximum-pool-size: 40
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -30,6 +31,9 @@ spring:
     port: 587
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
+    urls:
+      base-url: ${MAIL_SEND_BASE_URL}
+      image-url: ${MAI_SEND_IMAGE_URL}
     properties:
       mail:
         smtp:
@@ -40,7 +44,8 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
-          auth-code-expiration-millis: 180000
+      auth-code-expiration-millis: 180000
+
   data:
     redis:
       host: ${REDIS_AUTH_HOST}
@@ -48,7 +53,7 @@ spring:
 
 app:
   token:
-    secret-key: testestsetsetsetsetsetsetsetsetestset
+    secret-key: ${JWT_SECRET_KEY}
     expiration:
       access-token-expiration: 600_000
       refresh-token-expiration: 7_200_000

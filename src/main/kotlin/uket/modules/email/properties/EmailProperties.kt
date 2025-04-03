@@ -1,5 +1,6 @@
 package uket.uket.modules.email.properties
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding
 
@@ -10,9 +11,15 @@ data class EmailProperties(
     val port: Int,
     val username: String,
     val password: String,
-    val properties: EmailDetailProperties
+    val properties: EmailDetailProperties,
+    val urls: UrlProperties
 )
 
 data class EmailDetailProperties(
     val authCodeExpirationMillis: Long
+)
+
+data class UrlProperties (
+    val baseUrl: String,
+    val imageUrl: String
 )
