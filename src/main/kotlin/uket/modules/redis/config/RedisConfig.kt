@@ -17,7 +17,7 @@ import uket.uket.modules.redis.properties.RedisProperties
 @Configuration
 @EnableRedisRepositories
 class RedisConfig(
-    private val redisProperties: RedisProperties
+    private val redisProperties: RedisProperties,
 ) {
     companion object {
         private const val REDISSON_HOST_PREFIX = "redis://"

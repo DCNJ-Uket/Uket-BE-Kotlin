@@ -16,7 +16,7 @@ private val log = KotlinLogging.logger {}
 @Component
 class DistributedLockAop(
     private val redissonClient: RedissonClient,
-    private val aopForTransaction: AopForTransaction
+    private val aopForTransaction: AopForTransaction,
 ) {
     companion object {
         private const val REDISSON_LOCK_PREFIX = "LOCK:"
@@ -32,7 +32,7 @@ class DistributedLockAop(
         val key = REDISSON_LOCK_PREFIX + CustomSpringELParser.getDynamicValue(
             signature.parameterNames,
             joinPoint.args,
-            annotation.key
+            annotation.key,
         )
 
         val lock: RLock = redissonClient.getLock(key.toString())
@@ -41,7 +41,7 @@ class DistributedLockAop(
             val available = lock.tryLock(
                 annotation.waitTime,
                 annotation.leaseTime,
-                annotation.timeUnit
+                annotation.timeUnit,
             )
 
             if (!available) {
@@ -54,9 +54,10 @@ class DistributedLockAop(
             try {
                 lock.unlock()
             } catch (e: IllegalMonitorStateException) {
-                log.info("Redisson Lock Already UnLock {} {}",
+                log.info(
+                    "Redisson Lock Already UnLock {} {}",
                     keyValue("serviceName", method.name),
-                    keyValue("key", key.toString())
+                    keyValue("key", key.toString()),
                 )
             }
         }

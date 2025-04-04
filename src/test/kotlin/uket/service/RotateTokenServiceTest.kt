@@ -1,6 +1,10 @@
 package uket.service
 
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
@@ -16,7 +20,6 @@ import uket.uket.modules.redis.service.RotateTokenService
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class RotateTokenServiceTest {
-
     @Autowired
     lateinit var rotateTokenService: RotateTokenService
 
@@ -37,13 +40,13 @@ class RotateTokenServiceTest {
             platformId = "12345",
             name = "김철수",
             email = "cheolsu@naver.com",
-            profileImage = "https://some-url.com/profile.jpg"
+            profileImage = "https://some-url.com/profile.jpg",
         )
 
         testUser = userService.createUser(user)
 
         accessToken = jwtAuthTokenUtil.createAccessToken(
-            testUser.id, testUser.name, UserRole.USERS.toString(), testUser.isRegistered, 3000L
+            testUser.id, testUser.name, UserRole.USERS.toString(), testUser.isRegistered, 3000L,
         )
         refreshToken = jwtAuthTokenUtil.createRefreshToken(6000L)
 

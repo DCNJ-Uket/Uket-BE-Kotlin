@@ -7,16 +7,15 @@ import java.time.Duration
 
 @Service
 class RotateTokenService(
-    private val redisTemplate: RedisTemplate<String, String>
+    private val redisTemplate: RedisTemplate<String, String>,
 ) {
-
     fun storeToken(refreshToken: String, accessToken: String, userId: Long) {
         val refreshTokenKey = "refreshToken:$refreshToken"
         deleteTokenIfExist(refreshToken)
 
         val tokenDetails = mapOf(
             RedisValues.REDIS_KEY_ACCESS_TOKEN to accessToken,
-            RedisValues.REDIS_KEY_USER_ID to userId.toString()
+            RedisValues.REDIS_KEY_USER_ID to userId.toString(),
         )
 
         redisTemplate.opsForHash<String, String>().putAll(refreshTokenKey, tokenDetails)
