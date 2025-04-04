@@ -63,15 +63,15 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
-    //redis
-    implementation ("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation ("org.redisson:redisson-spring-boot-starter:3.30.0")
+    // redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.redisson:redisson-spring-boot-starter:3.30.0")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-    //aop
-    implementation ("org.springframework.boot:spring-boot-starter-aop")
+    // aop
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 
-    //logger
+    // logger
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
