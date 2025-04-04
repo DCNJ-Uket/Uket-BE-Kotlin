@@ -8,6 +8,17 @@ spring:
     show_sql: true
     hibernate:
       format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+app:
+  token:
+    secret-key: testestsetsetsetsetsetsetsetsetestset
+    expiration:
+      access-token-expiration: 600_000
+      refresh-token-expiration: 7_200_000
 
 logging:
   level:

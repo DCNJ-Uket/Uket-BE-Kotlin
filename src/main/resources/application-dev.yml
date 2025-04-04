@@ -45,7 +45,6 @@ spring:
           timeout: 5000
           writetimeout: 5000
       auth-code-expiration-millis: 180000
-
   data:
     redis:
       host: ${REDIS_AUTH_HOST}
