@@ -1,6 +1,18 @@
 package uket.uket.modules.redis.config
 
+import org.redisson.Redisson
+import org.redisson.api.RedissonClient
+import org.redisson.config.Config
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.ValueOperations
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
+import org.springframework.data.redis.serializer.StringRedisSerializer
+import uket.uket.modules.redis.properties.RedisProperties
 
 @Configuration
 @EnableRedisRepositories
@@ -18,7 +30,7 @@ class RedisConfig(
 
     @Bean
     fun redisConnectionFactory(): RedisConnectionFactory {
-        val config = RedisStandaloneConfiguration(redisProperties.host(), redisProperties.port())
+        val config = RedisStandaloneConfiguration(redisProperties.host, redisProperties.port)
         return LettuceConnectionFactory(config)
     }
 
@@ -46,7 +58,7 @@ class RedisConfig(
     @Bean
     fun redissonClient(): RedissonClient {
         val config = Config()
-        val redisAddress = "$REDISSON_HOST_PREFIX${redisProperties.host()}:${redisProperties.port()}"
+        val redisAddress = "$REDISSON_HOST_PREFIX${redisProperties.host}:${redisProperties.port}"
         config.useSingleServer().setAddress(redisAddress)
         return Redisson.create(config)
     }
