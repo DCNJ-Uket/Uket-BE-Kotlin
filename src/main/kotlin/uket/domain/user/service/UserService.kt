@@ -16,7 +16,7 @@ class UserService(
     /*
         유저 조회
      */
-    fun findById(userId: Long): User {
+    fun getById(userId: Long): User {
         val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
         return user

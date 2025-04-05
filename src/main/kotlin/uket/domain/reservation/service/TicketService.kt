@@ -16,7 +16,7 @@ import java.util.UUID
 class TicketService(
     private val ticketRepository: TicketRepository,
 ) {
-    fun findById(ticketId: Long): Ticket {
+    fun getById(ticketId: Long): Ticket {
         val ticket = ticketRepository.findByIdOrNull(ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다")
         return ticket
@@ -71,7 +71,7 @@ class TicketService(
     }
 
     fun validateTicketStatus(ticketId: Long) {
-        val ticket = this.findById(ticketId)
+        val ticket = this.getById(ticketId)
 
         val ticketStatus: TicketStatus = ticket.status
 
