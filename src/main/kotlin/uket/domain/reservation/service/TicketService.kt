@@ -22,15 +22,15 @@ class TicketService(
         return ticket
     }
 
-//    fun findAllByUserIdAndStatusNotWithEntryGroup(
-//        userId: Long,
-//        ticketStatus: TicketStatus,
-//    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
+    fun findAllByUserIdAndStatusNotWithEntryGroup(
+        userId: Long,
+        ticketStatus: TicketStatus,
+    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
 
-//    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-//        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
-//        return ticketRepository.findValidTicketsByUserId(userId, excludedStatuses)
-//    }
+    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
+        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
+        return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
+    }
 
     fun searchAllTickets(pageable: Pageable): Page<Ticket> {
         val tickets = ticketRepository.findAll(pageable)

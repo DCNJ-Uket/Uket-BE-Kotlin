@@ -28,9 +28,9 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("org.assertj:assertj-core:3.25.3")
 
-    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
-    testImplementation("io.kotest:kotest-assertions-core:5.8.0") // Kotest assertions
-    implementation("io.kotest:kotest-extensions-spring:4.3.1") // Spring 통합 (필요시)
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.1") // Kotest assertions
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0") // Spring 통합 (필요시)
     testImplementation("io.mockk:mockk:1.13.5") // MockK 라이브러리
 
     testImplementation("org.jeasy:easy-random-core:5.0.0")

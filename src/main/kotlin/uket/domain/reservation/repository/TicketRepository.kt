@@ -3,6 +3,7 @@ package uket.domain.reservation.repository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import java.time.LocalDateTime
@@ -16,9 +17,36 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
 
     fun findByUserIdAndId(userId: Long, ticketId: Long): Ticket?
 
+    @Query(
+        """
+        SELECT t FROM Ticket t
+        WHERE t.userId = :userId
+        AND t.status NOT IN :status
+        AND t.entryGroupId IN (
+            SELECT eg.id FROM EntryGroup eg
+            WHERE eg.uketEventRound.uketEvent.displayEndDate > CURRENT_TIMESTAMP
+        )
+    """,
+    )
+    fun findValidTicketsByUserIdAndStatusNotIn(userId: Long, excludedStatuses: List<TicketStatus>): List<Ticket>
+
     fun findAllByUserId(userId: Long): List<Ticket>
 
     fun findAllByUserIdAndStatusNot(userId: Long, status: TicketStatus): List<Ticket>
+
+//    @Query("SELECT t FROM Ticket t JOIN FETCH t.reservation r WHERE t.user.id = :userId AND t.status <> :status")
+
+    @Query(
+        """
+            SELECT t.* 
+            FROM ticket t 
+            JOIN entry_group eg ON t.entry_group_id = eg.id 
+            WHERE t.user_id = :userId 
+              AND t.status <> :status
+        """,
+        nativeQuery = true,
+    )
+    fun findAllByUserIdAndStatusNotWithEntryGroup(userId: Long, status: TicketStatus): List<Ticket>
 
     fun existsByUserIdAndId(userId: Long, ticketId: Long): Boolean
 
