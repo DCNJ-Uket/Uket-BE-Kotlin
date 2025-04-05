@@ -23,7 +23,7 @@ class TicketEntryGroupFacade(
 
     @Transactional
     fun updateTicketStatus(ticketId: Long, ticketStatus: TicketStatus) {
-        val ticket = ticketService.findById(ticketId)
+        val ticket = ticketService.getById(ticketId)
 
         if (ticketStatus === TicketStatus.RESERVATION_CANCEL) {
             entryGroupService.decreaseReservedCount(ticket.entryGroupId)

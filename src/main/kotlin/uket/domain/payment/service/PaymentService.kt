@@ -11,7 +11,7 @@ import uket.domain.payment.repository.PaymentRepository
 class PaymentService(
     private val paymentRepository: PaymentRepository,
 ) {
-    fun findById(paymentId: Long): Payment {
+    fun getById(paymentId: Long): Payment {
         val payment = paymentRepository.findByIdOrNull(paymentId)
             ?: throw IllegalStateException("해당 결제 정보를 찾을 수 없습니다")
         return payment
