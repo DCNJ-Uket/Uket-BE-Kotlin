@@ -23,9 +23,9 @@ import uket.domain.terms.enums.TermsType
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
-import uket.domain.uketevent.enums.EventType
 import uket.domain.user.entity.User
 import uket.domain.user.enums.Platform
+import uket.uket.common.enums.EventType
 import java.time.LocalDateTime
 
 @DataJpaTest

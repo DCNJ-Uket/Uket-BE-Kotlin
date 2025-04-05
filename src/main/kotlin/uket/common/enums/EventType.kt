@@ -1,4 +1,4 @@
-package uket.domain.uketevent.enums
+package uket.uket.common.enums
 
 enum class EventType {
     FESTIVAL,

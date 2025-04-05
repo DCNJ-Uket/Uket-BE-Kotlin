@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import uket.domain.BaseTimeEntity
-import uket.domain.uketevent.enums.EventType
+import uket.uket.common.enums.EventType
 import java.time.LocalDateTime
 
 @Entity
