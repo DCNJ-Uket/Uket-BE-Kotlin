@@ -103,6 +103,7 @@ class AdminServiceTest :
                 organization = organization,
                 name = "adminB",
                 email = "emailB",
+                isSuperAdmin = false,
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false

@@ -17,6 +17,7 @@ class AuthConfig(
             .excludePathPatterns("/api/v1/auth/**")
             .excludePathPatterns("/api/v1/users/register")
             .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/error")
+            .excludePathPatterns("/admin/users/login")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {

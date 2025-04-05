@@ -33,7 +33,7 @@ spring:
     password: ${MAIL_PASSWORD}
     urls:
       base-url: ${MAIL_SEND_BASE_URL}
-      image-url: ${MAI_SEND_IMAGE_URL}
+      image-url: ${MAIL_SEND_IMAGE_URL}
     properties:
       mail:
         smtp:

@@ -2,6 +2,7 @@ package uket.auth.jwt
 
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
+import uket.uket.domain.user.enums.UserRole
 import java.security.SignatureException
 import java.util.Date
 import java.util.UUID
@@ -41,6 +42,13 @@ class JwtAuthTokenUtil(
         .build()
         .parseSignedClaims(token)
         .payload[JwtValues.JWT_PAYLOAD_KEY_ROLE] as String
+
+    fun getEmail(token: String?): String = Jwts
+        .parser()
+        .verifyWith(secretKey)
+        .build()
+        .parseSignedClaims(token)
+        .payload[JwtValues.JWT_PAYLOAD_KEY_EMAIL] as String
 
     fun isRegistered(token: String?): Boolean = Jwts
         .parser()
@@ -86,6 +94,23 @@ class JwtAuthTokenUtil(
             .claim(JwtValues.JWT_PAYLOAD_KEY_ID, userId)
             .claim(JwtValues.JWT_PAYLOAD_KEY_NAME, name)
             .claim(JwtValues.JWT_PAYLOAD_KEY_ROLE, role)
+            .claim(JwtValues.JWT_PAYLOAD_KEY_REGISTERED, isRegistered)
+            .issuedAt(Date(now))
+            .expiration(getAccessTokenExpiration(now))
+            .signWith(secretKey)
+            .compact()
+    }
+
+    fun createEmailToken(adminId: Long?, email:String?, name: String?, isRegistered: Boolean?): String {
+        val now = System.currentTimeMillis()
+
+        return Jwts
+            .builder()
+            .claim(JwtValues.JWT_PAYLOAD_KEY_CATEGORY, JwtValues.JWT_PAYLOAD_VALUE_ACCESS)
+            .claim(JwtValues.JWT_PAYLOAD_KEY_ID, adminId)
+            .claim(JwtValues.JWT_PAYLOAD_KEY_NAME, name)
+            .claim(JwtValues.JWT_PAYLOAD_KEY_EMAIL, email)
+            .claim(JwtValues.JWT_PAYLOAD_KEY_ROLE, UserRole.ADMIN)
             .claim(JwtValues.JWT_PAYLOAD_KEY_REGISTERED, isRegistered)
             .issuedAt(Date(now))
             .expiration(getAccessTokenExpiration(now))
