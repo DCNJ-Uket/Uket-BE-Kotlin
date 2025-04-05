@@ -100,16 +100,16 @@ class AdminServiceTest :
 
         describe("비밀번호가 없는 Admin 생성 요청") {
             val registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand = RegisterAdminWithoutPasswordCommand(
-                organization = organization,
+                organization = "organizationA",
                 name = "adminB",
                 email = "emailB",
-                isSuperAdmin = false,
+                authority = "멤버",
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
                 every { adminRepository.save(any()) } returns null
                 it("Admin을 생성한다") {
-                    adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand)
+                    adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand, organization)
                     verify(exactly = 1) { adminRepository.save(any()) }
                 }
             }
@@ -119,7 +119,7 @@ class AdminServiceTest :
                     val exception =
                         shouldThrow<IllegalStateException> {
                             adminService.registerAdminWithoutPassword(
-                                registerAdminWithoutPasswordCommand,
+                                registerAdminWithoutPasswordCommand, organization
                             )
                         }
                     exception.message shouldBe "이미 가입된 어드민입니다."
