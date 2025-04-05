@@ -26,23 +26,25 @@ class AdminAuthEmailFacade(
     private val emailProperties: EmailProperties,
     private val redisUtil: RedisUtil,
     private val jwtAuthTokenUtil: JwtAuthTokenUtil,
-    private val organizationService: OrganizationService
+    private val organizationService: OrganizationService,
 ) {
-
     companion object {
         private const val EMAIL_TOKEN_PREFIX = "EMAIL_TOKEN:"
         private const val EMAIL_TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60 * 24 // 24시간
     }
 
-    fun sendAuthEmail(command: RegisterAdminWithoutPasswordCommand):SendEmailResponse {
+    fun sendAuthEmail(command: RegisterAdminWithoutPasswordCommand): SendEmailResponse {
         validateEmail(command.email)
         val organization: Organization = organizationService.findByName(command.organization)
         val admin = adminService.registerAdminWithoutPassword(command, organization)
 
         val token = jwtAuthTokenUtil.createEmailToken(
-            admin.id, admin.email, admin.name, true
+            admin.id,
+            admin.email,
+            admin.name,
+            true,
         )
-        redisUtil.setDataExpire(EMAIL_TOKEN_PREFIX+token, admin.email, EMAIL_TOKEN_EXPIRATION_MILLIS.toLong())
+        redisUtil.setDataExpire(EMAIL_TOKEN_PREFIX + token, admin.email, EMAIL_TOKEN_EXPIRATION_MILLIS.toLong())
 
         val subject = "[Uket admin] 회원가입 링크 안내"
         val content = loadAdminInviteHtml(token)
@@ -51,9 +53,9 @@ class AdminAuthEmailFacade(
         return SendEmailResponse.from(admin)
     }
 
-    fun registerAdminWithPassword(token: String, command: RegisterAdminPasswordCommand):RegisterAdminResponse {
+    fun registerAdminWithPassword(token: String, command: RegisterAdminPasswordCommand): RegisterAdminResponse {
         validateEmailInRedis(token, command.email)
-        val admin: Admin = adminService.updatePassword(command.email,command.password)
+        val admin: Admin = adminService.updatePassword(command.email, command.password)
         return RegisterAdminResponse.of(admin, admin.organization)
     }
 
@@ -62,8 +64,10 @@ class AdminAuthEmailFacade(
 
         validateRegistered(admin)
         val accessToken = jwtAuthTokenUtil.createAccessToken(
-            admin.id, admin.name,
-            java.lang.String.valueOf(UserRole.ADMIN), true
+            admin.id,
+            admin.name,
+            java.lang.String.valueOf(UserRole.ADMIN),
+            true,
         )
         return AdminAuthToken.from(accessToken, admin.name)
     }

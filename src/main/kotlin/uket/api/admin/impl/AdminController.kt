@@ -14,9 +14,11 @@ import uket.uket.facade.AdminAuthEmailFacade
 
 @RestController
 class AdminController(
-    private val adminAuthEmailFacade: AdminAuthEmailFacade
-): AdminApi {
-    override fun sendInviteEmail(registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand): ResponseEntity<SendEmailResponse> {
+    private val adminAuthEmailFacade: AdminAuthEmailFacade,
+) : AdminApi {
+    override fun sendInviteEmail(
+        registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand,
+    ): ResponseEntity<SendEmailResponse> {
         val response: SendEmailResponse = adminAuthEmailFacade.sendAuthEmail(registerAdminWithoutPasswordCommand)
         return ResponseEntity.ok(response)
     }

@@ -10,10 +10,10 @@ data class SmtpProperties(
     val connectiontimeout: Long,
     val timeout: Long,
     val writetimeout: Long,
-    val starttls: StarttlsProperties
+    val starttls: StarttlsProperties,
 )
 
 data class StarttlsProperties(
     val enable: Boolean,
-    val required: Boolean
+    val required: Boolean,
 )

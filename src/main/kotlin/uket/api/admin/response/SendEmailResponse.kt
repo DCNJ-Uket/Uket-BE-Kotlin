@@ -10,7 +10,7 @@ data class SendEmailResponse(
         fun from(admin: Admin): SendEmailResponse {
             return SendEmailResponse(
                 success = true,
-                email = admin.email
+                email = admin.email,
             )
         }
     }

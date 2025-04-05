@@ -10,9 +10,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(readOnly = true)
 class MailSendService(
-    private val javaMailSender: JavaMailSender
+    private val javaMailSender: JavaMailSender,
 ) {
-
     fun sendEmail(to: String, subject: String, text: String) {
         val emailForm = createEmailForm(to, subject, text)
         try {

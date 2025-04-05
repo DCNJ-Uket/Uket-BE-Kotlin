@@ -101,7 +101,7 @@ class JwtAuthTokenUtil(
             .compact()
     }
 
-    fun createEmailToken(adminId: Long?, email:String?, name: String?, isRegistered: Boolean?): String {
+    fun createEmailToken(adminId: Long?, email: String?, name: String?, isRegistered: Boolean?): String {
         val now = System.currentTimeMillis()
 
         return Jwts
@@ -113,7 +113,7 @@ class JwtAuthTokenUtil(
             .claim(JwtValues.JWT_PAYLOAD_KEY_ROLE, UserRole.ADMIN)
             .claim(JwtValues.JWT_PAYLOAD_KEY_REGISTERED, isRegistered)
             .issuedAt(Date(now))
-            .expiration(getAccessTokenExpiration(now))
+            .expiration(getEmailTokenExpiration(now))
             .signWith(secretKey)
             .compact()
     }
@@ -165,4 +165,6 @@ class JwtAuthTokenUtil(
     private fun getAccessTokenExpiration(now: Long): Date = Date(now + (tokenProperties.expiration.accessTokenExpiration))
 
     private fun getRefreshTokenExpiration(now: Long): Date = Date(now + (tokenProperties.expiration.refreshTokenExpiration))
+
+    private fun getEmailTokenExpiration(now: Long): Date = Date(now + (tokenProperties.expiration.emailTokenExpiration))
 }

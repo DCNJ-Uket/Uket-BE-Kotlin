@@ -19,7 +19,7 @@ data class RegisterAdminResponse(
                 name = admin.name,
                 email = admin.email,
                 password = admin.password,
-                isSuperAdmin = admin.isSuperAdmin
+                isSuperAdmin = admin.isSuperAdmin,
             )
         }
     }

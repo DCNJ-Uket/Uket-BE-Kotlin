@@ -6,14 +6,13 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import uket.uket.modules.email.properties.EmailProperties
 import uket.uket.modules.email.properties.SmtpProperties
-import java.util.*
+import java.util.Properties
 
 @Configuration
 class EmailConfig(
     private val emailProperties: EmailProperties,
-    private val smtpProperties: SmtpProperties
+    private val smtpProperties: SmtpProperties,
 ) {
-
     @Bean
     fun javaMailSender(): JavaMailSender {
         val mailSender = JavaMailSenderImpl().apply {

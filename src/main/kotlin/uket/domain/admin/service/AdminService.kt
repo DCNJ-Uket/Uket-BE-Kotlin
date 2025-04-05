@@ -40,7 +40,7 @@ class AdminService(
     }
 
     @Transactional
-    fun registerAdminWithoutPassword(command: RegisterAdminWithoutPasswordCommand, organization: Organization):Admin {
+    fun registerAdminWithoutPassword(command: RegisterAdminWithoutPasswordCommand, organization: Organization): Admin {
         check(Boolean.TRUE != adminRepository.existsByEmail(command.email)) { "이미 가입된 어드민입니다." }
 
         val isSuperAdmin = when (command.authority) {
@@ -60,7 +60,7 @@ class AdminService(
     }
 
     @Transactional
-    fun updatePassword(email: String, password: String):Admin {
+    fun updatePassword(email: String, password: String): Admin {
         val admin: Admin = findByEmail(email)
         admin.updatePassword(password)
         return adminRepository.save(admin)
