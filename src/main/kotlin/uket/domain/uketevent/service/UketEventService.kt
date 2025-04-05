@@ -17,8 +17,8 @@ class UketEventService(
         return uketEvent
     }
 
-    fun findOrganizationNameByUketEventIid(uketEventId: Long): String {
-        val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId)
-        return name
-    }
+//    fun findOrganizationNameByUketEventIid(uketEventId: Long): String {
+//        val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId)
+//        return name
+//    }
 }
