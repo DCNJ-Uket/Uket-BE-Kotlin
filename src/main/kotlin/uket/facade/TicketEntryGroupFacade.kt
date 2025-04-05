@@ -2,7 +2,6 @@ package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
 import uket.domain.uketevent.service.EntryGroupService
@@ -13,14 +12,14 @@ class TicketEntryGroupFacade(
     val ticketService: TicketService,
     val entryGroupService: EntryGroupService,
 ) {
-    @Transactional
-    fun deleteAllUserTickets(userId: Long) {
-        val tickets: List<Ticket> = ticketService.findAllByUserIdAndStatusNotWithEntryGroup(userId, TicketStatus.RESERVATION_CANCEL)
-        for (ticket in tickets) {
-            entryGroupService.decreaseReservedCount(ticket.entryGroupId)
-        }
-        ticketService.deleteAllByUserId(userId)
-    }
+//    @Transactional
+//    fun deleteAllUserTickets(userId: Long) {
+//        val tickets: List<Ticket> = ticketService.findAllByUserIdAndStatusNotWithEntryGroup(userId, TicketStatus.RESERVATION_CANCEL)
+//        for (ticket in tickets) {
+//            entryGroupService.decreaseReservedCount(ticket.entryGroupId)
+//        }
+//        ticketService.deleteAllByUserId(userId)
+//    }
 
     @Transactional
     fun updateTicketStatus(ticketId: Long, ticketStatus: TicketStatus) {

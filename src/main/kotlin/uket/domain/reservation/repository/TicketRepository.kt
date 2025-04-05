@@ -7,9 +7,7 @@ import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import java.time.LocalDateTime
 
-interface TicketRepository :
-    JpaRepository<Ticket, Long>,
-    TicketRepositoryCustom {
+interface TicketRepository : JpaRepository<Ticket, Long> {
     fun findByStatus(status: TicketStatus, pageable: Pageable): Page<Ticket>
 
     fun findByCreatedAtBetween(startAt: LocalDateTime, endAt: LocalDateTime, pageable: Pageable): Page<Ticket>
