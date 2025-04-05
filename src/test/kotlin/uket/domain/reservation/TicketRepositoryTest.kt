@@ -75,7 +75,7 @@ class TicketRepositoryTest(
                     status = TicketStatus.RESERVATION_CANCEL,
                 )
                 tickets.size shouldBe 1
-                tickets[0].ticketNo shouldBe "TKT-001"
+                tickets[0].ticketNo shouldBe "ticketA"
             }
 
             it("조건에 맞는 티켓이 없으면 빈 리스트를 반환한다") {
