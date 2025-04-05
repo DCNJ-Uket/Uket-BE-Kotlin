@@ -56,11 +56,13 @@ class AdminAuthEmailFacade(
     fun registerAdminWithPassword(token: String, command: RegisterAdminPasswordCommand): RegisterAdminResponse {
         validateEmailInRedis(token, command.email)
         val admin: Admin = adminService.updatePassword(command.email, command.password)
-        return RegisterAdminResponse.of(admin, admin.organization)
+        val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
+        return RegisterAdminResponse.of(admin, admin.organization, authority)
     }
 
     fun login(email: String, password: String): AdminAuthToken {
         val admin = adminService.findByEmail(email)
+        val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
 
         validateRegistered(admin)
         val accessToken = jwtAuthTokenUtil.createAccessToken(
@@ -69,7 +71,7 @@ class AdminAuthEmailFacade(
             java.lang.String.valueOf(UserRole.ADMIN),
             true,
         )
-        return AdminAuthToken.from(accessToken, admin.name)
+        return AdminAuthToken.from(accessToken, admin.name, authority)
     }
 
     private fun validateEmail(email: String) {
