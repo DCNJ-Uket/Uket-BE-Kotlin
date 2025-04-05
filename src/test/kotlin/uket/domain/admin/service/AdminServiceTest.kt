@@ -119,7 +119,8 @@ class AdminServiceTest :
                     val exception =
                         shouldThrow<IllegalStateException> {
                             adminService.registerAdminWithoutPassword(
-                                registerAdminWithoutPasswordCommand, organization
+                                registerAdminWithoutPasswordCommand,
+                                organization,
                             )
                         }
                     exception.message shouldBe "이미 가입된 어드민입니다."
