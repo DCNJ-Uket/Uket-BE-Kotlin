@@ -1,4 +1,4 @@
-package uket.uket.domain.uketeventregistration.entity
+package uket.domain.eventregistration.entity
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
@@ -15,10 +15,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import uket.domain.BaseTimeEntity
-import uket.domain.eventregistration.entity.EventRoundRegistration
 import uket.uket.common.enums.EventType
 import uket.uket.domain.eventregistration.converter.ListToStringConverter
-import uket.uket.domain.eventregistration.entity.EventRegistrationStatus
 import java.time.LocalDateTime
 
 @Entity
@@ -27,9 +25,11 @@ class EventRegistration(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+    @Column(name = "organization_id")
+    val organizationId: Long,
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    val status: EventRegistrationStatus,
+    val status: EventRegistrationStatus = EventRegistrationStatus.검수진행,
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type")
     val eventType: EventType,
@@ -43,24 +43,8 @@ class EventRegistration(
     val ticketingEndDateTime: LocalDateTime,
     @Column(name = "total_ticket_count")
     val totalTicketCount: Int,
-    @OneToMany(
-        mappedBy = "eventRegistration",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    val eventRound: List<EventRoundRegistration>,
-    @OneToMany(
-        mappedBy = "eventRegistration",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    val entryGroup: List<EntryGroupRegistration>,
     @Embedded
     val details: EventDetails,
-    @Embedded
-    val contact: EventContact,
     @Column(name = "uket_event_image_id")
     val uketEventImageId: String,
     @Column(name = "thumbnail_image_id")
@@ -68,17 +52,56 @@ class EventRegistration(
     @Convert(converter = ListToStringConverter::class)
     @Column(name = "banner_image_ids")
     val bannerImageIds: List<String>,
+    _eventRound: List<EventRoundRegistration>,
+    _entryGroup: List<EntryGroupRegistration>,
 ) : BaseTimeEntity() {
+    @OneToMany(
+        mappedBy = "eventRegistration",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    val eventRound: List<EventRoundRegistration> = _eventRound.map {
+        EventRoundRegistration(
+            id = it.id,
+            eventRegistration = this,
+            eventRoundDate = it.eventRoundDate,
+            eventStartTime = it.eventStartTime,
+        )
+    }
+
+    @OneToMany(
+        mappedBy = "eventRegistration",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    val entryGroup: List<EntryGroupRegistration> = _entryGroup.map {
+        EntryGroupRegistration(
+            id = it.id,
+            eventRegistration = this,
+            entryStartTime = it.entryStartTime,
+            entryEndTime = it.entryEndTime,
+            ticketCount = it.ticketCount,
+        )
+    }
+
     @Embeddable
     data class EventDetails(
+        @Column(name = "information")
         val information: String,
+        @Column(name = "caution")
         val caution: String,
+        @Embedded
         val contact: EventContact,
     )
 
     @Embeddable
     data class EventContact(
+        @Column(name = "contact_type")
+        @Enumerated(EnumType.STRING)
         val type: ContactType,
+        @Column(name = "contact_content")
         val content: String,
     ) {
         enum class ContactType {

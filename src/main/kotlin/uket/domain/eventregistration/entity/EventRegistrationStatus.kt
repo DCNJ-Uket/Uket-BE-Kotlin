@@ -1,4 +1,4 @@
-package uket.uket.domain.eventregistration.entity
+package uket.domain.eventregistration.entity
 
 enum class EventRegistrationStatus(
     val order: Int,
