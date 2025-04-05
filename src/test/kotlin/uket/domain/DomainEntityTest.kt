@@ -6,8 +6,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
-import uket.QueryDslConfig
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.payment.entity.Payment
@@ -29,7 +27,6 @@ import uket.domain.user.enums.Platform
 import java.time.LocalDateTime
 
 @DataJpaTest
-@Import(QueryDslConfig::class)
 class DomainEntityTest {
     @Autowired
     lateinit var em: EntityManager
