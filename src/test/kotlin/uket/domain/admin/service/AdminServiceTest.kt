@@ -107,7 +107,7 @@ class AdminServiceTest :
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
-                every { adminRepository.save(any()) } returns null
+                every { adminRepository.save(any()) } returns admin
                 it("Admin을 생성한다") {
                     adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand, organization)
                     verify(exactly = 1) { adminRepository.save(any()) }
