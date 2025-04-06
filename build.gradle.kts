@@ -4,7 +4,6 @@ plugins {
     // 플러그인
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.jpa") version "1.9.25"
-    kotlin("kapt") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.spring") version "1.9.25" // 스프링 어노테이션 처리 지원(open 관련)
     id("org.springframework.boot") version "3.4.0" // 스프링 부트
     id("io.spring.dependency-management") version "1.1.6" // 스프링 의존성 관리
@@ -29,9 +28,9 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
     testImplementation("org.assertj:assertj-core:3.25.3")
 
-    testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
-    testImplementation("io.kotest:kotest-assertions-core:5.8.0") // Kotest assertions
-    implementation("io.kotest:kotest-extensions-spring:4.3.1") // Spring 통합 (필요시)
+    testImplementation("io.kotest:kotest-runner-junit5:5.8.1")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.1") // Kotest assertions
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0") // Spring 통합 (필요시)
     testImplementation("io.mockk:mockk:1.13.5") // MockK 라이브러리
 
     testImplementation("org.jeasy:easy-random-core:5.0.0")
@@ -54,9 +53,8 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("com.github.f4b6a3:ulid-creator:5.2.3")
 
-    // QueryDSL
-    implementation("jakarta.persistence:jakarta.persistence-api")
-    implementation("jakarta.annotation:jakarta.annotation-api")
+    // mail
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")

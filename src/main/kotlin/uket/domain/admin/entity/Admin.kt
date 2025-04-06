@@ -22,4 +22,8 @@ class Admin(
     val email: String,
     var password: String?,
     val isSuperAdmin: Boolean,
-) : BaseTimeEntity()
+) : BaseTimeEntity() {
+    fun updatePassword(password: String) {
+        this.password = password
+    }
+}

@@ -13,7 +13,7 @@ class UketEventRoundService(
     private val uketEventRoundRepository: UketEventRoundRepository,
     private val uketEventRepository: UketEventRepository,
 ) {
-    fun findById(uketEventRoundId: Long): UketEventRound {
+    fun getById(uketEventRoundId: Long): UketEventRound {
         val uketEventRound = uketEventRoundRepository.findByIdOrNull(uketEventRoundId)
             ?: throw IllegalStateException("해당 회차를 찾을 수 없습니다.")
         return uketEventRound
@@ -22,8 +22,8 @@ class UketEventRoundService(
     fun findByUketEventId(uketEventId: Long): List<UketEventRound> =
         uketEventRoundRepository.findByUketEventId(uketEventId, UketEventRound::class.java)
 
-    fun findNameById(uketEventRoundId: Long): String {
-        val uketEventRound = this.findById(uketEventRoundId)
+    fun getNameById(uketEventRoundId: Long): String {
+        val uketEventRound = this.getById(uketEventRoundId)
         val name = uketEventRound.name
         return name
     }

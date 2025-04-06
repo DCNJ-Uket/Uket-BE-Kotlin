@@ -15,5 +15,6 @@ data class TokenProperties(
     data class TokenExpirationProperties(
         val accessTokenExpiration: Long,
         val refreshTokenExpiration: Long,
+        val emailTokenExpiration: Long,
     )
 }

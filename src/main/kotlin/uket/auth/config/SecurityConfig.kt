@@ -89,6 +89,10 @@ class SecurityConfig(
             }
             .authorizeHttpRequests { registry ->
                 registry
+                    .requestMatchers("/admin/users/login").permitAll()
+            }
+            .authorizeHttpRequests { registry ->
+                registry
                     .anyRequest().authenticated()
             }
             .sessionManagement { session ->

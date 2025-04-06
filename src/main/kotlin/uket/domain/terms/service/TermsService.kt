@@ -11,7 +11,7 @@ import uket.domain.terms.repository.TermsRepository
 class TermsService(
     private val termsRepository: TermsRepository,
 ) {
-    fun findById(termsId: Long): Terms {
+    fun getById(termsId: Long): Terms {
         val terms = termsRepository.findByIdOrNull(termsId)
             ?: throw IllegalStateException("약관을 찾을 수 없습니다.")
         return terms
