@@ -1,9 +1,8 @@
-package uket.uket.domain.eventregistration.service
+package uket.domain.eventregistration.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.eventregistration.entity.EventRegistration
-import uket.domain.eventregistration.service.EventRegistrationRepository
 
 @Service
 class EventRegistrationService(

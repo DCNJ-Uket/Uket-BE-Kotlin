@@ -24,8 +24,8 @@ class AdminService(
 
     @Transactional
     fun registerAdmin(registerAdminCommand: RegisterAdminCommand) {
-        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminCommand.email)) {
-            throw IllegalStateException("이미 가입된 어드민입니다.")
+        check(adminRepository.existsByEmail(registerAdminCommand.email).not()) {
+            "이미 가입된 어드민입니다."
         }
 
         val admin = Admin(
@@ -41,8 +41,8 @@ class AdminService(
 
     @Transactional
     fun registerAdminWithoutPassword(registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand) {
-        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email)) {
-            throw IllegalStateException("이미 가입된 어드민입니다.")
+        check(adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email).not()) {
+            "이미 가입된 어드민입니다."
         }
 
         val admin = Admin(

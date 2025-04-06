@@ -36,8 +36,8 @@ class EntryGroupService(
         val entryGroup = this.findById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()
 
-        if (java.lang.Boolean.FALSE == isSuccess) {
-            throw IllegalStateException("예매된 티켓이 존재하지 않습니다.")
+        check(isSuccess) {
+            "예매된 티켓이 존재하지 않습니다."
         }
     }
 }

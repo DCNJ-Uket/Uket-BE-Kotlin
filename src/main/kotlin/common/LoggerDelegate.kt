@@ -1,4 +1,4 @@
-package uket.uket.common
+package uket.common
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

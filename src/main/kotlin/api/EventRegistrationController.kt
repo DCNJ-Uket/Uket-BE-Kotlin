@@ -1,14 +1,14 @@
-package uket.uket.api
+package uket.api
 
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import uket.api.request.RegisterUketEventRequest
+import uket.api.response.RegisterUketEventResponse
 import uket.common.enums.EventType
 import uket.domain.admin.service.OrganizationService
-import uket.uket.api.request.RegisterUketEventRequest
-import uket.uket.api.response.RegisterUketEventResponse
 import uket.uket.domain.eventregistration.service.EventRegistrationService
 
 @RestController

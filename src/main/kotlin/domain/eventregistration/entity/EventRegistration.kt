@@ -14,10 +14,10 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
 import uket.domain.eventregistration.converter.ListToStringConverter
-import uket.uket.common.LoggerDelegate
 import java.time.LocalDateTime
 
 @Entity
@@ -133,6 +133,6 @@ class EventRegistration(
     }
 
     companion object {
-        private val log by LoggerDelegate()
+        private val log by uket.common.LoggerDelegate()
     }
 }

@@ -71,7 +71,7 @@ class UserService(
         메일 중복 확인
      */
     fun checkDuplicateEmail(email: String) {
-        if (java.lang.Boolean.TRUE == userRepository.existsByEmail(email)) {
+        check(userRepository.existsByEmail(email).not()) {
             throw IllegalStateException("이미 가입된 사용자입니다.")
         }
     }

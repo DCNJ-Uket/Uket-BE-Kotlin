@@ -7,5 +7,5 @@ import uket.domain.user.enums.Platform
 interface UserRepository : JpaRepository<User, Long> {
     fun findByPlatformAndPlatformId(platform: Platform, platformId: String): User?
 
-    fun existsByEmail(email: String): Boolean?
+    fun existsByEmail(email: String): Boolean
 }

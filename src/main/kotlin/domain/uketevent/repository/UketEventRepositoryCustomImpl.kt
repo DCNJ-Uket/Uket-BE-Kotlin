@@ -1,4 +1,4 @@
-package uket.uket.domain.uketevent.repository
+package uket.domain.uketevent.repository
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import uket.domain.admin.entity.QOrganization.organization
@@ -6,7 +6,7 @@ import uket.domain.uketevent.entity.QUketEvent.uketEvent
 
 class UketEventRepositoryCustomImpl(
     val queryFactory: JPAQueryFactory,
-) : UketEventRepositoryCustom {
+) : uket.domain.uketevent.repository.UketEventRepositoryCustom {
     override fun findOrganizationNameByUketEventId(uketEventId: Long): String {
         val name = queryFactory
             .select(organization.name)

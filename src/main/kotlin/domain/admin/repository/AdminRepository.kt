@@ -6,5 +6,5 @@ import uket.domain.admin.entity.Admin
 interface AdminRepository : JpaRepository<Admin, Long> {
     fun findByEmail(email: String): Admin?
 
-    fun existsByEmail(email: String): Boolean?
+    fun existsByEmail(email: String): Boolean
 }

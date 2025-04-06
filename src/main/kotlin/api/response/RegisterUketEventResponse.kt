@@ -1,6 +1,6 @@
-package uket.uket.api.response
+package uket.api.response
 
-import uket.uket.common.enums.EventType
+import uket.common.enums.EventType
 
 data class RegisterUketEventResponse(
     val uketEventRegistrationId: Long,

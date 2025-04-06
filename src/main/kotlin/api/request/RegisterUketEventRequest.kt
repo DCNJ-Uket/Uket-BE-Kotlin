@@ -1,4 +1,4 @@
-package uket.uket.api.request
+package uket.api.request
 
 import uket.common.enums.EventType
 import uket.domain.eventregistration.entity.EntryGroupRegistration

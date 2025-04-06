@@ -9,8 +9,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import uket.common.LoggerDelegate
 import uket.domain.BaseTimeEntity
-import uket.uket.common.LoggerDelegate
 import java.time.LocalTime
 
 @Entity
@@ -42,6 +42,6 @@ class EntryGroupRegistration(
     }
 
     companion object {
-        private val log by LoggerDelegate()
+        private val log by uket.common.LoggerDelegate()
     }
 }
