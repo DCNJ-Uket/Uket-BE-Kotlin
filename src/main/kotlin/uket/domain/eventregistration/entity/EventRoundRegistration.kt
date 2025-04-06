@@ -1,5 +1,6 @@
 package uket.domain.eventregistration.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -18,9 +19,14 @@ class EventRoundRegistration(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_registration_id")
     private var eventRegistration: EventRegistration? = null,
+
+    @Column(name = "event_round_date")
     val eventRoundDate: LocalDate,
+
+    @Column(name = "event_start_time")
     val eventStartTime: LocalTime,
 ) : BaseTimeEntity()

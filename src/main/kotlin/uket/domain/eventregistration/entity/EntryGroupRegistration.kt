@@ -1,5 +1,6 @@
 package uket.domain.eventregistration.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -18,9 +19,16 @@ class EntryGroupRegistration(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+
+    @Column(name = "ticket_count")
     val ticketCount: Int,
+
+    @Column(name = "entry_start_time")
     val entryStartTime: LocalTime,
+
+    @Column(name = "entry_end_time")
     val entryEndTime: LocalTime,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_registration_id")
     private var eventRegistration: EventRegistration? = null,

@@ -44,7 +44,7 @@ data class RegisterUketEventRequest(
                     information = details.information,
                     caution = details.caution,
                     contact = EventRegistration.EventContact(
-                        type = ContactType.valueOf(contact.type),
+                        type = ContactType.entries.find { it.name == contact.type } ?: error("[RegisterUketEventRequest] ContactType을 찾을 수 없습니다."),
                         content = contact.content,
                     ),
                 ),

@@ -26,33 +26,46 @@ class EventRegistration(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
+
     @Column(name = "organization_id")
     val organizationId: Long,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     val status: EventRegistrationStatus = EventRegistrationStatus.검수진행,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type")
     val eventType: EventType,
+
     @Column(name = "event_name")
     val eventName: String,
+
     @Column(name = "location")
     val location: String,
+
     @Column(name = "ticketing_start_date_time")
     val ticketingStartDateTime: LocalDateTime,
+
     @Column(name = "ticketing_end_date_time")
     val ticketingEndDateTime: LocalDateTime,
+
     @Column(name = "total_ticket_count")
     val totalTicketCount: Int,
+
     @Embedded
     val details: EventDetails,
+
     @Column(name = "uket_event_image_id")
     val uketEventImageId: String,
+
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
+
     @Convert(converter = ListToStringConverter::class)
     @Column(name = "banner_image_ids")
     val bannerImageIds: List<String>,
+
     _eventRound: List<EventRoundRegistration>,
     _entryGroup: List<EntryGroupRegistration>,
 ) : BaseTimeEntity() {
