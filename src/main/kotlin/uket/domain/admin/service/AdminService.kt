@@ -15,13 +15,13 @@ import java.lang.Boolean
 class AdminService(
     private val adminRepository: AdminRepository,
 ) {
-    fun findById(adminId: Long): Admin {
+    fun getById(adminId: Long): Admin {
         val admin = adminRepository.findByIdOrNull(adminId)
             ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
         return admin
     }
 
-    fun findByEmail(email: String): Admin = adminRepository.findByEmail(email)
+    fun getByEmail(email: String): Admin = adminRepository.findByEmail(email)
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
     @Transactional
@@ -61,7 +61,7 @@ class AdminService(
 
     @Transactional
     fun updatePassword(email: String, password: String): Admin {
-        val admin: Admin = findByEmail(email)
+        val admin: Admin = getByEmail(email)
         admin.updatePassword(password)
         return adminRepository.save(admin)
     }

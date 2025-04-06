@@ -35,7 +35,7 @@ class AdminAuthEmailFacade(
 
     fun sendAuthEmail(command: RegisterAdminWithoutPasswordCommand): SendEmailResponse {
         validateEmail(command.email)
-        val organization: Organization = organizationService.findByName(command.organization)
+        val organization: Organization = organizationService.getByName(command.organization)
         val admin = adminService.registerAdminWithoutPassword(command, organization)
 
         val token = jwtAuthTokenUtil.createEmailToken(
@@ -61,7 +61,7 @@ class AdminAuthEmailFacade(
     }
 
     fun login(email: String, password: String): AdminAuthToken {
-        val admin = adminService.findByEmail(email)
+        val admin = adminService.getByEmail(email)
         val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
 
         validateRegistered(admin)
