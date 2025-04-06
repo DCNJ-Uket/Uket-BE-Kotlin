@@ -8,13 +8,13 @@ import io.kotest.matchers.shouldNotBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.transaction.annotation.Transactional
+import uket.common.enums.EventType
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
-import uket.domain.uketevent.enums.EventType
 import java.time.LocalDateTime
 
 @DataJpaTest
