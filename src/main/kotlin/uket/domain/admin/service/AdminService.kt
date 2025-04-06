@@ -13,13 +13,13 @@ import uket.domain.admin.repository.AdminRepository
 class AdminService(
     private val adminRepository: AdminRepository,
 ) {
-    fun findById(adminId: Long): Admin {
+    fun getById(adminId: Long): Admin {
         val admin = adminRepository.findByIdOrNull(adminId)
             ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
         return admin
     }
 
-    fun findByEmail(email: String): Admin = adminRepository.findByEmail(email)
+    fun getByEmail(email: String): Admin = adminRepository.findByEmail(email)
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
     @Transactional

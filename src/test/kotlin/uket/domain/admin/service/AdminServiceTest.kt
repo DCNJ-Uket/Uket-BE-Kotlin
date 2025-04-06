@@ -40,7 +40,7 @@ class AdminServiceTest :
                 every { adminRepository.findByIdOrNull(admin.id) } returns admin
 
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findById(admin.id)
+                    val findAdmin = adminService.getById(admin.id)
                     admin.shouldNotBeNull()
                     findAdmin.name shouldBe admin.name
                 }
@@ -50,7 +50,7 @@ class AdminServiceTest :
                 every { adminRepository.findByIdOrNull(admin.id) } returns null
 
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findById(admin.id) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.getById(admin.id) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }
@@ -60,7 +60,7 @@ class AdminServiceTest :
             context("Admin이 있으면") {
                 every { adminRepository.findByEmail(admin.email) } returns admin
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findByEmail(admin.email)
+                    val findAdmin = adminService.getByEmail(admin.email)
                     admin.shouldNotBeNull()
                     findAdmin.email shouldBe admin.email
                 }
@@ -68,7 +68,7 @@ class AdminServiceTest :
             context("Admin이 없으면") {
                 every { adminRepository.findByEmail(admin.email) } returns null
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findByEmail(admin.email) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.getByEmail(admin.email) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }

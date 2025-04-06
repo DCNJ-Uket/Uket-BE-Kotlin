@@ -16,7 +16,7 @@ import java.util.UUID
 class TicketService(
     private val ticketRepository: TicketRepository,
 ) {
-    fun findById(ticketId: Long): Ticket {
+    fun getById(ticketId: Long): Ticket {
         val ticket = ticketRepository.findByIdOrNull(ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다")
         return ticket
@@ -29,7 +29,7 @@ class TicketService(
 
     fun findAllTicketsByUserId(userId: Long): List<Ticket> {
         val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
-        return ticketRepository.findValidTicketsByUserId(userId, excludedStatuses)
+        return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
     }
 
     fun searchAllTickets(pageable: Pageable): Page<Ticket> {
@@ -58,7 +58,7 @@ class TicketService(
     @Transactional
     fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
-            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다. 티켓 아이디를 다시 확인해주세요.")
+            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
 
         ticket.cancel()
         ticket.updateDeletedAt()
@@ -71,7 +71,7 @@ class TicketService(
     }
 
     fun validateTicketStatus(ticketId: Long) {
-        val ticket = this.findById(ticketId)
+        val ticket = this.getById(ticketId)
 
         val ticketStatus: TicketStatus = ticket.status
 

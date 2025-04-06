@@ -11,7 +11,7 @@ import uket.domain.uketevent.repository.EntryGroupRepository
 class EntryGroupService(
     private val entryGroupRepository: EntryGroupRepository,
 ) {
-    fun findById(entryGroupId: Long): EntryGroup {
+    fun getById(entryGroupId: Long): EntryGroup {
         val entryGroup = entryGroupRepository.findByIdOrNull(entryGroupId)
             ?: throw IllegalStateException("해당 입장 그룹을 찾을 수 없습니다.")
         return entryGroup
@@ -22,7 +22,7 @@ class EntryGroupService(
 
     @Transactional
     fun increaseReservedCount(entryGroupId: Long) {
-        val entryGroup = this.findById(entryGroupId)
+        val entryGroup = this.getById(entryGroupId)
         val isSuccess: Boolean = entryGroup.increaseReservedCount()
 
         if (java.lang.Boolean.FALSE == isSuccess) {
@@ -33,7 +33,7 @@ class EntryGroupService(
 
     // @DistributedLock(key = "#reservationId")
     fun decreaseReservedCount(entryGroupId: Long) {
-        val entryGroup = this.findById(entryGroupId)
+        val entryGroup = this.getById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()
 
         if (java.lang.Boolean.FALSE == isSuccess) {

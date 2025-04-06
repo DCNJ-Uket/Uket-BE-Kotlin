@@ -9,13 +9,13 @@ import uket.domain.admin.repository.OrganizationRepository
 class OrganizationService(
     private val organizationRepository: OrganizationRepository,
 ) {
-    fun findById(organizationId: Long): Organization {
+    fun getById(organizationId: Long): Organization {
         val organization = organizationRepository.findByIdOrNull(organizationId)
             ?: throw IllegalStateException("단체를 찾을 수 없습니다.")
         return organization
     }
 
-    fun findByName(name: String): Organization {
+    fun getByName(name: String): Organization {
         val organization = organizationRepository.findByName(name)
             ?: throw IllegalStateException("단체를 찾을 수 없습니다.")
         return organization
