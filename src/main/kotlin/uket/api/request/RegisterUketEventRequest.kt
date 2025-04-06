@@ -1,10 +1,10 @@
 package uket.uket.api.request
 
+import uket.common.enums.EventType
 import uket.domain.eventregistration.entity.EntryGroupRegistration
 import uket.domain.eventregistration.entity.EventRegistration
 import uket.domain.eventregistration.entity.EventRegistration.EventContact.ContactType
 import uket.domain.eventregistration.entity.EventRoundRegistration
-import uket.uket.common.enums.EventType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

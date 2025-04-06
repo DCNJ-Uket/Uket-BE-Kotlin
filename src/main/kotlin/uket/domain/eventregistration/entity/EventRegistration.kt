@@ -14,10 +14,10 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
+import uket.domain.eventregistration.converter.ListToStringConverter
 import uket.uket.common.LoggerDelegate
-import uket.uket.common.enums.EventType
-import uket.uket.domain.eventregistration.converter.ListToStringConverter
 import java.time.LocalDateTime
 
 @Entity

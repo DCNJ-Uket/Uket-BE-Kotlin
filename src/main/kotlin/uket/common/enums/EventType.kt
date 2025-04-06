@@ -1,4 +1,4 @@
-package uket.uket.common.enums
+package uket.common.enums
 
 enum class EventType {
     FESTIVAL,

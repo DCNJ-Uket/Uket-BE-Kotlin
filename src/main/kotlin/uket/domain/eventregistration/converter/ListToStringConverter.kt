@@ -1,4 +1,4 @@
-package uket.uket.domain.eventregistration.converter
+package uket.domain.eventregistration.converter
 
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
