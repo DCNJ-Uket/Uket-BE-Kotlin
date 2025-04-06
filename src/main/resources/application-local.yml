@@ -20,7 +20,6 @@ spring:
     properties:
       hibernate:
         show_sql: true
-<<<<<<< HEAD
   mail:
     host: smtp.gmail.com
     port: 587
@@ -40,8 +39,6 @@ spring:
           timeout: 5000
           writetimeout: 5000
       auth-code-expiration-millis: 180000
-=======
->>>>>>> 54bbb23999167bec64e381536894b1c7d32a25d0
   data:
     redis:
       host: localhost
