@@ -6,8 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.context.annotation.Import
-import uket.QueryDslConfig
+import uket.common.enums.EventType
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.payment.entity.Payment
@@ -23,13 +22,11 @@ import uket.domain.terms.enums.TermsType
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
-import uket.domain.uketevent.enums.EventType
 import uket.domain.user.entity.User
 import uket.domain.user.enums.Platform
 import java.time.LocalDateTime
 
 @DataJpaTest
-@Import(QueryDslConfig::class)
 class DomainEntityTest {
     @Autowired
     lateinit var em: EntityManager
@@ -88,36 +85,37 @@ class DomainEntityTest {
         em.persist(uketEvent)
         em.persist(uketEventRound)
         em.persist(entryGroup)
+        em.flush()
 
         // then
-        val findUser = em.find(User::class.java, 1L)
+        val findUser = em.find(User::class.java, user.id)
         println("findUsers id : ${findUser.id}")
 
-        val findOrganization = em.find(Organization::class.java, 1L)
+        val findOrganization = em.find(Organization::class.java, organization.id)
         println("findOrganization id : ${findOrganization.id}")
-        val findAdmin = em.find(Admin::class.java, 1L)
+        val findAdmin = em.find(Admin::class.java, admin.id)
         println("findAdmin id : ${findAdmin.id}")
 
-        val findPayment = em.find(Payment::class.java, 1L)
+        val findPayment = em.find(Payment::class.java, payment.id)
         println("findPayment id : ${findPayment.id}")
-        val findPaymentHistory = em.find(PaymentHistory::class.java, 1L)
+        val findPaymentHistory = em.find(PaymentHistory::class.java, paymentHistory.id)
         println("findPaymentHistory id : ${findPaymentHistory.id}")
 
-        val findTicket = em.find(Ticket::class.java, 1L)
+        val findTicket = em.find(Ticket::class.java, ticket.id)
         println("findTicket id : ${findTicket.id}")
 
-        val findDocument = em.find(Document::class.java, 1L)
+        val findDocument = em.find(Document::class.java, document.id)
         println("findDocument id : ${findDocument.id}")
-        val findTerms = em.find(Terms::class.java, 1L)
+        val findTerms = em.find(Terms::class.java, terms.id)
         println("findTerms id : ${findTerms.id}")
-        val findTermSign = em.find(TermSign::class.java, 1L)
+        val findTermSign = em.find(TermSign::class.java, termSign.id)
         println("findTermSign id : ${findTermSign.id}")
 
-        val findUketEvent = em.find(UketEvent::class.java, 1L)
+        val findUketEvent = em.find(UketEvent::class.java, uketEvent.id)
         println("findUketEvent id : ${findUketEvent.id}")
-        val findUketEventRound = em.find(UketEventRound::class.java, 1L)
+        val findUketEventRound = em.find(UketEventRound::class.java, uketEventRound.id)
         println("findUketEventRound id : ${findUketEventRound.id}")
-        val findEntryGroup = em.find(EntryGroup::class.java, 1L)
+        val findEntryGroup = em.find(EntryGroup::class.java, entryGroup.id)
         println("findEntryGroup id : ${findEntryGroup.id}")
     }
 }
