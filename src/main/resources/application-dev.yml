@@ -1,0 +1,59 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  sql:
+    init:
+      mode: never
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DEV_MYSQL_URL}
+    username: ${DEV_MYSQL_USERNAME}
+    password: ${DEV_MYSQL_PASSWORD}
+    hikari:
+      maximum-pool-size: 40
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+  cloud:
+    aws:
+      s3:
+        access-key: ${AWS_S3_ACCESS_KEY}
+        secret-key: ${AWS_S3_SECRET_KEY}
+        bucket: ${AWS_S3_BUCKET}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    urls:
+      base-url: ${MAIL_SEND_BASE_URL}
+      image-url: ${MAIL_SEND_IMAGE_URL}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+      auth-code-expiration-millis: 180000
+  data:
+    redis:
+      host: ${REDIS_AUTH_HOST}
+      port: ${REDIS_AUTH_PORT}
+
+app:
+  token:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration:
+      access-token-expiration: 600_000
+      refresh-token-expiration: 7_200_000
+      email-token-expiration: 86_400_000

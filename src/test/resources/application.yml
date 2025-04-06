@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: "jdbc:h2:mem:test"
+    username : sa
+    password :
+
+  jpa:
+    show_sql: true
+    hibernate:
+      format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "test@gmail.com"
+    password: "testPassword"
+    urls:
+      base-url: "testBaseUrl"
+      image-url: "testImageUrl"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+      auth-code-expiration-millis: 180000
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+app:
+  token:
+    secret-key: testestsetsetsetsetsetsetsetsetestset
+    expiration:
+      access-token-expiration: 600_000
+      refresh-token-expiration: 7_200_000
+      email-token-expiration: 86_400_000
+
+logging:
+  level:
+    org.hibernate.SQL: debug # logger에 출력하려면
+    org.hibernate.type.descriptor.sql: trace # 파라미터 값 출력
