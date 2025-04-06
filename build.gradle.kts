@@ -55,13 +55,8 @@ dependencies {
     implementation("com.github.f4b6a3:ulid-creator:5.2.3")
 
     // QueryDSL
-    implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
-    implementation("com.querydsl:querydsl-apt:5.1.0:jakarta")
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("jakarta.annotation:jakarta.annotation-api")
-
-    kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
