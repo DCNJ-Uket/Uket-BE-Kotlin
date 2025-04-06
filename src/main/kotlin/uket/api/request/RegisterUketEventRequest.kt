@@ -16,11 +16,11 @@ data class RegisterUketEventRequest(
     fun validateByEventType(eventType: EventType) {
         when (eventType) {
             EventType.FESTIVAL -> require(festivalData != null) {
-                "[EventRegistrationController] festivalData 가 null일 수 없습니다. | $eventType"
+                "[RegisterUketEventRequest] festivalData 가 null일 수 없습니다. | $eventType"
             }
 
             EventType.PERFORMANCE -> require(performanceData != null) {
-                "[EventRegistrationController] performanceData 가 null일 수 없습니다. | $eventType"
+                "[RegisterUketEventRequest] performanceData 가 null일 수 없습니다. | $eventType"
             }
         }
     }

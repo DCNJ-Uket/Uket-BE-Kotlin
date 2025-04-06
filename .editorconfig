@@ -15,3 +15,6 @@ ktlint_standard_enum-entry-name-case = disabled
 ktlint_standard_no-semi = disabled
 ktlint_standard_discouraged-comment-location = disabled
 ktlint_standard_if-else-wrapping = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_max-line-length = disabled
+ktlint_standard_argument-list-wrapping = disabled

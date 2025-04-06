@@ -15,6 +15,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import uket.domain.BaseTimeEntity
+import uket.uket.common.LoggerDelegate
 import uket.uket.common.enums.EventType
 import uket.uket.domain.eventregistration.converter.ListToStringConverter
 import java.time.LocalDateTime
@@ -55,6 +56,14 @@ class EventRegistration(
     _eventRound: List<EventRoundRegistration>,
     _entryGroup: List<EntryGroupRegistration>,
 ) : BaseTimeEntity() {
+    init {
+        check(ticketingStartDateTime < ticketingEndDateTime) {
+            val message = "[EventRegistration] 티켓팅 시작시간은 종료시간보다 이전이어야 합니다. | ticketingStartDateTime: $ticketingStartDateTime, ticketingEndDateTime: $ticketingEndDateTime"
+            log.warn(message)
+            message
+        }
+    }
+
     @OneToMany(
         mappedBy = "eventRegistration",
         fetch = FetchType.LAZY,
@@ -108,5 +117,9 @@ class EventRegistration(
             INSTAGRAM,
             KAKAO,
         }
+    }
+
+    companion object {
+        private val log by LoggerDelegate()
     }
 }

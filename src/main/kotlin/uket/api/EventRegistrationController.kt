@@ -27,7 +27,7 @@ class EventRegistrationController(
         val organization = organizationService.findById(organizationId)
 
         val eventRegistration = eventRegistrationService.registerEvent(
-            request.toEntity(organization.id, eventType)
+            request.toEntity(organization.id, eventType),
         )
         return RegisterUketEventResponse(
             uketEventRegistrationId = eventRegistration.id,

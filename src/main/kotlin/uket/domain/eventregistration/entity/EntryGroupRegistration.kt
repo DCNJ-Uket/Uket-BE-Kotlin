@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import uket.domain.BaseTimeEntity
+import uket.uket.common.LoggerDelegate
 import java.time.LocalTime
 
 @Entity
@@ -23,4 +24,16 @@ class EntryGroupRegistration(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_registration_id")
     private var eventRegistration: EventRegistration? = null,
-) : BaseTimeEntity()
+) : BaseTimeEntity() {
+    init {
+        check(entryStartTime < entryEndTime) {
+            val message = "[EventRegistration] 입장 시작시간은 종료시간보다 이전이어야 합니다. | entryStartTime: $entryStartTime, entryEndTime: $entryEndTime"
+            log.warn(message)
+            message
+        }
+    }
+
+    companion object {
+        private val log by LoggerDelegate()
+    }
+}
