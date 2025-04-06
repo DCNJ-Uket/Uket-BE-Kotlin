@@ -53,6 +53,9 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     implementation("com.github.f4b6a3:ulid-creator:5.2.3")
 
+    // mail
+    implementation("org.springframework.boot:spring-boot-starter-mail")
+
     // redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.redisson:redisson-spring-boot-starter:3.30.0")

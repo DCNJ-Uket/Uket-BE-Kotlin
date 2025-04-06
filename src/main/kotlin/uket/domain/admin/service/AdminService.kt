@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional
 import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.domain.admin.entity.Admin
+import uket.domain.admin.entity.Organization
 import uket.domain.admin.repository.AdminRepository
+import java.lang.Boolean
 
 @Service
 @Transactional(readOnly = true)
@@ -23,41 +25,53 @@ class AdminService(
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
     @Transactional
-    fun registerAdmin(registerAdminCommand: RegisterAdminCommand) {
-        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminCommand.email)) {
-            throw IllegalStateException("이미 가입된 어드민입니다.")
-        }
+    fun registerAdmin(command: RegisterAdminCommand) {
+        check(Boolean.TRUE != adminRepository.existsByEmail(command.email)) { "이미 가입된 어드민입니다." }
 
         val admin = Admin(
-            organization = registerAdminCommand.organization,
-            name = registerAdminCommand.name,
-            email = registerAdminCommand.email,
+            organization = command.organization,
+            name = command.name,
+            email = command.email,
             isSuperAdmin = false,
-            password = registerAdminCommand.password,
+            password = command.password,
         )
 
         adminRepository.save(admin)
     }
 
     @Transactional
-    fun registerAdminWithoutPassword(registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand) {
-        if (java.lang.Boolean.TRUE == adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email)) {
-            throw IllegalStateException("이미 가입된 어드민입니다.")
+    fun registerAdminWithoutPassword(command: RegisterAdminWithoutPasswordCommand, organization: Organization): Admin {
+        check(Boolean.TRUE != adminRepository.existsByEmail(command.email)) { "이미 가입된 어드민입니다." }
+
+        val isSuperAdmin = when (command.authority) {
+            "관리자" -> true
+            else -> false
         }
 
         val admin = Admin(
-            organization = registerAdminWithoutPasswordCommand.organization,
-            name = registerAdminWithoutPasswordCommand.name,
-            email = registerAdminWithoutPasswordCommand.email,
-            isSuperAdmin = false,
+            organization = organization,
+            name = command.name,
+            email = command.email,
+            isSuperAdmin = isSuperAdmin,
             password = null,
         )
 
-        adminRepository.save(admin)
+        return adminRepository.save(admin)
+    }
+
+    @Transactional
+    fun updatePassword(email: String, password: String): Admin {
+        val admin: Admin = getByEmail(email)
+        admin.updatePassword(password)
+        return adminRepository.save(admin)
     }
 
     @Transactional
     fun deleteAdmin(adminId: Long) {
         adminRepository.deleteById(adminId)
+    }
+
+    fun checkDuplicateEmail(email: String) {
+        check(Boolean.TRUE != adminRepository.existsByEmail(email)) { "이미 가입된 사용자입니다." }
     }
 }
