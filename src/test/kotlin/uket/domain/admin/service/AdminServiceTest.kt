@@ -48,7 +48,7 @@ class AdminServiceTest :
                 every { adminRepository.findByIdOrNull(admin1.id) } returns admin1
 
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findById(admin1.id)
+                    val findAdmin = adminService.getById(admin1.id)
                     admin1.shouldNotBeNull()
                     findAdmin.name shouldBe admin1.name
                 }
@@ -58,7 +58,7 @@ class AdminServiceTest :
                 every { adminRepository.findByIdOrNull(admin1.id) } returns null
 
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findById(admin1.id) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.getById(admin1.id) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }
@@ -68,7 +68,7 @@ class AdminServiceTest :
             context("Admin이 있으면") {
                 every { adminRepository.findByEmail(admin1.email) } returns admin1
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findByEmail(admin1.email)
+                    val findAdmin = adminService.getByEmail(admin1.email)
                     admin1.shouldNotBeNull()
                     findAdmin.email shouldBe admin1.email
                 }
@@ -76,7 +76,7 @@ class AdminServiceTest :
             context("Admin이 없으면") {
                 every { adminRepository.findByEmail(admin1.email) } returns null
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findByEmail(admin1.email) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.getByEmail(admin1.email) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }
@@ -90,7 +90,7 @@ class AdminServiceTest :
                 every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf(admin2, admin1)
                 every { adminRepository.count() } returns 2
                 it("어드민 전체 목록을 반환한다") {
-                    val adminPage = adminService.findAdminsByPage(pageRequset)
+                    val adminPage = adminService.findAdminsWithOrganizationIdByPage(pageRequset)
                     adminPage.content.size shouldBe 2
                     adminPage.content.get(0).name shouldBe "adminB"
                     adminPage.content.get(1).name shouldBe "adminA"
@@ -102,7 +102,7 @@ class AdminServiceTest :
                 every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf(admin1)
                 every { adminRepository.count() } returns 1
                 it("어드민 전체 목록(이지만 1개)을 반환한다") {
-                    val adminPage = adminService.findAdminsByPage(pageRequset)
+                    val adminPage = adminService.findAdminsWithOrganizationIdByPage(pageRequset)
                     adminPage.content.size shouldBe 1
                     adminPage.content.get(0).name shouldBe "adminA"
                 }
@@ -113,7 +113,7 @@ class AdminServiceTest :
                 every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf()
                 every { adminRepository.count() } returns 0
                 it("어드민 전체 목록(이지만 빈 리스트)을 반환한다") {
-                    val adminPage = adminService.findAdminsByPage(pageRequset)
+                    val adminPage = adminService.findAdminsWithOrganizationIdByPage(pageRequset)
                     adminPage.content.size shouldBe 0
                 }
             }
@@ -153,7 +153,7 @@ class AdminServiceTest :
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
-                every { adminRepository.save(any()) } returns admin
+                every { adminRepository.save(any()) } returns admin1
                 it("Admin을 생성한다") {
                     adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand, organization)
                     verify(exactly = 1) { adminRepository.save(any()) }

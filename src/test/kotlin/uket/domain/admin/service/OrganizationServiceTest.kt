@@ -33,7 +33,7 @@ class OrganizationServiceTest :
                 every { organizationRepository.findByIdOrNull(organization1.id) } returns organization1
 
                 it("해당 Organization을 반환한다") {
-                    val findOrganization = organizationService.findById(organization1.id)
+                    val findOrganization = organizationService.getById(organization1.id)
                     findOrganization.shouldNotBeNull()
                     findOrganization.name shouldBe organization1.name
                 }
@@ -44,7 +44,7 @@ class OrganizationServiceTest :
 
                 it("예외를 던진다") {
                     val exception =
-                        shouldThrow<IllegalStateException> { organizationService.findById(organization1.id) }
+                        shouldThrow<IllegalStateException> { organizationService.getById(organization1.id) }
                     exception.message shouldBe "단체를 찾을 수 없습니다."
                 }
             }
@@ -56,7 +56,7 @@ class OrganizationServiceTest :
                 every { organizationRepository.findByName(organization1.name) } returns organization1
 
                 it("해당 Organization을 반환한다") {
-                    val findOrganization = organizationService.findByName(organization1.name)
+                    val findOrganization = organizationService.getByName(organization1.name)
                     findOrganization.shouldNotBeNull()
                     findOrganization.name shouldBe organization1.name
                 }
@@ -67,7 +67,7 @@ class OrganizationServiceTest :
 
                 it("예외를 던진다") {
                     val exception =
-                        shouldThrow<IllegalStateException> { organizationService.findByName(organization1.name) }
+                        shouldThrow<IllegalStateException> { organizationService.getByName(organization1.name) }
                     exception.message shouldBe "단체를 찾을 수 없습니다."
                 }
             }

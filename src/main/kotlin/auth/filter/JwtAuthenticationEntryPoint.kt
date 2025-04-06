@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
 import uket.common.ErrorCode
-import uket.common.ErrorResponse
+import uket.common.response.ErrorResponse
 import java.nio.charset.StandardCharsets
 
 @Component

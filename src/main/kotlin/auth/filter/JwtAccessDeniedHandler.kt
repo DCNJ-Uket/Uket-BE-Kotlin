@@ -9,7 +9,7 @@ import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
 import uket.common.ErrorCode
-import uket.common.ErrorResponse
+import uket.common.response.ErrorResponse
 import java.nio.charset.StandardCharsets
 
 @Component

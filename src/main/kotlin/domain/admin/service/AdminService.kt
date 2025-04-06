@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.domain.admin.dto.AdminWithOrganizationIdDto
 import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.domain.admin.entity.Admin
@@ -26,11 +27,15 @@ class AdminService(
     fun getByEmail(email: String): Admin = adminRepository.findByEmail(email)
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
-    fun findAdminsByPage(pageRequest: PageRequest): Page<Admin> {
+    fun findAdminsWithOrganizationIdByPage(pageRequest: PageRequest): Page<AdminWithOrganizationIdDto> {
         val ids = adminRepository.findAdminIds(pageRequest)
         val admins = adminRepository.findAllByIdsOrderByCreatedAtDesc(ids)
+        val adminItems = admins
+            .stream()
+            .map { AdminWithOrganizationIdDto.from(it) }
+            .toList()
         val count = adminRepository.count()
-        return PageImpl(admins, pageRequest, count)
+        return PageImpl(adminItems, pageRequest, count)
     }
 
     @Transactional
@@ -77,7 +82,7 @@ class AdminService(
 
     @Transactional
     fun deleteAdmin(adminId: Long) {
-        this.findById(adminId)
+        this.getById(adminId)
         adminRepository.deleteById(adminId)
     }
 
