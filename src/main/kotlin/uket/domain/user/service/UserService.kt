@@ -52,8 +52,7 @@ class UserService(
      */
     @Transactional
     fun registerUser(registerUserCommand: RegisterUserCommand) {
-        val user = userRepository.findByIdOrNull(registerUserCommand.userId)
-            ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
+        val user = this.getById(registerUserCommand.userId)
         user.register(registerUserCommand.depositorName, registerUserCommand.phoneNumber)
     }
 
@@ -62,8 +61,7 @@ class UserService(
      */
     @Transactional
     fun deleteUser(userId: Long) {
-        val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalStateException("해당 사용자를 찾을 수 없습니다.")
+        val user = this.getById(userId)
         userRepository.delete(user)
     }
 

@@ -58,7 +58,7 @@ class TicketService(
     @Transactional
     fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
-            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다. 티켓 아이디를 다시 확인해주세요.")
+            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
 
         ticket.cancel()
         ticket.updateDeletedAt()

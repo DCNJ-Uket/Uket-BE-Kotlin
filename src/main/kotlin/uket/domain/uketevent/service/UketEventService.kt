@@ -11,14 +11,15 @@ import uket.domain.uketevent.repository.UketEventRepository
 class UketEventService(
     private val uketEventRepository: UketEventRepository,
 ) {
-    fun findById(uketEventId: Long): UketEvent {
+    fun getById(uketEventId: Long): UketEvent {
         val uketEvent = uketEventRepository.findByIdOrNull(uketEventId)
             ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
         return uketEvent
     }
 
-    fun findOrganizationNameByUketEventIid(uketEventId: Long): String {
-        val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId) ?: ""
+    fun getOrganizationNameByUketEventIid(uketEventId: Long): String {
+        val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId)
+            ?: throw IllegalStateException("해당 행사의 이름을 찾을 수 없습니다.")
         return name
     }
 }
