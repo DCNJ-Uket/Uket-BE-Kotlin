@@ -2,6 +2,7 @@ package uket.api.admin
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -21,6 +22,7 @@ import uket.domain.admin.service.AdminService
 class UserController(
     val adminService: AdminService,
 ) {
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 멤버 목록 조회", description = "어드민 목록을 페이지로 조회합니다.")
     @GetMapping("/admin/users")
     fun getAdmins(page: Int, size: Int): ResponseEntity<CustomPageResponse<AdminWithOrganizationIdDto>> {
@@ -29,6 +31,7 @@ class UserController(
         return ResponseEntity.ok(CustomPageResponse.from(adminPage))
     }
 
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 멤버 삭제", description = "지정한 어드민 멤버를 삭제합니다.")
     @DeleteMapping("/admin/users/{adminId}")
     fun deleteAdmin(
