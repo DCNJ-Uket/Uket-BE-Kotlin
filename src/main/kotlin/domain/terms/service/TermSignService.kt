@@ -12,7 +12,7 @@ import java.util.stream.Collectors
 class TermSignService(
     private val termSignRepository: TermSignRepository,
 ) {
-    fun findById(termSignId: Long): TermSign {
+    fun getById(termSignId: Long): TermSign {
         val termSign = termSignRepository.findByIdOrNull(termSignId)
             ?: throw IllegalStateException("해당 약관 동의 내역을 찾을 수 없습니다")
         return termSign

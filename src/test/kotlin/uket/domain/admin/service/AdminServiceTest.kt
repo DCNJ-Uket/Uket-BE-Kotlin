@@ -40,7 +40,7 @@ class AdminServiceTest :
                 every { adminRepository.findByIdOrNull(admin.id) } returns admin
 
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findById(admin.id)
+                    val findAdmin = adminService.getById(admin.id)
                     admin.shouldNotBeNull()
                     findAdmin.name shouldBe admin.name
                 }
@@ -50,7 +50,7 @@ class AdminServiceTest :
                 every { adminRepository.findByIdOrNull(admin.id) } returns null
 
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findById(admin.id) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.getById(admin.id) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }
@@ -60,7 +60,7 @@ class AdminServiceTest :
             context("Admin이 있으면") {
                 every { adminRepository.findByEmail(admin.email) } returns admin
                 it("해당 Admin을 반환한다") {
-                    val findAdmin = adminService.findByEmail(admin.email)
+                    val findAdmin = adminService.getByEmail(admin.email)
                     admin.shouldNotBeNull()
                     findAdmin.email shouldBe admin.email
                 }
@@ -68,7 +68,7 @@ class AdminServiceTest :
             context("Admin이 없으면") {
                 every { adminRepository.findByEmail(admin.email) } returns null
                 it("예외를 던진다") {
-                    val exception = shouldThrow<IllegalStateException> { adminService.findByEmail(admin.email) }
+                    val exception = shouldThrow<IllegalStateException> { adminService.getByEmail(admin.email) }
                     exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
                 }
             }
@@ -100,15 +100,16 @@ class AdminServiceTest :
 
         describe("비밀번호가 없는 Admin 생성 요청") {
             val registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand = RegisterAdminWithoutPasswordCommand(
-                organization = organization,
+                organization = "organizationA",
                 name = "adminB",
                 email = "emailB",
+                authority = "멤버",
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
-                every { adminRepository.save(any()) } returns null
+                every { adminRepository.save(any()) } returns admin
                 it("Admin을 생성한다") {
-                    adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand)
+                    adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand, organization)
                     verify(exactly = 1) { adminRepository.save(any()) }
                 }
             }
@@ -119,6 +120,7 @@ class AdminServiceTest :
                         shouldThrow<IllegalStateException> {
                             adminService.registerAdminWithoutPassword(
                                 registerAdminWithoutPasswordCommand,
+                                organization,
                             )
                         }
                     exception.message shouldBe "이미 가입된 어드민입니다."
