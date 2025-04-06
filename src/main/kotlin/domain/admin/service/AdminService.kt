@@ -25,8 +25,7 @@ class AdminService(
 
     @Transactional
     fun registerAdmin(registerAdminCommand: RegisterAdminCommand) {
-        check(adminRepository.existsByEmail(command.email) != true) { "이미 가입된 어드민입니다." }
-
+        check(adminRepository.existsByEmail(registerAdminCommand.email).not()) { "이미 가입된 어드민입니다." }
 
         val admin = Admin(
             organization = registerAdminCommand.organization,
@@ -41,7 +40,7 @@ class AdminService(
 
     @Transactional
     fun registerAdminWithoutPassword(command: RegisterAdminWithoutPasswordCommand, organization: Organization): Admin {
-        check(adminRepository.existsByEmail(command.email) != true) { "이미 가입된 어드민입니다." }
+        check(adminRepository.existsByEmail(command.email).not()) { "이미 가입된 어드민입니다." }
 
         val isSuperAdmin = when (command.authority) {
             "관리자" -> true
@@ -49,10 +48,10 @@ class AdminService(
         }
 
         val admin = Admin(
-            organization = registerAdminWithoutPasswordCommand.organization,
-            name = registerAdminWithoutPasswordCommand.name,
-            email = registerAdminWithoutPasswordCommand.email,
-            isSuperAdmin = false,
+            organization = organization,
+            name = command.name,
+            email = command.email,
+            isSuperAdmin = isSuperAdmin,
             password = null,
         )
 
@@ -72,6 +71,6 @@ class AdminService(
     }
 
     fun checkDuplicateEmail(email: String) {
-        check(Boolean.TRUE != adminRepository.existsByEmail(email)) { "이미 가입된 사용자입니다." }
+        check(adminRepository.existsByEmail(email).not()) { "이미 가입된 사용자입니다." }
     }
 }

@@ -3,20 +3,20 @@ package uket.uket.facade
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.api.admin.request.RegisterAdminPasswordCommand
+import uket.api.admin.response.RegisterAdminResponse
+import uket.api.admin.response.SendEmailResponse
+import uket.auth.dto.AdminAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
 import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
-import uket.uket.api.admin.request.RegisterAdminPasswordCommand
-import uket.uket.api.admin.response.RegisterAdminResponse
-import uket.uket.api.admin.response.SendEmailResponse
-import uket.uket.auth.dto.AdminAuthToken
+import uket.modules.email.properties.EmailProperties
+import uket.modules.email.service.MailSendService
+import uket.modules.redis.util.RedisUtil
 import uket.uket.domain.user.enums.UserRole
-import uket.uket.modules.email.properties.EmailProperties
-import uket.uket.modules.email.service.MailSendService
-import uket.uket.modules.redis.util.RedisUtil
 
 @Service
 @Transactional
@@ -85,8 +85,8 @@ class AdminAuthEmailFacade(
             throw IllegalStateException("이메일 인증 토큰이 만료되었거나 유효하지 않습니다.")
         }
 
-        if (savedEmail != requestEmail) {
-            throw IllegalStateException("요청 이메일과 인증된 이메일이 일치하지 않습니다.")
+        check (savedEmail == requestEmail) {
+            "요청 이메일과 인증된 이메일이 일치하지 않습니다."
         }
     }
 
@@ -100,8 +100,6 @@ class AdminAuthEmailFacade(
     }
 
     private fun validateRegistered(admin: Admin) {
-        if (admin.password == null) {
-            throw IllegalStateException("회원가입 후 이용해주세요")
-        }
+        checkNotNull (admin.password) { "회원가입 후 이용해주세요" }
     }
 }

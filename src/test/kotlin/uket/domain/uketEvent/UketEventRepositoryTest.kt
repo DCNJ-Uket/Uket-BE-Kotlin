@@ -8,9 +8,9 @@ import io.kotest.matchers.shouldBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.transaction.annotation.Transactional
+import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
 import uket.domain.uketevent.entity.UketEvent
-import uket.domain.uketevent.enums.EventType
 import uket.domain.uketevent.repository.UketEventRepository
 import java.time.LocalDateTime
 
