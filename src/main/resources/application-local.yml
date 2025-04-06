@@ -8,8 +8,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/uket?useSSL=false&allowPublicKeyRetrieval=true
-    username: ${DEV_MYSQL_USERNAME}
-    password: ${DEV_MYSQL_PASSWORD}
+    username: ${LOCAL_MYSQL_USERNAME}
+    password: ${LOCAL_MYSQL_PASSWORD}
     hikari:
       maximum-pool-size: 40
   jpa:
@@ -19,6 +19,10 @@ spring:
     properties:
       hibernate:
         show_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 app:
   token:
