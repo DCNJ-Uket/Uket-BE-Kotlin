@@ -2,7 +2,7 @@ package uket.auth.jwt
 
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
-import uket.uket.domain.user.enums.UserRole
+import uket.domain.user.enums.UserRole
 import java.security.SignatureException
 import java.util.Date
 import java.util.UUID

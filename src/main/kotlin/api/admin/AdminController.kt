@@ -16,7 +16,7 @@ import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
 import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
-import uket.uket.facade.AdminAuthEmailFacade
+import uket.facade.AdminAuthEmailFacade
 
 @Tag(name = "어드민 멤버 관련 API", description = "어드민 멤버 관련 API 입니다.")
 @RestController
