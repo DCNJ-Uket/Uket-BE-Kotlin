@@ -16,7 +16,7 @@ import uket.auth.jwt.JwtValues.JWT_AUTHORIZATION_VALUE_PREFIX
 import uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_ACCESS
 import uket.common.BaseException
 import uket.common.ErrorCode
-import uket.common.ErrorResponse
+import uket.common.response.ErrorResponse
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 

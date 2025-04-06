@@ -1,4 +1,6 @@
-package uket.common
+package uket.common.response
+
+import uket.common.ErrorCode
 
 data class ErrorResponse(
     val code: String,

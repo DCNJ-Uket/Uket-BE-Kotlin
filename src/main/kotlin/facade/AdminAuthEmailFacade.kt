@@ -1,4 +1,4 @@
-package uket.uket.facade
+package uket.facade
 
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
@@ -13,10 +13,10 @@ import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
+import uket.domain.user.enums.UserRole
 import uket.modules.email.properties.EmailProperties
 import uket.modules.email.service.MailSendService
 import uket.modules.redis.util.RedisUtil
-import uket.uket.domain.user.enums.UserRole
 
 @Service
 @Transactional
@@ -92,7 +92,9 @@ class AdminAuthEmailFacade(
 
     private fun loadAdminInviteHtml(token: String): String {
         val template = ClassPathResource("static/invite.html")
-            .inputStream.bufferedReader().use { it.readText() }
+            .inputStream
+            .bufferedReader()
+            .use { it.readText() }
 
         return template
             .replace("{{IMAGE_URL}}", emailProperties.urls.imageUrl)
