@@ -149,7 +149,7 @@ class AdminServiceTest :
                 organization = "organizationA",
                 name = "adminB",
                 email = "emailB",
-                authority = "멤버",
+                isSuperAdmin = false,
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
@@ -158,7 +158,7 @@ class AdminServiceTest :
                     adminService.registerAdminWithoutPassword(
                         registerAdminWithoutPasswordCommand.name,
                         registerAdminWithoutPasswordCommand.email,
-                        registerAdminWithoutPasswordCommand.authority,
+                        registerAdminWithoutPasswordCommand.isSuperAdmin,
                         organization
                     )
                     verify(exactly = 1) { adminRepository.save(any()) }
@@ -172,7 +172,7 @@ class AdminServiceTest :
                             adminService.registerAdminWithoutPassword(
                                 registerAdminWithoutPasswordCommand.name,
                                 registerAdminWithoutPasswordCommand.email,
-                                registerAdminWithoutPasswordCommand.authority,
+                                registerAdminWithoutPasswordCommand.isSuperAdmin,
                                 organization
                             )
                         }

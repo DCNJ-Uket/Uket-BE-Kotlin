@@ -36,7 +36,7 @@ class AdminAuthEmailFacade(
         validateEmail(request.email)
         validateOrganization(request.organization)
         val organization: Organization = organizationService.getByName(request.organization)
-        val admin = adminService.registerAdminWithoutPassword(request.name, request.email, request.authority, organization)
+        val admin = adminService.registerAdminWithoutPassword(request.name, request.email, request.isSuperAdmin, organization)
 
         val token = jwtAuthTokenUtil.createEmailToken(
             admin.id,

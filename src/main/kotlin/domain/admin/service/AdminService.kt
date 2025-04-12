@@ -53,13 +53,8 @@ class AdminService(
         adminRepository.save(admin)
     }
 
-    fun registerAdminWithoutPassword(name: String, email: String, authority: String, organization: Organization): Admin {
+    fun registerAdminWithoutPassword(name: String, email: String, isSuperAdmin: Boolean, organization: Organization): Admin {
         check(adminRepository.existsByEmail(email).not()) { "이미 가입된 어드민입니다." }
-
-        val isSuperAdmin = when (authority) {
-            "관리자" -> true
-            else -> false
-        }
 
         val admin = Admin(
             organization = organization,

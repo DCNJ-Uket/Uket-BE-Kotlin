@@ -4,5 +4,5 @@ data class SendEmailRequest(
     val name: String,
     val email: String,
     val organization: String,
-    val authority: String,
+    val isSuperAdmin: Boolean,
 )
