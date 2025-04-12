@@ -71,7 +71,7 @@ class AdminAuthEmailFacade(
             java.lang.String.valueOf(UserRole.ADMIN),
             true,
         )
-        return AdminAuthToken.from(accessToken, admin.name, authority)
+        return AdminAuthToken.of(accessToken, admin.name, authority)
     }
 
     private fun validateEmail(email: String) {
