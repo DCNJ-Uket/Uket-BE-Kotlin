@@ -32,6 +32,6 @@ class OrganizationService(
     }
 
     fun checkDuplicateOrganizationRegister(name: String) {
-        check(organizationRepository.existsByNameAndNotRegistered(name)) { "이미 관리자로 등록된 단체입니다." }
+        check(organizationRepository.existsByNameAndNotRegistered(name)) { "이미 관리자가 등록되어있는 단체입니다" }
     }
 }
