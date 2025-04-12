@@ -13,8 +13,7 @@ import uket.domain.user.dto.CreateUserCommand
 import uket.domain.user.entity.User
 import uket.domain.user.enums.Platform
 import uket.domain.user.service.UserService
-import uket.uket.domain.user.enums.UserRole
-import uket.uket.modules.redis.service.RotateTokenService
+import uket.modules.redis.service.RotateTokenService
 
 @SpringBootTest
 @Transactional

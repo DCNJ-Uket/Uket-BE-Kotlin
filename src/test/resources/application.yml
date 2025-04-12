@@ -8,6 +8,25 @@ spring:
     show_sql: true
     hibernate:
       format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "test@gmail.com"
+    password: "testPassword"
+    urls:
+      base-url: "testBaseUrl"
+      image-url: "testImageUrl"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+      auth-code-expiration-millis: 180000
   data:
     redis:
       host: localhost
@@ -19,6 +38,7 @@ app:
     expiration:
       access-token-expiration: 600_000
       refresh-token-expiration: 7_200_000
+      email-token-expiration: 86_400_000
 
 logging:
   level:
