@@ -1,5 +1,6 @@
 package uket.api.admin.handler
 
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.ResponseEntity
@@ -17,15 +18,15 @@ import java.nio.CharBuffer
 import java.security.InvalidParameterException
 import java.time.format.DateTimeParseException
 
+@Hidden
 @RestControllerAdvice
-class WebExceptionHandler(
-) {
+class WebExceptionHandler() {
     private val log by LoggerDelegate()
 
     @ExceptionHandler(Exception::class)
     fun unKnownException(
         request: HttpServletRequest,
-        exception: Exception
+        exception: Exception,
     ): ResponseEntity<ErrorResponse> {
         return handleUnhandledException(request, exception)
     }
@@ -33,7 +34,7 @@ class WebExceptionHandler(
     @ExceptionHandler(DateTimeParseException::class)
     fun handleDateTimeParseException(
         request: HttpServletRequest,
-        exception: DateTimeParseException
+        exception: DateTimeParseException,
     ): ResponseEntity<ErrorResponse> {
         log.warn("[DateTimeParseException] {}", exception.message, exception)
         return ResponseEntity
@@ -44,7 +45,7 @@ class WebExceptionHandler(
     @ExceptionHandler(IllegalStateException::class)
     fun handleIllegalStateException(
         request: HttpServletRequest,
-        exception: IllegalStateException
+        exception: IllegalStateException,
     ): ResponseEntity<ErrorResponse> {
         log.warn("[IllegalStateException] {}", exception.message, exception)
         return ResponseEntity
@@ -52,11 +53,10 @@ class WebExceptionHandler(
             .body(ErrorResponse.from(exception.message ?: "잘못된 요청입니다."))
     }
 
-
     @ExceptionHandler(Throwable::class)
     fun handleUnhandledException(
         request: HttpServletRequest,
-        exception: Throwable
+        exception: Throwable,
     ): ResponseEntity<ErrorResponse> {
         val dump = dumpRequest(request).append("\n ")
             .append(getStackTraceAsString(exception))
@@ -77,7 +77,7 @@ class WebExceptionHandler(
     )
     fun handleValidationException(
         request: HttpServletRequest,
-        exception: Exception
+        exception: Exception,
     ): ResponseEntity<ErrorResponse> {
         log.warn("[ValidationException]", exception)
         return ResponseEntity
