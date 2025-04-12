@@ -47,7 +47,7 @@ class AdminAuthEmailFacade(
         redisUtil.setDataExpire(EMAIL_TOKEN_PREFIX + token, admin.email, EMAIL_TOKEN_EXPIRATION_MILLIS.toLong())
 
         val subject = "[Uket admin] 회원가입 링크 안내"
-        val content = loadAdminInviteHtml(token)
+        val content = loadAdminInviteHtml(admin.email, token)
 
         mailService.sendEmailWithHtmlContent(admin.email, subject, content)
         return SendEmailResponse.from(admin)
@@ -90,7 +90,7 @@ class AdminAuthEmailFacade(
         }
     }
 
-    private fun loadAdminInviteHtml(token: String): String {
+    private fun loadAdminInviteHtml(email: String, token: String): String {
         val template = ClassPathResource("static/invite.html")
             .inputStream
             .bufferedReader()
@@ -98,7 +98,7 @@ class AdminAuthEmailFacade(
 
         return template
             .replace("{{IMAGE_URL}}", emailProperties.urls.imageUrl)
-            .replace("{{SIGNUP_LINK}}", "${emailProperties.urls.baseUrl}?token=$token")
+            .replace("{{SIGNUP_LINK}}", "${emailProperties.urls.baseUrl}?email=$email?token=$token")
     }
 
     private fun validateRegistered(admin: Admin) {
