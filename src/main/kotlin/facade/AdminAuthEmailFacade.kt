@@ -102,7 +102,7 @@ class AdminAuthEmailFacade(
 
         return template
             .replace("{{IMAGE_URL}}", emailProperties.urls.imageUrl)
-            .replace("{{SIGNUP_LINK}}", "${emailProperties.urls.baseUrl}?email=$email?token=$token")
+            .replace("{{SIGNUP_LINK}}", "${emailProperties.urls.baseUrl}?email=$email&token=$token")
     }
 
     private fun validateRegistered(admin: Admin) {
