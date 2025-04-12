@@ -14,10 +14,10 @@ import uket.domain.admin.entity.Organization
 import uket.domain.admin.repository.AdminRepository
 
 @Service
-@Transactional(readOnly = true)
 class AdminService(
     private val adminRepository: AdminRepository,
 ) {
+    @Transactional(readOnly = true)
     fun getById(adminId: Long): Admin {
         val admin = adminRepository.findByIdOrNull(adminId)
             ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
@@ -27,6 +27,7 @@ class AdminService(
     fun getByEmail(email: String): Admin = adminRepository.findByEmail(email)
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
+    @Transactional(readOnly = true)
     fun findAdminsWithOrganizationIdByPage(pageRequest: PageRequest): Page<AdminWithOrganizationIdDto> {
         val ids = adminRepository.findAdminIds(pageRequest)
         val admins = adminRepository.findAllByIdsOrderByCreatedAtDesc(ids)
@@ -53,7 +54,6 @@ class AdminService(
         adminRepository.save(admin)
     }
 
-    @Transactional
     fun registerAdminWithoutPassword(name: String, email: String, authority: String, organization: Organization): Admin {
         check(adminRepository.existsByEmail(email).not()) { "이미 가입된 어드민입니다." }
 
@@ -73,7 +73,6 @@ class AdminService(
         return adminRepository.save(admin)
     }
 
-    @Transactional
     fun updatePassword(email: String, password: String): Admin {
         val admin: Admin = getByEmail(email)
         admin.updatePassword(password)

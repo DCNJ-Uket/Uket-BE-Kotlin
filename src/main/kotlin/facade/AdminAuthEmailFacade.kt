@@ -9,7 +9,6 @@ import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
-import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.AdminService
@@ -20,7 +19,6 @@ import uket.modules.email.service.MailSendService
 import uket.modules.redis.util.RedisUtil
 
 @Service
-@Transactional
 class AdminAuthEmailFacade(
     private val mailService: MailSendService,
     private val adminService: AdminService,
@@ -34,6 +32,7 @@ class AdminAuthEmailFacade(
         private const val EMAIL_TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60 * 24 // 24시간
     }
 
+    @Transactional
     fun sendAuthEmail(request: SendEmailRequest): SendEmailResponse {
         validateEmail(request.email)
         val organization: Organization = organizationService.getByName(request.organization)
@@ -54,6 +53,7 @@ class AdminAuthEmailFacade(
         return SendEmailResponse.from(admin)
     }
 
+    @Transactional
     fun registerAdminWithPassword(token: String, command: RegisterAdminPasswordCommand): RegisterAdminResponse {
         validateEmailInRedis(token, command.email)
         val admin: Admin = adminService.updatePassword(command.email, command.password)
@@ -61,6 +61,7 @@ class AdminAuthEmailFacade(
         return RegisterAdminResponse.of(admin, admin.organization, authority)
     }
 
+    @Transactional(readOnly = true)
     fun login(email: String, password: String): AdminAuthToken {
         val admin = adminService.getByEmail(email)
         val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
