@@ -57,8 +57,7 @@ class AdminAuthEmailFacade(
     fun registerAdminWithPassword(token: String, email: String, password: String): RegisterAdminResponse {
         validateEmailInRedis(token, email)
         val admin: Admin = adminService.updatePassword(email, password)
-        val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
-        return RegisterAdminResponse.of(admin, admin.organization, authority)
+        return RegisterAdminResponse.of(admin, admin.organization)
     }
 
     @Transactional(readOnly = true)
