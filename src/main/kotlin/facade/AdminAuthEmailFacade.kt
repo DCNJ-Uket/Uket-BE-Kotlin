@@ -35,6 +35,7 @@ class AdminAuthEmailFacade(
     @Transactional
     fun sendAuthEmail(request: SendEmailRequest): SendEmailResponse {
         validateEmail(request.email)
+        validateOrganization(request.organization)
         val organization: Organization = organizationService.getByName(request.organization)
         val admin = adminService.registerAdminWithoutPassword(request.name,request.email,request.authority, organization)
 
@@ -80,9 +81,12 @@ class AdminAuthEmailFacade(
         adminService.checkDuplicateEmail(email)
     }
 
+    private fun validateOrganization(organizationName: String) {
+        organizationService.checkDuplicateOrganizationRegister(organizationName)
+    }
+
     private fun validateEmailInRedis(token: String, requestEmail: String) {
         val redisKey = EMAIL_TOKEN_PREFIX + token
-        System.out.println(redisKey)
         val savedEmail = redisUtil.getData(redisKey).orElseThrow {
             throw IllegalStateException("이메일 인증 토큰이 만료되었거나 유효하지 않습니다.")
         }
