@@ -3,7 +3,6 @@ package uket.facade
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.api.admin.request.RegisterAdminPasswordCommand
 import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
@@ -37,7 +36,7 @@ class AdminAuthEmailFacade(
         validateEmail(request.email)
         validateOrganization(request.organization)
         val organization: Organization = organizationService.getByName(request.organization)
-        val admin = adminService.registerAdminWithoutPassword(request.name,request.email,request.authority, organization)
+        val admin = adminService.registerAdminWithoutPassword(request.name, request.email, request.authority, organization)
 
         val token = jwtAuthTokenUtil.createEmailToken(
             admin.id,
@@ -55,9 +54,9 @@ class AdminAuthEmailFacade(
     }
 
     @Transactional
-    fun registerAdminWithPassword(token: String, email: String, password: String ): RegisterAdminResponse {
+    fun registerAdminWithPassword(token: String, email: String, password: String): RegisterAdminResponse {
         validateEmailInRedis(token, email)
-        val admin: Admin = adminService.updatePassword(email,password)
+        val admin: Admin = adminService.updatePassword(email, password)
         val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
         return RegisterAdminResponse.of(admin, admin.organization, authority)
     }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.request.EmailLoginRequest
-import uket.api.admin.request.RegisterAdminPasswordCommand
 import uket.api.admin.request.RegisterAdminPasswordRequest
 import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.RegisterAdminResponse
