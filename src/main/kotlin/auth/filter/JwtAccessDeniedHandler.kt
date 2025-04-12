@@ -33,6 +33,6 @@ class JwtAccessDeniedHandler(
         response.characterEncoding = StandardCharsets.UTF_8.name()
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.status = HttpServletResponse.SC_FORBIDDEN
-        response.writer.write(objectMapper.writeValueAsString(ErrorResponse.of(ErrorCode.AUTHORIZATION_FAILED)))
+        response.writer.write(objectMapper.writeValueAsString(ErrorResponse.from(ErrorCode.AUTHORIZATION_FAILED)))
     }
 }

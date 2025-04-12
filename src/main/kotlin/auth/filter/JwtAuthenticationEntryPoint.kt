@@ -30,6 +30,6 @@ class JwtAuthenticationEntryPoint(
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.writer
-            .write(objectMapper.writeValueAsString(ErrorResponse.of(ErrorCode.TOKEN_AUTHENTICATION_FAILED)))
+            .write(objectMapper.writeValueAsString(ErrorResponse.from(ErrorCode.TOKEN_AUTHENTICATION_FAILED)))
     }
 }

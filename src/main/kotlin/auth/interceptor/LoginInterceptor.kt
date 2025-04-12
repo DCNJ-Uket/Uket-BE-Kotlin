@@ -42,7 +42,7 @@ class LoginInterceptor(
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.writer
-            .write(objectMapper.writeValueAsString(ErrorResponse.of(errorCode)))
+            .write(objectMapper.writeValueAsString(ErrorResponse.from(errorCode)))
     }
 
     private fun isSwaggerRequest(request: HttpServletRequest): Boolean {
