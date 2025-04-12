@@ -62,16 +62,16 @@ class AdminAuthEmailFacade(
 
     fun login(email: String, password: String): AdminAuthToken {
         val admin = adminService.getByEmail(email)
-        val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
+        checkNotNull(admin.password) { "초대 메일을 통해 회원가입 후 이용 바랍니다." }
 
         validateRegistered(admin)
         val accessToken = jwtAuthTokenUtil.createAccessToken(
             admin.id,
             admin.name,
-            java.lang.String.valueOf(UserRole.ADMIN),
+            UserRole.ADMIN.toString(),
             true,
         )
-        return AdminAuthToken.from(accessToken, admin.name, authority)
+        return AdminAuthToken.of(accessToken, admin.name, admin.email, admin.isSuperAdmin)
     }
 
     private fun validateEmail(email: String) {
