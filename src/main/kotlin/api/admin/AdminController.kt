@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.request.EmailLoginRequest
 import uket.api.admin.request.RegisterAdminPasswordCommand
+import uket.api.admin.request.RegisterAdminPasswordRequest
 import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
-import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.facade.AdminAuthEmailFacade
 
 @Tag(name = "어드민 멤버 관련 API", description = "어드민 멤버 관련 API 입니다.")
@@ -40,11 +40,11 @@ class AdminController(
     @Operation(summary = "어드민 멤버 회원가입", description = "비밀번호를 받아 어드민 멤버 회원가입을 진행합니다.")
     @PostMapping("/password")
     fun registerPassword(
-        @RequestBody registerAdminPasswordCommand: RegisterAdminPasswordCommand,
+        @RequestBody request: RegisterAdminPasswordRequest,
     ): ResponseEntity<RegisterAdminResponse> {
         val authentication = SecurityContextHolder.getContext().authentication
         val token = authentication.credentials as String
-        val response: RegisterAdminResponse = adminAuthEmailFacade.registerAdminWithPassword(token, registerAdminPasswordCommand)
+        val response: RegisterAdminResponse = adminAuthEmailFacade.registerAdminWithPassword(token, request.email, request.password)
         return ResponseEntity.ok(response)
     }
 
