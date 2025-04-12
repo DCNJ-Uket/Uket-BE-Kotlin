@@ -4,6 +4,7 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.request.RegisterAdminPasswordCommand
+import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
@@ -33,10 +34,10 @@ class AdminAuthEmailFacade(
         private const val EMAIL_TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60 * 24 // 24시간
     }
 
-    fun sendAuthEmail(command: RegisterAdminWithoutPasswordCommand): SendEmailResponse {
-        validateEmail(command.email)
-        val organization: Organization = organizationService.getByName(command.organization)
-        val admin = adminService.registerAdminWithoutPassword(command, organization)
+    fun sendAuthEmail(request: SendEmailRequest): SendEmailResponse {
+        validateEmail(request.email)
+        val organization: Organization = organizationService.getByName(request.organization)
+        val admin = adminService.registerAdminWithoutPassword(request.name,request.email,request.authority, organization)
 
         val token = jwtAuthTokenUtil.createEmailToken(
             admin.id,

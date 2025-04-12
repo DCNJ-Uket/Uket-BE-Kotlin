@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.request.EmailLoginRequest
 import uket.api.admin.request.RegisterAdminPasswordCommand
+import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
@@ -29,9 +30,9 @@ class AdminController(
     @Operation(summary = "어드민 멤버 등록 메일 발송", description = "비밀번호를 제외한 어드민 멤버를 등록 후 회원가입 메일을 발송합니다.")
     @PostMapping("/register")
     fun sendInviteEmail(
-        @RequestBody registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand,
+        @RequestBody sendEmailRequest: SendEmailRequest,
     ): ResponseEntity<SendEmailResponse> {
-        val response: SendEmailResponse = adminAuthEmailFacade.sendAuthEmail(registerAdminWithoutPasswordCommand)
+        val response: SendEmailResponse = adminAuthEmailFacade.sendAuthEmail(sendEmailRequest)
         return ResponseEntity.ok(response)
     }
 
