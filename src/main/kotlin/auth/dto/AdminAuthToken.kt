@@ -7,8 +7,8 @@ data class AdminAuthToken(
     val isSuperAdmin: Boolean,
 ) {
     companion object {
-        fun of(accessToken: String, name: String,email: String, isSuperAdmin: Boolean): AdminAuthToken {
-            return AdminAuthToken(accessToken, name,email, isSuperAdmin)
+        fun of(accessToken: String, name: String, email: String, isSuperAdmin: Boolean): AdminAuthToken {
+            return AdminAuthToken(accessToken, name, email, isSuperAdmin)
         }
     }
 }
