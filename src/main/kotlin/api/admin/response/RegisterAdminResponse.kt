@@ -9,17 +9,17 @@ data class RegisterAdminResponse(
     val name: String,
     val email: String,
     var password: String?,
-    val authority: String,
+    val isSuperAdmin: Boolean,
 ) {
     companion object {
-        fun of(admin: Admin, organization: Organization, authority: String): RegisterAdminResponse {
+        fun of(admin: Admin, organization: Organization): RegisterAdminResponse {
             return RegisterAdminResponse(
                 adminId = admin.id,
                 organization = organization.name,
                 name = admin.name,
                 email = admin.email,
                 password = admin.password,
-                authority = authority,
+                isSuperAdmin = admin.isSuperAdmin,
             )
         }
     }

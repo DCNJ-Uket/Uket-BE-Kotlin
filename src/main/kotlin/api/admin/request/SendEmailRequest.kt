@@ -1,6 +1,6 @@
-package uket.domain.admin.dto
+package uket.api.admin.request
 
-data class RegisterAdminWithoutPasswordCommand(
+data class SendEmailRequest(
     val name: String,
     val email: String,
     val organization: String,

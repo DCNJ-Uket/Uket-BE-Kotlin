@@ -3,11 +3,12 @@ package uket.auth.dto
 data class AdminAuthToken(
     val accessToken: String,
     val name: String,
-    val authority: String,
+    val email: String,
+    val isSuperAdmin: Boolean,
 ) {
     companion object {
-        fun from(accessToken: String, name: String, authority: String): AdminAuthToken {
-            return AdminAuthToken(accessToken, name, authority)
+        fun of(accessToken: String, name: String, email: String, isSuperAdmin: Boolean): AdminAuthToken {
+            return AdminAuthToken(accessToken, name, email, isSuperAdmin)
         }
     }
 }

@@ -165,13 +165,18 @@ class AdminServiceTest :
                 organization = "organizationA",
                 name = "adminB",
                 email = "emailB",
-                authority = "멤버",
+                isSuperAdmin = false,
             )
             context("Admin이 이미 존재하지 않으면") {
                 every { adminRepository.existsByEmail(registerAdminWithoutPasswordCommand.email) } returns false
                 every { adminRepository.save(any()) } returns admin1
                 it("Admin을 생성한다") {
-                    adminService.registerAdminWithoutPassword(registerAdminWithoutPasswordCommand, organization1)
+                    adminService.registerAdminWithoutPassword(
+                        registerAdminWithoutPasswordCommand.name,
+                        registerAdminWithoutPasswordCommand.email,
+                        registerAdminWithoutPasswordCommand.isSuperAdmin,
+                        organization1
+                    )
                     verify(exactly = 1) { adminRepository.save(any()) }
                 }
             }
@@ -181,8 +186,10 @@ class AdminServiceTest :
                     val exception =
                         shouldThrow<IllegalStateException> {
                             adminService.registerAdminWithoutPassword(
-                                registerAdminWithoutPasswordCommand,
-                                organization1,
+                                registerAdminWithoutPasswordCommand.name,
+                                registerAdminWithoutPasswordCommand.email,
+                                registerAdminWithoutPasswordCommand.isSuperAdmin,
+                                organization1
                             )
                         }
                     exception.message shouldBe "이미 가입된 어드민입니다."

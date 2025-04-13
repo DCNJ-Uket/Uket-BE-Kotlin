@@ -3,12 +3,11 @@ package uket.facade
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.api.admin.request.RegisterAdminPasswordCommand
+import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
-import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.AdminService
@@ -19,7 +18,6 @@ import uket.modules.email.service.MailSendService
 import uket.modules.redis.util.RedisUtil
 
 @Service
-@Transactional
 class AdminAuthEmailFacade(
     private val mailService: MailSendService,
     private val adminService: AdminService,
@@ -33,10 +31,12 @@ class AdminAuthEmailFacade(
         private const val EMAIL_TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60 * 24 // 24시간
     }
 
-    fun sendAuthEmail(command: RegisterAdminWithoutPasswordCommand): SendEmailResponse {
-        validateEmail(command.email)
-        val organization: Organization = organizationService.getByName(command.organization)
-        val admin = adminService.registerAdminWithoutPassword(command, organization)
+    @Transactional
+    fun sendAuthEmail(request: SendEmailRequest): SendEmailResponse {
+        validateEmail(request.email)
+        validateOrganization(request.organization)
+        val organization: Organization = organizationService.getByName(request.organization)
+        val admin = adminService.registerAdminWithoutPassword(request.name, request.email, request.isSuperAdmin, organization)
 
         val token = jwtAuthTokenUtil.createEmailToken(
             admin.id,
@@ -47,40 +47,44 @@ class AdminAuthEmailFacade(
         redisUtil.setDataExpire(EMAIL_TOKEN_PREFIX + token, admin.email, EMAIL_TOKEN_EXPIRATION_MILLIS.toLong())
 
         val subject = "[Uket admin] 회원가입 링크 안내"
-        val content = loadAdminInviteHtml(token)
+        val content = loadAdminInviteHtml(admin.email, token)
 
         mailService.sendEmailWithHtmlContent(admin.email, subject, content)
         return SendEmailResponse.from(admin)
     }
 
-    fun registerAdminWithPassword(token: String, command: RegisterAdminPasswordCommand): RegisterAdminResponse {
-        validateEmailInRedis(token, command.email)
-        val admin: Admin = adminService.updatePassword(command.email, command.password)
-        val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
-        return RegisterAdminResponse.of(admin, admin.organization, authority)
+    @Transactional
+    fun registerAdminWithPassword(token: String, email: String, password: String): RegisterAdminResponse {
+        validateEmailInRedis(token, email)
+        val admin: Admin = adminService.updatePassword(email, password)
+        return RegisterAdminResponse.of(admin, admin.organization)
     }
 
+    @Transactional(readOnly = true)
     fun login(email: String, password: String): AdminAuthToken {
         val admin = adminService.getByEmail(email)
-        val authority: String = if (admin.isSuperAdmin) "관리자" else "멤버"
+        checkNotNull(admin.password) { "초대 메일을 통해 회원가입 후 이용 바랍니다." }
 
         validateRegistered(admin)
         val accessToken = jwtAuthTokenUtil.createAccessToken(
             admin.id,
             admin.name,
-            java.lang.String.valueOf(UserRole.ADMIN),
+            UserRole.ADMIN.toString(),
             true,
         )
-        return AdminAuthToken.from(accessToken, admin.name, authority)
+        return AdminAuthToken.of(accessToken, admin.name, admin.email, admin.isSuperAdmin)
     }
 
     private fun validateEmail(email: String) {
         adminService.checkDuplicateEmail(email)
     }
 
+    private fun validateOrganization(organizationName: String) {
+        organizationService.checkDuplicateOrganizationRegister(organizationName)
+    }
+
     private fun validateEmailInRedis(token: String, requestEmail: String) {
         val redisKey = EMAIL_TOKEN_PREFIX + token
-        System.out.println(redisKey)
         val savedEmail = redisUtil.getData(redisKey).orElseThrow {
             throw IllegalStateException("이메일 인증 토큰이 만료되었거나 유효하지 않습니다.")
         }
@@ -90,7 +94,7 @@ class AdminAuthEmailFacade(
         }
     }
 
-    private fun loadAdminInviteHtml(token: String): String {
+    private fun loadAdminInviteHtml(email: String, token: String): String {
         val template = ClassPathResource("static/invite.html")
             .inputStream
             .bufferedReader()
@@ -98,7 +102,7 @@ class AdminAuthEmailFacade(
 
         return template
             .replace("{{IMAGE_URL}}", emailProperties.urls.imageUrl)
-            .replace("{{SIGNUP_LINK}}", "${emailProperties.urls.baseUrl}?token=$token")
+            .replace("{{SIGNUP_LINK}}", "${emailProperties.urls.baseUrl}?email=$email&token=$token")
     }
 
     private fun validateRegistered(admin: Admin) {

@@ -18,7 +18,6 @@ class OrganizationService(
         return organization
     }
 
-    @Transactional(readOnly = true)
     fun getByName(name: String): Organization {
         val organization = organizationRepository.findByName(name)
             ?: throw IllegalStateException("단체를 찾을 수 없습니다.")
@@ -30,5 +29,9 @@ class OrganizationService(
     fun findAllIdAndNames(): List<OrganizationDropdownItem> {
         val organizations = organizationRepository.findAll()
         return organizations.stream().map { o -> OrganizationDropdownItem.from(o) }.toList()
+    }
+
+    fun checkDuplicateOrganizationRegister(name: String) {
+        check(organizationRepository.existsByNameAndNotRegistered(name)) { "이미 관리자가 등록되어있는 단체입니다" }
     }
 }
