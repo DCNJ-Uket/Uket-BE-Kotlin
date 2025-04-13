@@ -6,11 +6,11 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesBindin
 @ConfigurationProperties(prefix = "app")
 @ConfigurationPropertiesBinding
 data class AppProperties(
-    val kakao: KaKaoProperties,
+    val kakao: KakaoProperties,
     val google: GoogleProperties,
 ) {
     @ConfigurationPropertiesBinding
-    data class KaKaoProperties(
+    data class KakaoProperties(
         val tokenUri: String,
         val userInfoUri: String,
         val clientId: String,
