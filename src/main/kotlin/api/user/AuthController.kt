@@ -10,12 +10,12 @@ import uket.api.user.request.LoginRequest
 import uket.api.user.response.AuthResponse
 import uket.auth.jwt.JwtAuthTokenUtil
 import uket.domain.user.enums.Platform
-import uket.domain.user.service.AuthService
 import uket.domain.user.service.UserService
+import uket.facade.UserAuthFacade
 
 @RestController
 class AuthController(
-    private val authService: AuthService,
+    private val userAuthFacade: UserAuthFacade,
     private val jwtAuthTokenUtil: JwtAuthTokenUtil,
     private val userService: UserService,
 ) {
@@ -26,7 +26,7 @@ class AuthController(
         @PathVariable provider: String,
     ): ResponseEntity<AuthResponse> {
         val platform = Platform.fromString(provider)
-        val authToken = authService.login(platform, request.redirectUri, request.code)
+        val authToken = userAuthFacade.login(platform, request.redirectUri, request.code)
 
         val userId = jwtAuthTokenUtil.getId(authToken.accessToken)
         val loginUser = userService.getById(userId)

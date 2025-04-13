@@ -1,6 +1,6 @@
 package uket.api.user.response
 
-import uket.auth.dto.AuthToken
+import uket.auth.dto.UserAuthToken
 import uket.domain.user.entity.User
 
 @JvmRecord
@@ -12,12 +12,12 @@ data class AuthResponse(
     val isRegistered: Boolean,
 ) {
     companion object {
-        fun of(user: User, authToken: AuthToken): AuthResponse = AuthResponse(
+        fun of(user: User, userAuthToken: UserAuthToken): AuthResponse = AuthResponse(
             id = user.id,
             name = user.name,
-            accessToken = authToken.accessToken,
-            refreshToken = authToken.refreshToken,
-            isRegistered = authToken.isRegistered
+            accessToken = userAuthToken.accessToken,
+            refreshToken = userAuthToken.refreshToken,
+            isRegistered = userAuthToken.isRegistered
         )
     }
 }
