@@ -2,7 +2,7 @@ package uket.domain.admin.dto
 
 import uket.domain.admin.entity.Admin
 
-data class AdminWithOrganizationIdAndName(
+data class AdminWithOrganizationDto(
     val id: Long,
     val organizationId: Long,
     val organizationName: String,
@@ -12,7 +12,7 @@ data class AdminWithOrganizationIdAndName(
     val isSuperAdmin: Boolean,
 ) {
     companion object {
-        fun from(admin: Admin): AdminWithOrganizationIdAndName = AdminWithOrganizationIdAndName(
+        fun from(admin: Admin): AdminWithOrganizationDto = AdminWithOrganizationDto(
             id = admin.id,
             organizationId = admin.organization.id,
             organizationName = admin.organization.name,

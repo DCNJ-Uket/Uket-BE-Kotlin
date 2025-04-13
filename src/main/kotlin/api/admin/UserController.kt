@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.response.DeleteAdminResponse
 import uket.common.response.CustomPageResponse
-import uket.domain.admin.dto.AdminWithOrganizationIdAndName
+import uket.domain.admin.dto.AdminWithOrganizationDto
 import uket.domain.admin.service.AdminService
 
 @Tag(name = "어드민 멤버 관련 API", description = "어드민 멤버 관련 API 입니다.")
@@ -25,7 +25,7 @@ class UserController(
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 멤버 목록 조회", description = "어드민 목록을 페이지로 조회합니다.")
     @GetMapping("/admin/users")
-    fun getAdmins(page: Int, size: Int): ResponseEntity<CustomPageResponse<AdminWithOrganizationIdAndName>> {
+    fun getAdmins(page: Int, size: Int): ResponseEntity<CustomPageResponse<AdminWithOrganizationDto>> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
         val adminPage = adminService.findAdminsWithOrganizationIdAndNameByPage(pageRequest)
         return ResponseEntity.ok(CustomPageResponse.from(adminPage))
