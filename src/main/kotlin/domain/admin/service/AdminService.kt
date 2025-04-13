@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.domain.admin.dto.AdminWithOrganizationIdDto
+import uket.domain.admin.dto.AdminWithOrganizationDto
 import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
@@ -27,12 +27,12 @@ class AdminService(
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
     @Transactional(readOnly = true)
-    fun findAdminsWithOrganizationIdByPage(pageRequest: PageRequest): Page<AdminWithOrganizationIdDto> {
+    fun findAdminsWithOrganizationIdAndNameByPage(pageRequest: PageRequest): Page<AdminWithOrganizationDto> {
         val ids = adminRepository.findAdminIds(pageRequest)
         val admins = adminRepository.findAllByIdsOrderByCreatedAtDesc(ids)
         val adminItems = admins
             .stream()
-            .map { AdminWithOrganizationIdDto.from(it) }
+            .map { AdminWithOrganizationDto.from(it) }
             .toList()
         val count = adminRepository.count()
         return PageImpl(adminItems, pageRequest, count)

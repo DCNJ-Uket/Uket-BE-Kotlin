@@ -23,19 +23,27 @@ class AdminServiceTest :
         val adminRepository: AdminRepository = mockk<AdminRepository>()
         val adminService: AdminService = AdminService(adminRepository)
 
-        val organization: Organization = Organization(
+        val organization1: Organization = Organization(
+            id = 1L,
             name = "organizationA",
-            organizationImagePath = "imagePath",
+            organizationImagePath = "imagePathA",
+        )
+        val organization2: Organization = Organization(
+            id = 2L,
+            name = "organizationB",
+            organizationImagePath = "imagePathB",
         )
         val admin1: Admin = Admin(
-            organization = organization,
+            id = 1L,
+            organization = organization1,
             name = "adminA",
             email = "emailA",
             password = "passwordA",
             isSuperAdmin = false,
         )
         val admin2: Admin = Admin(
-            organization = organization,
+            id = 2L,
+            organization = organization2,
             name = "adminB",
             email = "emailB",
             password = "passwordB",
@@ -82,7 +90,7 @@ class AdminServiceTest :
             }
         }
 
-        describe("Admin 전체 조회") {
+        describe("Admin 전체 조회(페이징)") {
             val pageRequset = PageRequest.of(1, 2)
             context("Admin이 2개 이상이면") {
                 val list = listOf(admin1.id, admin2.id)
@@ -90,10 +98,18 @@ class AdminServiceTest :
                 every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf(admin2, admin1)
                 every { adminRepository.count() } returns 2
                 it("어드민 전체 목록을 반환한다") {
-                    val adminPage = adminService.findAdminsWithOrganizationIdByPage(pageRequset)
+                    val adminPage = adminService.findAdminsWithOrganizationIdAndNameByPage(pageRequset)
                     adminPage.content.size shouldBe 2
-                    adminPage.content.get(0).name shouldBe "adminB"
-                    adminPage.content.get(1).name shouldBe "adminA"
+
+                    val adminB = adminPage.content.get(0)
+                    adminB.organizationId shouldBe 2L
+                    adminB.name shouldBe "adminB"
+                    adminB.organizationName shouldBe "organizationB"
+
+                    val adminA = adminPage.content.get(1)
+                    adminA.organizationId shouldBe 1L
+                    adminA.name shouldBe "adminA"
+                    adminA.organizationName shouldBe "organizationA"
                 }
             }
             context("Admin이 1개면") {
@@ -102,7 +118,7 @@ class AdminServiceTest :
                 every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf(admin1)
                 every { adminRepository.count() } returns 1
                 it("어드민 전체 목록(이지만 1개)을 반환한다") {
-                    val adminPage = adminService.findAdminsWithOrganizationIdByPage(pageRequset)
+                    val adminPage = adminService.findAdminsWithOrganizationIdAndNameByPage(pageRequset)
                     adminPage.content.size shouldBe 1
                     adminPage.content.get(0).name shouldBe "adminA"
                 }
@@ -113,7 +129,7 @@ class AdminServiceTest :
                 every { adminRepository.findAllByIdsOrderByCreatedAtDesc(list) } returns listOf()
                 every { adminRepository.count() } returns 0
                 it("어드민 전체 목록(이지만 빈 리스트)을 반환한다") {
-                    val adminPage = adminService.findAdminsWithOrganizationIdByPage(pageRequset)
+                    val adminPage = adminService.findAdminsWithOrganizationIdAndNameByPage(pageRequset)
                     adminPage.content.size shouldBe 0
                 }
             }
@@ -121,7 +137,7 @@ class AdminServiceTest :
 
         describe("Admin 생성 요청") {
             val registerAdminCommand: RegisterAdminCommand = RegisterAdminCommand(
-                organization = organization,
+                organization = organization1,
                 name = "newAdmin",
                 email = "newEmail",
                 password = "newPassword",
@@ -159,7 +175,7 @@ class AdminServiceTest :
                         registerAdminWithoutPasswordCommand.name,
                         registerAdminWithoutPasswordCommand.email,
                         registerAdminWithoutPasswordCommand.isSuperAdmin,
-                        organization
+                        organization1
                     )
                     verify(exactly = 1) { adminRepository.save(any()) }
                 }
@@ -173,7 +189,7 @@ class AdminServiceTest :
                                 registerAdminWithoutPasswordCommand.name,
                                 registerAdminWithoutPasswordCommand.email,
                                 registerAdminWithoutPasswordCommand.isSuperAdmin,
-                                organization
+                                organization1
                             )
                         }
                     exception.message shouldBe "이미 가입된 어드민입니다."
