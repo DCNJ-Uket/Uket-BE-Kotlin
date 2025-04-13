@@ -6,6 +6,7 @@ data class UserAuthToken(
     val isRegistered: Boolean,
 ) {
     companion object {
-        fun of(accessToken: String, refreshToken: String, isRegistered: Boolean): UserAuthToken = UserAuthToken(accessToken, refreshToken, isRegistered)
+        fun of(accessToken: String, refreshToken: String, isRegistered: Boolean): UserAuthToken =
+            UserAuthToken(accessToken, refreshToken, isRegistered)
     }
 }
