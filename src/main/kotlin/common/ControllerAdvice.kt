@@ -1,5 +1,6 @@
 package uket.common
 
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
@@ -15,7 +16,6 @@ import java.io.IOException
 import java.nio.CharBuffer
 import java.security.InvalidParameterException
 import java.time.format.DateTimeParseException
-import io.swagger.v3.oas.annotations.Hidden
 
 @Hidden
 @RestControllerAdvice
