@@ -15,7 +15,9 @@ import java.io.IOException
 import java.nio.CharBuffer
 import java.security.InvalidParameterException
 import java.time.format.DateTimeParseException
+import io.swagger.v3.oas.annotations.Hidden
 
+@Hidden
 @RestControllerAdvice
 class ControllerAdvice {
     private val log by LoggerDelegate()
