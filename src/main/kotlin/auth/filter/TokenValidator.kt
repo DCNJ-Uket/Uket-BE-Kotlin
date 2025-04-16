@@ -2,8 +2,6 @@ package uket.auth.filter
 
 import org.springframework.stereotype.Component
 import uket.auth.jwt.JwtAuthTokenUtil
-import uket.common.BaseException
-import uket.common.ErrorCode
 
 @Component
 class TokenValidator(
@@ -11,32 +9,32 @@ class TokenValidator(
 ) {
     fun validateTokenSignature(token: String?) {
         if (!jwtAuthTokenUtil.isValidToken(token)) {
-            throw BaseException(ErrorCode.INVALID_TOKEN)
+            throw IllegalStateException("유효하지 않은 토큰입니다.")
         }
     }
 
     fun validateExpiredToken(token: String?) {
         if (jwtAuthTokenUtil.isExpired(token)) {
-            throw BaseException(ErrorCode.TOKEN_EXPIRED)
+            throw IllegalStateException("만료된 토큰입니다.")
         }
     }
 
     fun validateTokenCategory(category: String, token: String?) {
         val tokenCategory: String = jwtAuthTokenUtil.getCategory(token)
         if (tokenCategory != category) {
-            throw BaseException(ErrorCode.NOT_MATCH_CATEGORY)
+            throw IllegalStateException("올바르지 않은 유형의 토큰입니다.")
         }
     }
 
     fun checkNotExpiredToken(token: String?) {
         if (!jwtAuthTokenUtil.isExpired(token)) {
-            throw BaseException(ErrorCode.TOKEN_NOT_EXPIRED)
+            throw IllegalStateException("아직 토큰이 만료되지 않았습니다.")
         }
     }
 
     fun validateRegistered(accessToken: String?) {
         if (!jwtAuthTokenUtil.isRegistered(accessToken)) {
-            throw BaseException(ErrorCode.NOT_REGISTERED_USER)
+            throw IllegalStateException("가입되지 않은 사용자입니다. 회원가입 후 이용해주세요")
         }
     }
 }
