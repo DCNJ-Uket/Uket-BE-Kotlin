@@ -23,7 +23,7 @@ class AuthController(
     private val userService: UserService,
 ) {
     @Operation(summary = "소셜 로그인", description = "소셜 로그인을 진행합니다.")
-    @PostMapping("/login/{provider}")
+    @PostMapping("auth/login/{provider}")
     fun login(
         @RequestBody request: LoginRequest,
         @PathVariable provider: String,
@@ -39,8 +39,10 @@ class AuthController(
     }
 
     @Operation(summary = "토큰 갱신", description = "토큰을 갱신합니다")
-    @PostMapping("/reissue")
-    fun reissue(request: TokenReissueRequest): ResponseEntity<UserTokenResponse> {
+    @PostMapping("auth/reissue")
+    fun reissue(
+        @RequestBody request: TokenReissueRequest,
+    ): ResponseEntity<UserTokenResponse> {
         val authToken: UserAuthToken = userAuthFacade.reissue(request.accessToken, request.refreshToken)
         val response: UserTokenResponse = UserTokenResponse.from(authToken)
         return ResponseEntity.ok(response)

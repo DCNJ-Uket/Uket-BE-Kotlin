@@ -93,7 +93,7 @@ class SecurityConfig(
                 registry
                     .requestMatchers("/admin/users/login")
                     .permitAll()
-                    .requestMatchers("/login/**")
+                    .requestMatchers("/auth/**")
                     .permitAll()
             }.authorizeHttpRequests { registry ->
                 registry

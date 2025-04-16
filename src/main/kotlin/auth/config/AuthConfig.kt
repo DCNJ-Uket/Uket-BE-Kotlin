@@ -20,7 +20,7 @@ class AuthConfig(
             .excludePathPatterns("/admin/**")
             .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/error")
             .excludePathPatterns("/admin/users/login")
-            .excludePathPatterns("/login/**")
+            .excludePathPatterns("/auth/**")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
