@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import org.hibernate.annotations.BatchSize
 import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
@@ -83,6 +84,7 @@ class EventRegistration(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
+    @BatchSize(size = 10)
     val eventRound: List<EventRoundRegistration> = _eventRound.map {
         EventRoundRegistration(
             id = it.id,
@@ -98,6 +100,7 @@ class EventRegistration(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
+    @BatchSize(size = 10)
     val entryGroup: List<EntryGroupRegistration> = _entryGroup.map {
         EntryGroupRegistration(
             id = it.id,
