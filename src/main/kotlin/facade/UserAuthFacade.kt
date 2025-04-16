@@ -1,6 +1,5 @@
 package uket.facade
 
-import io.lettuce.core.RedisException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.auth.dto.UserAuthToken
@@ -42,7 +41,7 @@ class UserAuthFacade(
         tokenValidator.checkNotExpiredToken(accessToken)
         val existingAccessToken: String? = rotateTokenService.getAccessTokenForToken(refreshToken)
         if (accessToken != existingAccessToken) {
-            throw RedisException("요청하신 AccessToken이 저장소에 존재하지 않습니다. 확인 부탁드립니다.")
+            throw IllegalArgumentException("요청하신 AccessToken이 저장소에 존재하지 않습니다. 확인 부탁드립니다.")
         }
 
         rotateTokenService.validateRefreshToken(refreshToken)
