@@ -1,22 +1,23 @@
 package uket.api.admin
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import uket.api.admin.request.EmailLoginRequest
 import uket.api.admin.request.RegisterAdminPasswordRequest
 import uket.api.admin.request.SendEmailRequest
+import uket.api.admin.response.AdminInfoResponse
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
+import uket.auth.config.adminId.LoginAdminId
 import uket.auth.dto.AdminAuthToken
+import uket.domain.admin.dto.AdminWithOrganizationDto
+import uket.domain.admin.service.AdminService
 import uket.facade.AdminAuthEmailFacade
 
 @Tag(name = "어드민 멤버 관련 API", description = "어드민 멤버 관련 API 입니다.")
@@ -25,6 +26,7 @@ import uket.facade.AdminAuthEmailFacade
 @ApiResponse(responseCode = "200", description = "OK")
 class AdminController(
     private val adminAuthEmailFacade: AdminAuthEmailFacade,
+    private val adminService: AdminService,
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 멤버 등록 메일 발송", description = "비밀번호를 제외한 어드민 멤버를 등록 후 회원가입 메일을 발송합니다.")
@@ -61,8 +63,12 @@ class AdminController(
     @Operation(summary = "어드민 본인 정보 조회", description = "로그인한 어드민 유저의 정보를 조회합니다.")
     @GetMapping("/info")
     fun getAdminInfo(
-
-    ) : ResponseEntity<AdminInfo> {
-        val adminInfo: AdminInfo = adminService.getAdminInfo()
+        @Parameter(hidden = true)
+        @LoginAdminId
+        adminId: Long,
+    ) : ResponseEntity<AdminInfoResponse> {
+        val adminInfo: AdminWithOrganizationDto = adminService.getAdminInfo(adminId)
+        val response = AdminInfoResponse.from(adminInfo)
+        return ResponseEntity.ok(response)
     }
 }
