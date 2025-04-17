@@ -9,7 +9,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class LoginAdminIdArgumentResolver: HandlerMethodArgumentResolver {
+class LoginAdminIdArgumentResolver : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginAdminId::class.java)
     }
@@ -18,7 +18,7 @@ class LoginAdminIdArgumentResolver: HandlerMethodArgumentResolver {
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): Long {
         val role: String = SecurityContextHolder.getContext().authentication.authorities.first().authority
         check(role == "ADMIN") { "잘못된 토큰 전달입니다." }

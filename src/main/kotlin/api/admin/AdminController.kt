@@ -9,7 +9,13 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.request.EmailLoginRequest
 import uket.api.admin.request.RegisterAdminPasswordRequest
 import uket.api.admin.request.SendEmailRequest
@@ -64,13 +70,13 @@ class AdminController(
     }
 
     @SecurityRequirement(name = "JWT")
-    @Operation(summary = "어드민 본인 정보 조회", description = "로그인한 어드민 유저의 정보를 조회합니다.")
+    @Operation(summary = "어드민 본인 정보 상세 조회", description = "로그인한 어드민 유저의 정보를 조회합니다.")
     @GetMapping("/info")
     fun getAdminInfo(
         @Parameter(hidden = true)
         @LoginAdminId
         adminId: Long,
-    ) : ResponseEntity<AdminInfoResponse> {
+    ): ResponseEntity<AdminInfoResponse> {
         val adminInfo: AdminWithOrganizationDto = adminService.getAdminInfo(adminId)
         val response = AdminInfoResponse.from(adminInfo)
         return ResponseEntity.ok(response)

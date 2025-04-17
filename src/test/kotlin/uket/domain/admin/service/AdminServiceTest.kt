@@ -215,4 +215,35 @@ class AdminServiceTest :
                 }
             }
         }
+
+        describe("Admin 본인 정보 상세 조회") {
+            context("Admin이 존재하는 경우") {
+                beforeTest {
+                    every { adminRepository.findByIdOrNull(admin1.id) } returns admin1
+                }
+
+                it("AdminInfoResponse를 반환한다") {
+                    val result = adminService.getAdminInfo(admin1.id)
+
+                    result.id shouldBe admin1.id
+                    result.name shouldBe admin1.name
+                    result.email shouldBe admin1.email
+                    result.organizationName shouldBe organization1.name
+                    result.isSuperAdmin shouldBe admin1.isSuperAdmin
+                }
+            }
+
+            context("Admin이 존재하지 않는 경우") {
+                beforeTest {
+                    every { adminRepository.findByIdOrNull(admin1.id) } returns null
+                }
+
+                it("예외를 던진다") {
+                    val exception = shouldThrow<IllegalStateException> {
+                        adminService.getAdminInfo(admin1.id)
+                    }
+                    exception.message shouldBe "해당 어드민을 찾을 수 없습니다"
+                }
+            }
+        }
     })
