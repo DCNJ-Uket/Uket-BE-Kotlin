@@ -16,7 +16,6 @@ class AuthConfig(
             .excludePathPatterns("/api/v1/email/**")
             .excludePathPatterns("/api/v1/auth/**")
             .excludePathPatterns("/api/v1/users/register")
-            .excludePathPatterns("/admin/**")
             .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/error")
             .excludePathPatterns("/admin/users/login")
     }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -54,5 +55,14 @@ class AdminController(
     ): ResponseEntity<AdminAuthToken> {
         val adminAuthToken: AdminAuthToken = adminAuthEmailFacade.login(request.email, request.password)
         return ResponseEntity.ok(adminAuthToken)
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "어드민 본인 정보 조회", description = "로그인한 어드민 유저의 정보를 조회합니다.")
+    @GetMapping("/info")
+    fun getAdminInfo(
+
+    ) : ResponseEntity<AdminInfo> {
+        val adminInfo: AdminInfo = adminService.getAdminInfo()
     }
 }
