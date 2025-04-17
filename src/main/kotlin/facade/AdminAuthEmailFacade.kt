@@ -72,7 +72,7 @@ class AdminAuthEmailFacade(
             UserRole.ADMIN.toString(),
             true,
         )
-        return AdminAuthToken.of(accessToken, admin.name, admin.email, admin.isSuperAdmin)
+        return AdminAuthToken.of(accessToken, admin, admin.organization.name)
     }
 
     private fun validateEmail(email: String) {

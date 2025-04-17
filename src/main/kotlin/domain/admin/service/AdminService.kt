@@ -27,6 +27,13 @@ class AdminService(
         ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
 
     @Transactional(readOnly = true)
+    fun getAdminInfo(adminId: Long): AdminWithOrganizationDto {
+        val admin = adminRepository.findByIdOrNull(adminId)
+            ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
+        return AdminWithOrganizationDto.from(admin)
+    }
+
+    @Transactional(readOnly = true)
     fun findAdminsWithOrganizationIdAndNameByPage(pageRequest: PageRequest): Page<AdminWithOrganizationDto> {
         val ids = adminRepository.findAdminIds(pageRequest)
         val admins = adminRepository.findAllByIdsOrderByCreatedAtDesc(ids)
