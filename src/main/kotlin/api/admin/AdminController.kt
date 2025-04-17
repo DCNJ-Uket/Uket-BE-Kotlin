@@ -87,11 +87,9 @@ class AdminController(
 
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 멤버 삭제", description = "지정한 어드민 멤버를 삭제합니다.")
-    @DeleteMapping("/delete")
+    @DeleteMapping("/{adminId}")
     fun deleteAdmin(
-        @Parameter(hidden = true)
-        @LoginAdminId
-        adminId: Long,
+        @PathVariable("adminId") adminId: Long,
     ): ResponseEntity<DeleteAdminResponse> {
         val user = adminService.getById(adminId)
         adminService.deleteAdmin(adminId)
