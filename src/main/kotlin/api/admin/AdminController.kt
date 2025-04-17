@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
@@ -12,10 +14,12 @@ import uket.api.admin.request.EmailLoginRequest
 import uket.api.admin.request.RegisterAdminPasswordRequest
 import uket.api.admin.request.SendEmailRequest
 import uket.api.admin.response.AdminInfoResponse
+import uket.api.admin.response.DeleteAdminResponse
 import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.config.adminId.LoginAdminId
 import uket.auth.dto.AdminAuthToken
+import uket.common.response.CustomPageResponse
 import uket.domain.admin.dto.AdminWithOrganizationDto
 import uket.domain.admin.service.AdminService
 import uket.facade.AdminAuthEmailFacade
@@ -70,5 +74,27 @@ class AdminController(
         val adminInfo: AdminWithOrganizationDto = adminService.getAdminInfo(adminId)
         val response = AdminInfoResponse.from(adminInfo)
         return ResponseEntity.ok(response)
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "어드민 멤버 목록 조회", description = "어드민 목록을 페이지로 조회합니다.")
+    @GetMapping
+    fun getAdmins(page: Int, size: Int): ResponseEntity<CustomPageResponse<AdminWithOrganizationDto>> {
+        val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
+        val adminPage = adminService.findAdminsWithOrganizationIdAndNameByPage(pageRequest)
+        return ResponseEntity.ok(CustomPageResponse.from(adminPage))
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "어드민 멤버 삭제", description = "지정한 어드민 멤버를 삭제합니다.")
+    @DeleteMapping("/delete")
+    fun deleteAdmin(
+        @Parameter(hidden = true)
+        @LoginAdminId
+        adminId: Long,
+    ): ResponseEntity<DeleteAdminResponse> {
+        val user = adminService.getById(adminId)
+        adminService.deleteAdmin(adminId)
+        return ResponseEntity.ok(DeleteAdminResponse(adminId, user.name))
     }
 }
