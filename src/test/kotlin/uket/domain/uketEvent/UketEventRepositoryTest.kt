@@ -37,12 +37,20 @@ class UketEventRepositoryTest(
 
             val uketEvent = UketEvent(
                 organizationId = organization.id,
-                name = "uketEventA",
+                eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
                 location = "locationA",
-                eventImagePath = null,
-                displayEndDate = LocalDateTime.now(),
                 ticketPrice = 1000,
+                ticketingStartDateTime = LocalDateTime.now(),
+                ticketingEndDateTime = LocalDateTime.now(),
+                totalTicketCount = 0,
+                details = UketEvent.EventDetails(
+                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
+                ),
+                uketEventImageId = "",
+                thumbnailImageId = "",
+                bannerImageIds = listOf(),
+                _uketEventRounds = listOf()
             )
             entityManager.persist(uketEvent)
             entityManager.flush()
