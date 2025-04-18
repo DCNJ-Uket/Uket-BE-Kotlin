@@ -71,7 +71,7 @@ class UketEvent(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    val uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
+    var uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
         UketEventRound(
             id = it.id,
             uketEvent = this,
@@ -101,5 +101,10 @@ class UketEvent(
             INSTAGRAM,
             KAKAO,
         }
+    }
+
+    fun addUketEventRound(uketEventRound: UketEventRound) {
+        this.uketEventRounds += uketEventRound
+        uketEventRound.uketEvent = this
     }
 }

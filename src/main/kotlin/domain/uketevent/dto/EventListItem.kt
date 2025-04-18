@@ -1,14 +1,16 @@
 package uket.domain.uketevent.dto
 
+import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
 data class EventListItem(
-    private val eventName: String,
-    private val eventThumbnailImagePath: String,
-    private val eventStartDate: LocalDateTime,
-    private val eventEndDate: LocalDateTime,
-    private val ticketingStartDate: LocalDateTime,
-    private val ticketingEndDate: LocalDateTime,
+    val eventName: String,
+    val eventThumbnailImagePath: String,
+    val eventStartDate: LocalDateTime,
+    val eventEndDate: LocalDateTime,
+    val ticketingStartDate: LocalDateTime,
+    val ticketingEndDate: LocalDateTime,
+    val ticketingStatus: TicketingStatus,
 ) {
 //    fun from(uketEvent: UketEvent): EventListItem {
 //        return EventListItem(
