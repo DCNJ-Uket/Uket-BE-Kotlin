@@ -72,7 +72,7 @@ private fun setDB3(entityManager: EntityManager) {
         )
     entityManager.persist(uketEvent1)
     val uketEventRounds1 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now, now.plusDays(1)))
+        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(6), now.plusDays(7)))
     uketEventRounds1.forEach { entityManager.persist(it) }
 
     val uketEvent2 =
@@ -82,7 +82,7 @@ private fun setDB3(entityManager: EntityManager) {
         )
     entityManager.persist(uketEvent2)
     val uketEventRounds2 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now, now.plusDays(1)))
+        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(8)))
     uketEventRounds2.forEach { entityManager.persist(it) }
 
     val closedEvent = UketEventRandomUtil.createUketEventWithDates(
@@ -109,7 +109,7 @@ private fun setDB2(entityManager: EntityManager) {
 
     entityManager.persist(uketEvent1)
     val uketEventRounds1 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now, now.plusDays(1)))
+        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(3), now.plusDays(4)))
     uketEventRounds1.forEach { entityManager.persist(it) }
 
     val uketEvent2 =
@@ -119,7 +119,7 @@ private fun setDB2(entityManager: EntityManager) {
         )
     entityManager.persist(uketEvent2)
     val uketEventRounds2 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now, now.plusDays(1)))
+        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
     uketEventRounds2.forEach { entityManager.persist(it) }
 
     val uketEvent3 =
@@ -129,7 +129,7 @@ private fun setDB2(entityManager: EntityManager) {
         )
     entityManager.persist(uketEvent3)
     val uketEventRounds3 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now, now.plusDays(1)))
+        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now.plusDays(5)))
     uketEventRounds3.forEach { entityManager.persist(it) }
 
     entityManager.flush()

@@ -30,15 +30,16 @@ class UketEventService(
         } else {
             eventList = uketEventRepository.findAllByEventTypeAndEventEndDateBeforeNowWithUketEventRound(EventType.valueOf(type.name))
         }
+        println(eventList.map { it.eventName })
 
         val now = LocalDateTime.now()
         val itemList = eventList
             .map {
                 var ticketingStatus = TicketingStatus.오픈_예정
-                if (it.ticketingStartDateTime.isAfter(now)) {
+                if (now.isAfter(it.ticketingStartDateTime)) {
                     ticketingStatus = TicketingStatus.티켓팅_진행중
                 }
-                if (it.ticketingEndDateTime.isAfter(now)) {
+                if (now.isAfter(it.ticketingEndDateTime)) {
                     ticketingStatus = TicketingStatus.티켓팅_종료
                 }
 
@@ -52,10 +53,12 @@ class UketEventService(
                     ticketingStatus = ticketingStatus
                 )
             }
+        println(itemList.map { it.eventName + it.ticketingStatus })
         val orderedList = itemList.sortedWith(
             compareBy<EventListItem> { it.ticketingStatus }
                 .thenBy { it.eventStartDate }
         )
+        println(orderedList.map { it.eventName + it.ticketingStatus })
         return orderedList
     }
 

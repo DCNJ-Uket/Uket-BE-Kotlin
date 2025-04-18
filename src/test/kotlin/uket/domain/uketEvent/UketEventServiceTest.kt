@@ -32,8 +32,8 @@ class UketEventServiceTest :
                     val eventList = uketEventService.getActiveEventItemList(EventListQueryType.ALL)
                     eventList.size shouldBe 3
                     eventList.get(0).eventName shouldBe uketEvent3.eventName
-                    eventList.get(1).eventName shouldBe uketEvent2.eventName
-                    eventList.get(2).eventName shouldBe uketEvent1.eventName
+                    eventList.get(1).eventName shouldBe uketEvent1.eventName
+                    eventList.get(2).eventName shouldBe uketEvent2.eventName
                 }
             }
             context("티켓팅 진행 중인 행사 2개, 티켓팅 시작 전인 행사 1개, 티켓팅 종료된 행사 1개가 있을 때") {
@@ -69,7 +69,7 @@ private fun setDB3(
         now.plusDays(5)
     )
     val uketEventRounds3 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
+        UketEventRandomUtil.createUketEventsRoundWithDate(notOpenedEvent, listOf(now.plusDays(7), now.plusDays(8)))
 
     val closedEvent = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(4),
@@ -80,37 +80,37 @@ private fun setDB3(
     return Pair(notOpenedEvent, closedEvent)
 }
 
+private fun setDB2(now: LocalDateTime): Pair<UketEvent, UketEvent> {
+    val uketEvent1 = UketEventRandomUtil.createUketEventWithDates(
+        now.minusDays(2),
+        now.plusDays(2)
+    )
+    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(5), now.plusDays(6)))
+
+    val uketEvent2 = UketEventRandomUtil.createUketEventWithDates(
+        now.minusDays(3),
+        now.plusDays(3)
+    )
+    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
+    return Pair(uketEvent1, uketEvent2)
+}
+
 private fun setDB(uketEventRepository: UketEventRepository): Triple<UketEvent, UketEvent, UketEvent> {
     val now = LocalDateTime.now()
     val uketEvent1 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(2),
         now.plusDays(2)
     )
-    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now, now.plusDays(1)))
+    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(7), now.plusDays(8)))
     val uketEvent2 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(3),
         now.plusDays(3)
     )
-    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now, now.plusDays(1)))
+    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(9), now.plusDays(10)))
     val uketEvent3 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(4),
         now.plusDays(4)
     )
-    val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now, now.plusDays(1)))
+    val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now.plusDays(5), now.plusDays(6)))
     return Triple(uketEvent1, uketEvent2, uketEvent3)
-}
-
-private fun setDB2(now: LocalDateTime): Pair<UketEvent, UketEvent> {
-    val uketEvent1 = UketEventRandomUtil.createUketEventWithDates(
-        now.minusDays(2),
-        now.plusDays(2)
-    )
-    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now, now.plusDays(1)))
-
-    val uketEvent2 = UketEventRandomUtil.createUketEventWithDates(
-        now.minusDays(3),
-        now.plusDays(3)
-    )
-    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now, now.plusDays(1)))
-    return Pair(uketEvent1, uketEvent2)
 }
