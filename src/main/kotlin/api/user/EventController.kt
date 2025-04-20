@@ -18,7 +18,6 @@ class EventController(
         @RequestParam("type") type: EventListQueryType,
     ): ResponseEntity<ActiveEventsResponse> {
         val itemList = uketEventService.getActiveEventItemList(type = type)
-        println(itemList.map { it.eventName })
         return ResponseEntity.ok(ActiveEventsResponse(itemList))
     }
 }

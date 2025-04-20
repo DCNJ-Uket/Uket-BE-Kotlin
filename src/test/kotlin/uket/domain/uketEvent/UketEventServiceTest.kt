@@ -58,6 +58,10 @@ class UketEventServiceTest :
                 }
             }
         }
+
+        it("더미 sql 생성") {
+            UketEventRandomUtil.createDummyData()
+        }
     })
 
 private fun setDB3(

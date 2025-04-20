@@ -4,6 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.user.EventListQueryType
+import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.uketevent.dto.EventListItem
 import uket.domain.uketevent.entity.UketEvent
@@ -15,6 +16,8 @@ import java.time.LocalDateTime
 class UketEventService(
     private val uketEventRepository: UketEventRepository,
 ) {
+    private val log by LoggerDelegate()
+
     @Transactional(readOnly = true)
     fun getById(uketEventId: Long): UketEvent {
         val uketEvent = uketEventRepository.findByIdOrNull(uketEventId)
@@ -24,13 +27,13 @@ class UketEventService(
 
     @Transactional(readOnly = true)
     fun getActiveEventItemList(type: EventListQueryType): List<EventListItem> {
+        val startTime = System.currentTimeMillis()
         lateinit var eventList: List<UketEvent>
         if (type.name.equals("ALL")) {
             eventList = uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound()
         } else {
             eventList = uketEventRepository.findAllByEventTypeAndEventEndDateBeforeNowWithUketEventRound(EventType.valueOf(type.name))
         }
-        println(eventList.map { it.eventName })
 
         val now = LocalDateTime.now()
         val itemList = eventList
@@ -53,12 +56,12 @@ class UketEventService(
                     ticketingStatus = ticketingStatus
                 )
             }
-        println(itemList.map { it.eventName + it.ticketingStatus })
         val orderedList = itemList.sortedWith(
             compareBy<EventListItem> { it.ticketingStatus }
                 .thenBy { it.eventStartDate }
         )
-        println(orderedList.map { it.eventName + it.ticketingStatus })
+        val endTime = System.currentTimeMillis()
+        log.info("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
         return orderedList
     }
 
