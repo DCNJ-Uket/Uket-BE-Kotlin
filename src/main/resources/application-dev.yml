@@ -57,6 +57,9 @@ app:
       access-token-expiration: 600_000
       refresh-token-expiration: 7_200_000
       email-token-expiration: 86_400_000
+  slack:
+    webhook:
+      url: ${SLACK_WEBHOOK_URL}
   qr-code:
     width: 300
     height: 300

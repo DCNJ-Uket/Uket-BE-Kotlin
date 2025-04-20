@@ -69,6 +69,9 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
 
+    // slack
+    implementation("com.slack.api:slack-api-client:1.39.0")
+
     // qrcode
     implementation("com.google.zxing:core:3.4.1")
     implementation("com.google.zxing:javase:3.4.1")
