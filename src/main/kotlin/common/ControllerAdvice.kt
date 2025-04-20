@@ -3,6 +3,7 @@ package uket.common
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.ConstraintViolationException
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import uket.common.response.PublicErrorResponse
+import uket.modules.slack.dto.ErrorReportDto
 import java.io.IOException
 import java.nio.CharBuffer
 import java.security.InvalidParameterException
@@ -19,7 +21,9 @@ import java.time.format.DateTimeParseException
 
 @Hidden
 @RestControllerAdvice
-class ControllerAdvice {
+class ControllerAdvice(
+    private val eventPublisher: ApplicationEventPublisher,
+) {
     private val log by LoggerDelegate()
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -30,6 +34,8 @@ class ControllerAdvice {
     ): PublicErrorResponse {
         log.error("[UnhandledException] ${dumpRequest(request)}", exception)
 
+        val dump = dumpRequest(request).append("\n").append(exception.stackTraceToString())
+        eventPublisher.publishEvent(ErrorReportDto(exception.message, dump.toString()))
         return PublicErrorResponse.error(exception = exception)
     }
 

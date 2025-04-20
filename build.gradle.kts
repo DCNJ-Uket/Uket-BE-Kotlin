@@ -73,6 +73,13 @@ dependencies {
     implementation("io.awspring.cloud:spring-cloud-aws-starter:3.1.1")
     implementation(platform("software.amazon.awssdk:bom:2.25.46"))
     implementation("software.amazon.awssdk:s3")
+
+    // slack
+    implementation("com.slack.api:slack-api-client:1.39.0")
+
+    // qrcode
+    implementation("com.google.zxing:core:3.4.1")
+    implementation("com.google.zxing:javase:3.4.1")
 }
 
 tasks.test {
