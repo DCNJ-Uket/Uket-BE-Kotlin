@@ -33,7 +33,7 @@ class EventRegistration(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    val status: EventRegistrationStatus = EventRegistrationStatus.검수진행,
+    var status: EventRegistrationStatus = EventRegistrationStatus.검수_진행,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type")
@@ -135,7 +135,11 @@ class EventRegistration(
         }
     }
 
+    fun updateStatus(registrationStatus: EventRegistrationStatus) {
+        this.status = registrationStatus
+    }
+
     companion object {
-        private val log by uket.common.LoggerDelegate()
+        private val log by LoggerDelegate()
     }
 }
