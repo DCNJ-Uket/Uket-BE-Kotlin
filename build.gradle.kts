@@ -68,6 +68,11 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
+
+    // s3
+    implementation("io.awspring.cloud:spring-cloud-aws-starter:3.1.1")
+    implementation(platform("software.amazon.awssdk:bom:2.25.46"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 tasks.test {
