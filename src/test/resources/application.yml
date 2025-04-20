@@ -42,6 +42,10 @@ app:
   slack:
     webhook:
       url: "test.url"
+  qr-code:
+    width: 300
+    height: 300
+    type: png
 
 logging:
   level:

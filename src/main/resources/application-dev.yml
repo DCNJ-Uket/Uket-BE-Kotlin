@@ -60,3 +60,7 @@ app:
   slack:
     webhook:
       url: ${SLACK_WEBHOOK_URL}
+  qr-code:
+    width: 300
+    height: 300
+    type: png
