@@ -25,14 +25,10 @@ class SecurityConfig(
 ) {
     @Bean
     @Throws(Exception::class)
-    fun authenticationManager(configuration: AuthenticationConfiguration): AuthenticationManager {
-        return configuration.authenticationManager
-    }
+    fun authenticationManager(configuration: AuthenticationConfiguration): AuthenticationManager = configuration.authenticationManager
 
     @Bean
-    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun bCryptPasswordEncoder(): BCryptPasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     @Throws(Exception::class)
@@ -42,7 +38,8 @@ class SecurityConfig(
                 cors.configurationSource {
                     val configuration = CorsConfiguration()
                     configuration.allowedMethods = listOf(
-                        *ALLOWED_METHOD_NAMES.split(",".toRegex())
+                        *ALLOWED_METHOD_NAMES
+                            .split(",".toRegex())
                             .dropLastWhile { it.isEmpty() }
                             .toTypedArray(),
                     )
@@ -55,47 +52,54 @@ class SecurityConfig(
                     )
                     configuration
                 }
-            }
-            .csrf {
+            }.csrf {
                 it.disable()
-            }
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
+            }.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling { exceptionHandlerManagement ->
                 exceptionHandlerManagement
                     .authenticationEntryPoint(entryPoint)
                     .accessDeniedHandler(accessDeniedHandler)
-            }
-            .authorizeHttpRequests { registry ->
-                registry.requestMatchers("/favicon.ico").permitAll()
-                    .requestMatchers("/error").permitAll()
-            }
-            .authorizeHttpRequests { registry ->
+            }.authorizeHttpRequests { registry ->
+                registry
+                    .requestMatchers("/favicon.ico")
+                    .permitAll()
+                    .requestMatchers("/error")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
                 registry // actuator, rest docs 경로, 실무에서는 상황에 따라 적절한 접근제어 필요
-                    .requestMatchers("/actuator/*").permitAll()
-                    .requestMatchers("/swagger-ui.html").permitAll()
-                    .requestMatchers("/swagger-ui/**").permitAll()
-                    .requestMatchers("/v3/api-docs/**").permitAll()
-                    .requestMatchers("/admin/**").permitAll()
-            }
-            .authorizeHttpRequests { registry ->
+                    .requestMatchers("/actuator/*")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui.html")
+                    .permitAll()
+                    .requestMatchers("/swagger-ui/**")
+                    .permitAll()
+                    .requestMatchers("/v3/api-docs/**")
+                    .permitAll()
+                    .requestMatchers("/admin/**")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
                 registry
-                    .requestMatchers("/api/v1/auth").permitAll()
-                    .requestMatchers("/api/v1/auth/login/**").permitAll()
-            }
-            .authorizeHttpRequests { registry ->
+                    .requestMatchers("/api/v1/auth")
+                    .permitAll()
+                    .requestMatchers("/api/v1/auth/login/**")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
                 registry
-                    .requestMatchers("/api/v1/dev/token").permitAll()
-                    .requestMatchers("/api/v1/dev/token/registered").permitAll()
-            }
-            .authorizeHttpRequests { registry ->
+                    .requestMatchers("/api/v1/dev/token")
+                    .permitAll()
+                    .requestMatchers("/api/v1/dev/token/registered")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
                 registry
-                    .requestMatchers("/admin/users/login").permitAll()
-            }
-            .authorizeHttpRequests { registry ->
+                    .requestMatchers("/admin/users/login")
+                    .permitAll()
+                    .requestMatchers("/auth/**")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
                 registry
-                    .anyRequest().authenticated()
-            }
-            .sessionManagement { session ->
+                    .anyRequest()
+                    .authenticated()
+            }.sessionManagement { session ->
                 session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }

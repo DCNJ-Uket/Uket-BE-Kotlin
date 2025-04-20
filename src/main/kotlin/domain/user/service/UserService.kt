@@ -2,6 +2,7 @@ package uket.domain.user.service
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.user.dto.CreateUserCommand
 import uket.domain.user.dto.RegisterUserCommand
@@ -25,7 +26,7 @@ class UserService(
     /*
         유저 생성 또는 업데이트
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     fun createUser(createUserCommand: CreateUserCommand): User {
         val existUser = userRepository.findByPlatformAndPlatformId(
             createUserCommand.platform,
