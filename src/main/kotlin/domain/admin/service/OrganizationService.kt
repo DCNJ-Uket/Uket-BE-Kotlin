@@ -26,8 +26,8 @@ class OrganizationService(
 
     fun findAll(): List<Organization> = organizationRepository.findAll()
 
-    fun findAllIdAndNames(): List<OrganizationDropdownItem> {
-        val organizations = organizationRepository.findAll()
+    fun findAllAvailableIdAndNames(): List<OrganizationDropdownItem> {
+        val organizations = organizationRepository.findAvailableOrganization()
         return organizations.stream().map { o -> OrganizationDropdownItem.from(o) }.toList()
     }
 
