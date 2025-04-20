@@ -31,6 +31,12 @@ spring:
     redis:
       host: localhost
       port: 6379
+  cloud:
+    aws:
+      s3:
+        access-key: "test-access-key"
+        secret-key: "test-secret-key"
+        bucket: "test-bucket"
 
 app:
   token:
