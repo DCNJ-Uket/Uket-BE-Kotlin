@@ -19,7 +19,7 @@ import uket.modules.redis.service.RotateTokenService
 @SpringBootTest
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class RotateTokenServiceTest {
+class RotateTokenServiceTest() {
     @Autowired
     lateinit var rotateTokenService: RotateTokenService
 
