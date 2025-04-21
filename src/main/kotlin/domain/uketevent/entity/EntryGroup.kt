@@ -34,15 +34,18 @@ class EntryGroup(
 
     @Column(name = "ticket_count")
     var ticketCount: Int,
+
+    @Column(name = "total_ticket_count")
+    var totalTicketCount: Int,
 ) : BaseTimeEntity() {
-//    fun increaseReservedCount(): Boolean {
-//        if (this.ticketCount + 1 > this.totalCount) {
-//            return false
-//        }
-//
-//        this.ticketCount += 1
-//        return true
-//    }
+    fun increaseReservedCount(): Boolean {
+        if (this.ticketCount + 1 > this.totalTicketCount) {
+            return false
+        }
+
+        this.ticketCount += 1
+        return true
+    }
 
     fun decreaseReservedCount(): Boolean {
         if (this.ticketCount < 1) {

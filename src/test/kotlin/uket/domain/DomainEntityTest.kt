@@ -104,7 +104,7 @@ class DomainEntityTest {
             _uketEventRounds = listOf(uketEventRound)
         )
         uketEventRound.uketEvent = uketEvent
-        val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0)
+        val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 
         // when
         em.persist(user)
