@@ -12,16 +12,14 @@ data class CustomPageResponse<T>(
     val totalPages: Int,
     val empty: Boolean,
 ) {
-    companion object {
-        fun <T> from(page: Page<T>): CustomPageResponse<T> = CustomPageResponse(
-            content = page.content,
-            pageNumber = page.number + 1,
-            pageSize = page.size,
-            first = page.isFirst,
-            last = page.isLast,
-            totalElements = page.totalElements,
-            totalPages = page.totalPages,
-            empty = page.isEmpty,
-        )
-    }
+    constructor(page: Page<T>) : this(
+        content = page.content,
+        pageNumber = page.number + 1,
+        pageSize = page.size,
+        first = page.isFirst,
+        last = page.isLast,
+        totalElements = page.totalElements,
+        totalPages = page.totalPages,
+        empty = page.isEmpty
+    )
 }
