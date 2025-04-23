@@ -20,8 +20,8 @@ class LoginAdminIdArgumentResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Long {
-        val role: String = SecurityContextHolder.getContext().authentication.authorities.first().authority
-        check(role == "ADMIN") { "잘못된 토큰 전달입니다." }
+        val isAdmin = SecurityContextHolder.getContext().authentication.authorities.any { it.authority == "ADMIN" }
+        check(isAdmin) { "잘못된 토큰 전달입니다." }
 
         val adminId = SecurityContextHolder.getContext().authentication.name
         return adminId.toLong()

@@ -17,4 +17,14 @@ interface OrganizationRepository : JpaRepository<Organization, Long> {
     """
     )
     fun existsByNameAndNotRegistered(name: String): Boolean
+
+    @Query(
+        """
+    SELECT o FROM Organization o
+    WHERE o.id NOT IN (
+        SELECT a.organization.id FROM Admin a
+    )
+"""
+    )
+    fun findAvailableOrganization(): List<Organization>
 }
