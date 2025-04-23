@@ -5,6 +5,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.eventregistration.entity.EventRegistration
+import uket.domain.eventregistration.entity.EventRegistrationStatus
 
 @Service
 class EventRegistrationService(
@@ -31,6 +32,18 @@ class EventRegistrationService(
 
     @Transactional
     fun registerEvent(eventRegistration: EventRegistration): EventRegistration {
+        return eventRegistrationRepository.save(eventRegistration)
+    }
+
+    @Transactional
+    fun updateStatus(
+        id: Long,
+        registrationStatus: EventRegistrationStatus,
+    ): EventRegistration {
+        val eventRegistration = getById(id)
+
+        eventRegistration.updateStatus(registrationStatus)
+
         return eventRegistrationRepository.save(eventRegistration)
     }
 }
