@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.repository.EntryGroupRepository
+import uket.modules.redis.aop.DistributedLock
 
 @Service
 @Transactional(readOnly = true)
@@ -20,18 +21,18 @@ class EntryGroupService(
     fun findByUketEventRoundId(uketEventRoundId: Long): List<EntryGroup> =
         entryGroupRepository.findByUketEventRoundId(uketEventRoundId, EntryGroup::class.java)
 
-//    @Transactional
-//    fun increaseReservedCount(entryGroupId: Long) {
-//        val entryGroup = this.getById(entryGroupId)
-//        val isSuccess: Boolean = entryGroup.increaseReservedCount()
-//
-//        if (java.lang.Boolean.FALSE == isSuccess) {
-//            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
-//        }
-//        entryGroupRepository.save(entryGroup)
-//    }
+    @Transactional
+    fun increaseReservedCount(entryGroupId: Long) {
+        val entryGroup = this.getById(entryGroupId)
+        val isSuccess: Boolean = entryGroup.increaseReservedCount()
 
-    // @DistributedLock(key = "#reservationId")
+        if (java.lang.Boolean.FALSE == isSuccess) {
+            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
+        }
+        entryGroupRepository.save(entryGroup)
+    }
+
+    @DistributedLock(key = "#reservationId")
     fun decreaseReservedCount(entryGroupId: Long) {
         val entryGroup = this.getById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()

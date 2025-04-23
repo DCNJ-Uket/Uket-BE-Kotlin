@@ -19,7 +19,7 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
     @Query(
         """
             SELECT ue FROM UketEvent ue 
-            JOIN ue.uketEventRounds uer
+            JOIN FETCH ue.uketEventRounds uer
             WHERE ue.eventType = :eventType AND
                 (   
                     SELECT MAX(uer.eventRoundDateTime)
@@ -33,7 +33,7 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
     @Query(
         """
             SELECT ue FROM UketEvent ue 
-            JOIN ue.uketEventRounds uer
+            JOIN FETCH ue.uketEventRounds uer
             WHERE
                 (   
                     SELECT MAX(uer.eventRoundDateTime)

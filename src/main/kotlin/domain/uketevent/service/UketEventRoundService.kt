@@ -21,10 +21,4 @@ class UketEventRoundService(
 
     fun findByUketEventId(uketEventId: Long): List<UketEventRound> =
         uketEventRoundRepository.findByUketEventId(uketEventId, UketEventRound::class.java)
-
-//    fun getNameById(uketEventRoundId: Long): String {
-//        val uketEventRound = this.getById(uketEventRoundId)
-//        val name = uketEventRound.name
-//        return name
-//    }
 }

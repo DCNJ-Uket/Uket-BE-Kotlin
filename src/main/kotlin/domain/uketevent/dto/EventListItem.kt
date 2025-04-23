@@ -11,15 +11,4 @@ data class EventListItem(
     val ticketingStartDate: LocalDateTime,
     val ticketingEndDate: LocalDateTime,
     val ticketingStatus: TicketingStatus,
-) {
-//    fun from(uketEvent: UketEvent): EventListItem {
-//        return EventListItem(
-//            eventName = uketEvent.eventName,
-//            eventThumbnailImagePath = uketEvent.thumbnailImageId,
-//            eventStartDate = uketEvent.,
-//            eventEndDate =,
-//            ticketingStartDate = uketEvent.ticketingStartDateTime,
-//            ticketingEndDate = uketEvent.ticketingEndDateTime
-//        )
-//    }
-}
+)

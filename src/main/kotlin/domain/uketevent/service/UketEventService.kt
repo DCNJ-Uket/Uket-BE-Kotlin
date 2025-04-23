@@ -38,13 +38,7 @@ class UketEventService(
         val now = LocalDateTime.now()
         val itemList = eventList
             .map {
-                var ticketingStatus = TicketingStatus.오픈_예정
-                if (now.isAfter(it.ticketingStartDateTime)) {
-                    ticketingStatus = TicketingStatus.티켓팅_진행중
-                }
-                if (now.isAfter(it.ticketingEndDateTime)) {
-                    ticketingStatus = TicketingStatus.티켓팅_종료
-                }
+                val ticketingStatus = getCurrentEventTicketingStatus(now, it)
 
                 EventListItem(
                     eventName = it.eventName,
@@ -61,8 +55,22 @@ class UketEventService(
                 .thenBy { it.eventStartDate }
         )
         val endTime = System.currentTimeMillis()
-        log.info("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
+        log.debug("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
         return orderedList
+    }
+
+    private fun getCurrentEventTicketingStatus(
+        now: LocalDateTime,
+        it: UketEvent,
+    ): TicketingStatus {
+        var ticketingStatus = TicketingStatus.오픈_예정
+        if (now.isAfter(it.ticketingStartDateTime)) {
+            ticketingStatus = TicketingStatus.티켓팅_진행중
+        }
+        if (now.isAfter(it.ticketingEndDateTime)) {
+            ticketingStatus = TicketingStatus.티켓팅_종료
+        }
+        return ticketingStatus
     }
 
     @Transactional(readOnly = true)
