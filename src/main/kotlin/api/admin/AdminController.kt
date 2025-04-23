@@ -88,7 +88,7 @@ class AdminController(
     fun getAdmins(page: Int, size: Int): ResponseEntity<CustomPageResponse<AdminWithOrganizationDto>> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
         val adminPage = adminService.findAdminsWithOrganizationIdAndNameByPage(pageRequest)
-        return ResponseEntity.ok(CustomPageResponse.from(adminPage))
+        return ResponseEntity.ok(CustomPageResponse(adminPage))
     }
 
     @SecurityRequirement(name = "JWT")
