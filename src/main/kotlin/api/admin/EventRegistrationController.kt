@@ -1,5 +1,7 @@
 package uket.api.admin
 
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.request.RegisterUketEventRequest
 import uket.api.admin.response.ChangeEventRegistrationStatusResponse
 import uket.api.admin.response.RegisterUketEventResponse
+import uket.api.admin.response.UketEventRegistrationSummaryResponse
 import uket.api.admin.response.UketRegistrationEventResponse
 import uket.common.enums.EventType
+import uket.common.response.CustomPageResponse
 import uket.common.toEnum
 import uket.domain.admin.service.OrganizationService
 import uket.domain.eventregistration.service.EventRegistrationService
@@ -22,8 +26,16 @@ class EventRegistrationController(
     private val eventRegistrationService: EventRegistrationService,
 ) {
     @GetMapping("/admin/uket-event-registrations")
-    fun getUketEventRegistrations(): List<UketRegistrationEventResponse> {
-        return listOf()
+    fun getUketEventRegistrations(
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): CustomPageResponse<UketEventRegistrationSummaryResponse> {
+        val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
+
+        val uketEventRegistrationSummaryResponse = eventRegistrationService.findAll(pageRequest).map {
+            UketEventRegistrationSummaryResponse.from(it)
+        }
+        return CustomPageResponse(uketEventRegistrationSummaryResponse)
     }
 
     @GetMapping("/admin/uket-event-registrations/{uketEventRegistrationId}")

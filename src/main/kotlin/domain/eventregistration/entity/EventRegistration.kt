@@ -19,6 +19,7 @@ import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
 import uket.domain.eventregistration.converter.ListToStringConverter
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -44,6 +45,12 @@ class EventRegistration(
 
     @Column(name = "location")
     val location: String,
+
+    @Column(name = "event_start_date")
+    val eventStartDate: LocalDate,
+
+    @Column(name = "ticketing_end_date")
+    val eventEndDate: LocalDate,
 
     @Column(name = "ticketing_start_date_time")
     val ticketingStartDateTime: LocalDateTime,

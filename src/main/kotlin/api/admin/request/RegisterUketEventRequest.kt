@@ -37,6 +37,8 @@ data class RegisterUketEventRequest(
                 location = location,
                 ticketingStartDateTime = ticketingStartDateTime,
                 ticketingEndDateTime = ticketingEndDateTime,
+                eventStartDate = eventRound.minOf { it.date },
+                eventEndDate = eventRound.maxOf { it.date },
                 totalTicketCount = totalTicketCount,
                 details = EventRegistration.EventDetails(
                     information = details.information,
