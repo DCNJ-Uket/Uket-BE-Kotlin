@@ -1,13 +1,12 @@
 package uket.api.admin.request
 
+import domain.eventregistration.EventData
 import uket.common.enums.EventType
+import uket.domain.eventregistration.entity.BannerRegistration
 import uket.domain.eventregistration.entity.EntryGroupRegistration
 import uket.domain.eventregistration.entity.EventRegistration
 import uket.domain.eventregistration.entity.EventRegistration.EventContact.ContactType
 import uket.domain.eventregistration.entity.EventRoundRegistration
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 
 data class RegisterUketEventRequest(
     val festivalData: EventData? = null,
@@ -39,6 +38,8 @@ data class RegisterUketEventRequest(
                 location = location,
                 ticketingStartDateTime = ticketingStartDateTime,
                 ticketingEndDateTime = ticketingEndDateTime,
+                eventStartDate = eventRound.minOf { it.date },
+                eventEndDate = eventRound.maxOf { it.date },
                 totalTicketCount = totalTicketCount,
                 details = EventRegistration.EventDetails(
                     information = details.information,
@@ -52,6 +53,11 @@ data class RegisterUketEventRequest(
                 uketEventImageId = uketEventImageId,
                 thumbnailImageId = thumbnailImageId,
                 bannerImageIds = bannerImageIds.map { it },
+                _banners = banners.map {
+                    BannerRegistration(
+                        imageId = it.imageId, link = it.link
+                    )
+                },
                 _eventRound = eventRound.map {
                     EventRoundRegistration(
                         eventRoundDate = it.date,
@@ -65,43 +71,14 @@ data class RegisterUketEventRequest(
                         ticketCount = it.ticketCount,
                     )
                 },
+                paymentInfo = EventRegistration.PaymentInfo(
+                    ticketPrice = paymentInfo.ticketPrice,
+                    bankCode = paymentInfo.bankCode,
+                    accountNumber = paymentInfo.accountNumber,
+                    depositorName = paymentInfo.depositorName,
+                    depositUrl = paymentInfo.depositUrl
+                )
             )
         }
     }
-}
-
-data class EventData(
-    val eventName: String,
-    val location: String,
-    val eventRound: List<EventRoundDto>,
-    val ticketingStartDateTime: LocalDateTime, // yyyy-MM-ddThh:mm:ss
-    val ticketingEndDateTime: LocalDateTime, // yyyy-MM-ddThh:mm:ss
-    val entryGroup: List<EntryGroupDto>,
-    val totalTicketCount: Int,
-    val details: FestivalDetailsDto,
-    val contact: ContactInfoDto,
-    val uketEventImageId: String,
-    val thumbnailImageId: String,
-    val bannerImageIds: List<String>,
-) {
-    data class EventRoundDto(
-        val date: LocalDate, // yyyy-MM-dd
-        val startTime: LocalTime, // hh:mm:ss
-    )
-
-    data class EntryGroupDto(
-        val ticketCount: Int,
-        val entryStartTime: LocalTime, // hh:mm:ss
-        val entryEndTime: LocalTime, // hh:mm:ss
-    )
-
-    data class FestivalDetailsDto(
-        val information: String,
-        val caution: String,
-    )
-
-    data class ContactInfoDto(
-        val type: String, // 예: INSTAGRAM
-        val content: String, // 예: @soritor
-    )
 }

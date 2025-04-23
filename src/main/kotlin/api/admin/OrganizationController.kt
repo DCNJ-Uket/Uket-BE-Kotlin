@@ -17,10 +17,10 @@ class OrganizationController(
     private val organizationService: OrganizationService,
 ) {
     @SecurityRequirement(name = "JWT")
-    @Operation(summary = "모든 단체 조회 API", description = "모든 단체 목록을 조회합니다.")
+    @Operation(summary = "모든 등록 가능한 단체 조회 API", description = "모든 등록 가능한 단체 목록을 조회합니다.")
     @GetMapping("/admin/organizations")
     fun getAllOrganizations(): ResponseEntity<GetOrganizationDropdownItemsResponse> {
-        val dropdownItems = organizationService.findAllIdAndNames()
+        val dropdownItems = organizationService.findAllAvailableIdAndNames()
         return ResponseEntity.ok(GetOrganizationDropdownItemsResponse(dropdownItems))
     }
 }
