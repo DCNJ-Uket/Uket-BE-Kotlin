@@ -89,6 +89,8 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers("/auth/**")
                     .permitAll()
+                    .requestMatchers("/uket-events/**")
+                    .permitAll()
             }.authorizeHttpRequests { registry ->
                 registry
                     .anyRequest()

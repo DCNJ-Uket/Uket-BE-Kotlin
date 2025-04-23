@@ -14,19 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 import uket.api.admin.request.RegisterUketEventRequest
 import uket.api.admin.request.UploadUketEventImagesReqeust
-import uket.api.admin.response.*
+import uket.api.admin.response.ChangeEventRegistrationStatusResponse
+import uket.api.admin.response.EventImageUploadResponse
+import uket.api.admin.response.RegisterUketEventResponse
+import uket.api.admin.response.UketEventRegistrationSummaryResponse
+import uket.api.admin.response.UketRegistrationEventResponse
 import uket.common.enums.EventType
 import uket.common.response.CustomPageResponse
 import uket.common.toEnum
 import uket.domain.admin.service.OrganizationService
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.facade.S3ImageFacade
-import uket.modules.s3.service.S3Service
 
 @Tag(name = "어드민 행사 관련 API", description = "어드민 행사 관련 API 입니다.")
 @RestController
@@ -40,10 +41,10 @@ class EventRegistrationController(
     @Operation(summary = "어드민 행사 사진 업로드", description = "행사를 등록하기전 해당 행사의 사진들을 먼저 등록합니다.")
     @PostMapping("/admin/upload/images", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun uploadUketEventImages(
-        @ModelAttribute request: UploadUketEventImagesReqeust
-    ) : ResponseEntity<EventImageUploadResponse> {
-        val response: EventImageUploadResponse
-            = s3ImageFacade.uploadUketEventImages(request.eventImage, request.thumbnailImage, request.bannerImages)
+        @ModelAttribute request: UploadUketEventImagesReqeust,
+    ): ResponseEntity<EventImageUploadResponse> {
+        val response: EventImageUploadResponse =
+            s3ImageFacade.uploadUketEventImages(request.eventImage, request.thumbnailImage, request.bannerImages)
         return ResponseEntity.ok(response)
     }
 
@@ -67,6 +68,7 @@ class EventRegistrationController(
             eventType = eventType,
         )
     }
+
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "내 행사 전체 조회", description = "내 행사 전체를 조회합니다.")
     @GetMapping("/admin/uket-event-registrations")

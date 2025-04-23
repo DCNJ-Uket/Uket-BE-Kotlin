@@ -23,6 +23,7 @@ class AuthConfig(
             .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/error")
             .excludePathPatterns("/admin/users/login")
             .excludePathPatterns("/auth/**")
+            .excludePathPatterns("/uket-events/**")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {

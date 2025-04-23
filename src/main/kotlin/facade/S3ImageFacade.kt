@@ -13,31 +13,41 @@ class S3ImageFacade(
     private val imageRepository: ImageRepository,
     private val s3Service: S3Service,
 ) {
-    fun uploadUketEventImages(eventImage: MultipartFile?, thumbnailImage: MultipartFile?, bannerImages: List<MultipartFile>?): EventImageUploadResponse {
+    fun uploadUketEventImages(
+        eventImage: MultipartFile?,
+        thumbnailImage: MultipartFile?,
+        bannerImages: List<MultipartFile>?,
+    ): EventImageUploadResponse {
         val tasks = mutableListOf<CompletableFuture<Pair<String, Long>?>>()
 
         eventImage?.let {
-            tasks.add(CompletableFuture.supplyAsync {
-                val image = imageRepository.save(Image())
-                s3Service.putImage(it, image.id.toString())
-                "event" to image.id
-            })
+            tasks.add(
+                CompletableFuture.supplyAsync {
+                    val image = imageRepository.save(Image())
+                    s3Service.putImage(it, image.id.toString())
+                    "event" to image.id
+                }
+            )
         }
 
         thumbnailImage?.let {
-            tasks.add(CompletableFuture.supplyAsync {
-                val image = imageRepository.save(Image())
-                s3Service.putImage(it, image.id.toString())
-                "thumbnail" to image.id
-            })
+            tasks.add(
+                CompletableFuture.supplyAsync {
+                    val image = imageRepository.save(Image())
+                    s3Service.putImage(it, image.id.toString())
+                    "thumbnail" to image.id
+                }
+            )
         }
 
         bannerImages?.forEach { file ->
-            tasks.add(CompletableFuture.supplyAsync {
-                val image = imageRepository.save(Image())
-                s3Service.putImage(file, image.id.toString())
-                "banner" to image.id
-            })
+            tasks.add(
+                CompletableFuture.supplyAsync {
+                    val image = imageRepository.save(Image())
+                    s3Service.putImage(file, image.id.toString())
+                    "banner" to image.id
+                }
+            )
         }
 
         val results = tasks.mapNotNull { it.join() }

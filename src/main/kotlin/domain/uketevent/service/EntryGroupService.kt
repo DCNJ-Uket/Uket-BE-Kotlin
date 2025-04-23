@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.repository.EntryGroupRepository
+import uket.modules.redis.aop.DistributedLock
 
 @Service
 @Transactional(readOnly = true)
@@ -31,7 +32,7 @@ class EntryGroupService(
         entryGroupRepository.save(entryGroup)
     }
 
-    // @DistributedLock(key = "#reservationId")
+    @DistributedLock(key = "#reservationId")
     fun decreaseReservedCount(entryGroupId: Long) {
         val entryGroup = this.getById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()

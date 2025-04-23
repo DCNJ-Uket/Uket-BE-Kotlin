@@ -16,7 +16,7 @@ import java.time.Duration
 class S3Service(
     private val preSigner: S3Presigner,
     private val s3Properties: S3Properties,
-    private val s3Client: S3Client
+    private val s3Client: S3Client,
 ) {
     companion object {
         private const val IMAGE_FOLDER = "images"
@@ -34,6 +34,7 @@ class S3Service(
             ).key(listOf(IMAGE_FOLDER, filename).joinToString("/"))
         }.toExternalForm()
     }
+
     private fun getPreSignedUrl(folder: String, filename: String?): String? {
         if (filename.isNullOrEmpty()) return null
 

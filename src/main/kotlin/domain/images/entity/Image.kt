@@ -11,5 +11,4 @@ class Image(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-): BaseTimeEntity() {
-}
+) : BaseTimeEntity()
