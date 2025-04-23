@@ -12,4 +12,5 @@ object JwtValues {
     const val JWT_AUTHORIZATION_VALUE_PREFIX: String = "Bearer "
     const val JWT_PAYLOAD_VALUE_ACCESS: String = "access"
     const val JWT_PAYLOAD_VALUE_REFRESH: String = "refresh"
+    const val JWT_PAYLOAD_VALUE_TICKET: String = "ticket"
 }
