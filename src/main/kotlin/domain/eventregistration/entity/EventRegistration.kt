@@ -64,6 +64,9 @@ class EventRegistration(
     @Embedded
     val details: EventDetails,
 
+    @Embedded
+    val paymentInfo: PaymentInfo,
+
     @Column(name = "uket_event_image_id")
     val uketEventImageId: String,
 
@@ -74,6 +77,7 @@ class EventRegistration(
     @Column(name = "banner_image_ids")
     val bannerImageIds: List<String>,
 
+    _banners: List<BannerRegistration>,
     _eventRound: List<EventRoundRegistration>,
     _entryGroup: List<EntryGroupRegistration>,
 ) : BaseTimeEntity() {
@@ -83,6 +87,22 @@ class EventRegistration(
             log.warn(message)
             message
         }
+    }
+
+    @OneToMany(
+        mappedBy = "eventRegistration",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    @BatchSize(size = 10)
+    val banners: List<BannerRegistration> = _banners.map {
+        BannerRegistration(
+            id = it.id,
+            eventRegistration = this,
+            imageId = it.imageId,
+            link = it.link,
+        )
     }
 
     @OneToMany(
@@ -126,6 +146,20 @@ class EventRegistration(
         val caution: String,
         @Embedded
         val contact: EventContact,
+    )
+
+    @Embeddable
+    data class PaymentInfo(
+        @Column(name = "ticket_price")
+        val ticketPrice: Long,
+        @Column(name = "bank_code")
+        val bankCode: String,
+        @Column(name = "account_number")
+        val accountNumber: String,
+        @Column(name = "depositor_name")
+        val depositorName: String,
+        @Column(name = "deposit_url")
+        val depositUrl: String,
     )
 
     @Embeddable
