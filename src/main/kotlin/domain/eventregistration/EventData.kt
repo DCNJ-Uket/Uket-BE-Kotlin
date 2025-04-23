@@ -18,6 +18,8 @@ data class EventData(
     val uketEventImageId: String,
     val thumbnailImageId: String,
     val bannerImageIds: List<String>,
+    val banners: List<BannerInfoDto>,
+    val paymentInfo: PaymentInfoDto,
 ) {
     data class EventRoundDto(
         val date: LocalDate, // yyyy-MM-dd
@@ -40,6 +42,19 @@ data class EventData(
         val content: String, // 예: @soritor
     )
 
+    data class PaymentInfoDto(
+        val ticketPrice: Long,
+        val bankCode: String,
+        val accountNumber: String,
+        val depositorName: String,
+        val depositUrl: String,
+    )
+
+    data class BannerInfoDto(
+        val imageId: Long,
+        val link: String,
+    )
+
     companion object {
         fun from(eventRegistration: EventRegistration): EventData {
             return with(eventRegistration) {
@@ -48,8 +63,7 @@ data class EventData(
                     location = location,
                     eventRound = eventRound.map {
                         EventRoundDto(
-                            date = it.eventRoundDate,
-                            startTime = it.eventStartTime
+                            date = it.eventRoundDate, startTime = it.eventStartTime
                         )
                     },
                     ticketingStartDateTime = ticketingStartDateTime,
@@ -63,8 +77,7 @@ data class EventData(
                     },
                     totalTicketCount = totalTicketCount,
                     details = EventDetailsDto(
-                        information = details.information,
-                        caution = details.caution
+                        information = details.information, caution = details.caution
                     ),
                     contact = ContactInfoDto(
                         type = details.contact.type.name,
@@ -73,6 +86,18 @@ data class EventData(
                     uketEventImageId = uketEventImageId,
                     thumbnailImageId = thumbnailImageId,
                     bannerImageIds = bannerImageIds,
+                    banners = banners.map {
+                        BannerInfoDto(
+                            imageId = it.imageId, link = it.link
+                        )
+                    },
+                    paymentInfo = PaymentInfoDto(
+                        ticketPrice = paymentInfo.ticketPrice,
+                        bankCode = paymentInfo.bankCode,
+                        accountNumber = paymentInfo.accountNumber,
+                        depositorName = paymentInfo.depositorName,
+                        depositUrl = paymentInfo.depositUrl
+                    )
                 )
             }
         }

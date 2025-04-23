@@ -2,6 +2,7 @@ package uket.api.admin.request
 
 import domain.eventregistration.EventData
 import uket.common.enums.EventType
+import uket.domain.eventregistration.entity.BannerRegistration
 import uket.domain.eventregistration.entity.EntryGroupRegistration
 import uket.domain.eventregistration.entity.EventRegistration
 import uket.domain.eventregistration.entity.EventRegistration.EventContact.ContactType
@@ -50,6 +51,11 @@ data class RegisterUketEventRequest(
                 uketEventImageId = uketEventImageId,
                 thumbnailImageId = thumbnailImageId,
                 bannerImageIds = bannerImageIds.map { it },
+                _banners = banners.map {
+                    BannerRegistration(
+                        imageId = it.imageId, link = it.link
+                    )
+                },
                 _eventRound = eventRound.map {
                     EventRoundRegistration(
                         eventRoundDate = it.date,
@@ -63,6 +69,13 @@ data class RegisterUketEventRequest(
                         ticketCount = it.ticketCount,
                     )
                 },
+                paymentInfo = EventRegistration.PaymentInfo(
+                    ticketPrice = paymentInfo.ticketPrice,
+                    bankCode = paymentInfo.bankCode,
+                    accountNumber = paymentInfo.accountNumber,
+                    depositorName = paymentInfo.depositorName,
+                    depositUrl = paymentInfo.depositUrl
+                )
             )
         }
     }
