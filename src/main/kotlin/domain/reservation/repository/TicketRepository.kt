@@ -23,8 +23,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         WHERE t.userId = :userId
         AND t.status NOT IN :status
         AND t.entryGroupId IN (
-            SELECT eg.id FROM EntryGroup eg
-            WHERE eg.uketEventRound.uketEvent.displayEndDate > CURRENT_TIMESTAMP
+            SELECT eg.id FROM EntryGroup eg 
+            WHERE eg.uketEventRound.uketEvent.ticketingEndDateTime > CURRENT_TIMESTAMP
         )
     """,
     )
@@ -33,8 +33,6 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     fun findAllByUserId(userId: Long): List<Ticket>
 
     fun findAllByUserIdAndStatusNot(userId: Long, status: TicketStatus): List<Ticket>
-
-//    @Query("SELECT t FROM Ticket t JOIN FETCH t.reservation r WHERE t.user.id = :userId AND t.status <> :status")
 
     @Query(
         """

@@ -35,7 +35,17 @@ class DomainEntityTest {
     @DisplayName("테스트 디비와 연동이 잘 되는 지 확인")
     fun testDBIntegration() {
         // given
-        val user = User(0L, Platform.KAKAO, "platformIdA", "nameA", "emailA", "profileImageA", "depositorNameA", "phoneNumberA", true)
+        val user = User(
+            0L,
+            Platform.KAKAO,
+            "platformIdA",
+            "nameA",
+            "emailA",
+            "profileImageA",
+            "depositorNameA",
+            "phoneNumberA",
+            true
+        )
         em.persist(user)
 
         // when
@@ -49,13 +59,24 @@ class DomainEntityTest {
     @DisplayName("각 엔티티 생성 및 조회 테스트(누락 필드 확인)")
     fun test() {
         // given
-        val user = User(0L, Platform.KAKAO, "platformIdA", "nameA", "emailA", "profileImageA", "depositorNameA", "phoneNumberA", true)
+        val user = User(
+            0L,
+            Platform.KAKAO,
+            "platformIdA",
+            "nameA",
+            "emailA",
+            "profileImageA",
+            "depositorNameA",
+            "phoneNumberA",
+            true
+        )
 
         val organization = Organization(0L, "OrganiationA", null)
         val admin = Admin(0L, organization, "nameA", "emailA", "password123", true)
 
         val payment = Payment(0L, 0L, "123-12-123457", "linkA")
-        val paymentHistory = PaymentHistory(0L, 0L, 0L, 0, PaymentStatus.PURCHASED, "categoryA", PaymentManner.DEPOSIT_LINK, null)
+        val paymentHistory =
+            PaymentHistory(0L, 0L, 0L, 0, PaymentStatus.PURCHASED, "categoryA", PaymentManner.DEPOSIT_LINK, null)
 
         val ticket = Ticket(0L, 0L, 0L, TicketStatus.BEFORE_ENTER, "123456789", null)
 
@@ -63,9 +84,27 @@ class DomainEntityTest {
         val terms = Terms(0L, "nameA", TermsType.MANDATORY, 0L, true)
         val termSign = TermSign(0L, 0L, 0L, true, LocalDateTime.now())
 
-        val uketEvent = UketEvent(0L, 0L, "nameA", EventType.FESTIVAL, "00시00구", null, LocalDateTime.now(), 0)
-        val uketEventRound = UketEventRound(0L, uketEvent, "nameA", LocalDateTime.now(), LocalDateTime.now())
-        val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 100)
+        val uketEventRound = UketEventRound(0L, null, LocalDateTime.now())
+        val uketEvent = UketEvent(
+            id = 0L,
+            organizationId = 0L,
+            eventName = "nameA",
+            eventType = EventType.FESTIVAL,
+            location = "00시00구",
+            ticketingStartDateTime = LocalDateTime.now(),
+            ticketingEndDateTime = LocalDateTime.now(),
+            ticketPrice = 0,
+            totalTicketCount = 0,
+            details = UketEvent.EventDetails(
+                "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
+            ),
+            uketEventImageId = "",
+            thumbnailImageId = "",
+            bannerImageIds = listOf(),
+            _uketEventRounds = listOf(uketEventRound)
+        )
+        uketEventRound.uketEvent = uketEvent
+        val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 
         // when
         em.persist(user)

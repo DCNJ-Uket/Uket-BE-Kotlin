@@ -32,31 +32,38 @@ class TicketRepositoryTest(
         beforeEach {
             val uketEvent = UketEvent(
                 organizationId = 1L,
-                name = "uketEventA",
+                eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
-                location = "locationA",
-                eventImagePath = null,
-                displayEndDate = LocalDateTime.now(),
-                ticketPrice = 1000,
+                location = "00시00구",
+                ticketingStartDateTime = LocalDateTime.now(),
+                ticketingEndDateTime = LocalDateTime.now(),
+                ticketPrice = 0,
+                totalTicketCount = 0,
+                details = UketEvent.EventDetails(
+                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
+                ),
+                uketEventImageId = "",
+                thumbnailImageId = "",
+                bannerImageIds = listOf(),
+                _uketEventRounds = listOf()
             )
             entityManager.persist(uketEvent)
 
             val uketEventRound = UketEventRound(
                 uketEvent = uketEvent,
-                name = "uketEventRoundA",
-                eventDate = LocalDateTime.now(),
-                ticketingDateTime = LocalDateTime.now(),
+                eventRoundDateTime = LocalDateTime.now()
             )
             entityManager.persist(uketEventRound)
+            uketEvent.addUketEventRound(uketEventRound)
 
             // 엔트리 그룹 저장
             val entryGroup = EntryGroup(
                 uketEventRound = uketEventRound,
-                name = "entryGroupA",
-                entryStartTime = LocalDateTime.now(),
-                entryEndTime = LocalDateTime.now(),
-                reservationCount = 0,
-                totalCount = 10,
+                entryGroupName = "nameA",
+                entryStartDateTime = LocalDateTime.now(),
+                entryEndDateTime = LocalDateTime.now(),
+                ticketCount = 0,
+                totalTicketCount = 10
             )
             entityManager.persist(entryGroup)
 
