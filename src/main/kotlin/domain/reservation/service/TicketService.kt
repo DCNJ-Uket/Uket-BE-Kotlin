@@ -56,6 +56,13 @@ class TicketService(
     }
 
     @Transactional
+    fun updateTicketStatus(ticketId: Long, ticketStatus: TicketStatus): Ticket {
+        val ticket: Ticket = ticketRepository.findById(ticketId).get()
+        ticket.updateStatus(ticketStatus)
+        return ticketRepository.save(ticket)
+    }
+
+    @Transactional
     fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
