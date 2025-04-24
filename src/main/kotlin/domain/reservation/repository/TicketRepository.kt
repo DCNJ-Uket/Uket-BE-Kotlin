@@ -195,11 +195,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId AND t.status = :status
+    WHERE e.id = :uketEventId
+    AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    AND t.status = :status
 """
     )
     fun findLiveEnterUserDtosByUketEventAndRoundId(
         @Param("uketEventId") uketEventId: Long,
+        @Param("uketEventRoundId") uketEventRoundId: Long?,
         @Param("status") status: TicketStatus,
         pageable: Pageable,
     ): Page<LiveEnterUserDto>

@@ -63,12 +63,14 @@ class AdminTicketController(
     @Operation(summary = "실시간 입장 내역 조회 API", description = "실시간 입장내역 조회를 합니다. 페이지는 1Page부터 시작합니다.")
     @GetMapping("/live/enter-users/{uketEventId}")
     fun searchLiveEnterUsers(
+        @RequestParam(required = false) uketEventRoundId: Long?,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @PathVariable("uketEventId") uketEventId: Long,
     ): ResponseEntity<CustomPageResponse<LiveEnterUserResponse>> {
         val response = enterUketEventFacade.searchLiveEnterUsers(
             uketEventId,
+            uketEventRoundId,
             PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "modifiedAt"))
         )
         return ResponseEntity.ok(CustomPageResponse(response))
