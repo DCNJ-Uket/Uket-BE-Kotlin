@@ -18,6 +18,12 @@ class LoginUserIdArgumentResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
     ): Long {
+        val isUser = SecurityContextHolder
+            .getContext()
+            .authentication.authorities
+            .any { it.authority == "USERS" }
+        check(isUser) { "잘못된 토큰 전달입니다." }
+
         val userId = SecurityContextHolder.getContext().authentication.name
         return userId.toLong()
     }
