@@ -5,7 +5,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import uket.api.user.EventListQueryType
+import uket.api.user.request.EventListQueryType
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.repository.UketEventRepository
 import uket.domain.uketevent.service.UketEventService
