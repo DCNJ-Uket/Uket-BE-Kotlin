@@ -11,10 +11,8 @@ import uket.auth.filter.TokenValidator
 import uket.auth.jwt.JwtTicketUtil
 import uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_TICKET
 import uket.common.PublicException
-import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
-import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
 
 @Service
@@ -31,8 +29,8 @@ class EnterUketEventFacade(
         tokenValidator.validateTokenSignature(ticketToken)
 
         val ticketId = jwtTicketUtil.getTicketId(ticketToken)
-        val ticket: Ticket = ticketService.getById(ticketId)
-        val user: User = userService.getById(ticket.userId)
+        val ticket = ticketService.getById(ticketId)
+        val user = userService.getById(ticket.userId)
 
         validateBeforePaymentTicket(ticket.status)
         validateAlreadyEnterTicket(ticket.status)
