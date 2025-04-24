@@ -32,7 +32,7 @@ import uket.facade.EnterUketEventFacade
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController
-@ApiResponse(responseCode = "200", description = "단체")
+@ApiResponse(responseCode = "200", description = "OK")
 class AdminTicketController(
     private val enterUketEventFacade: EnterUketEventFacade,
     private val ticketService: TicketService,
