@@ -19,13 +19,18 @@ class TicketSearcherByCreatedAt(
     }
 
     @Transactional(readOnly = true)
-    override fun search(uketEventId: Long, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto> {
+    override fun search(
+        uketEventId: Long,
+        uketEventRoundId: Long?,
+        searchRequest: SearchRequest,
+        pageable: Pageable,
+    ): Page<TicketSearchDto> {
         val createdAt = searchRequest.createdAt
             ?: throw IllegalStateException("createdAt은 null일 수 없습니다.")
 
         val createStart = createdAt.toLocalDate().atTime(LocalTime.MIN)
         val createEnd = createdAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByCreatedAtBetween(uketEventId, createStart, createEnd, pageable)
+        return ticketRepository.findByCreatedAtBetween(uketEventId, uketEventRoundId, createStart, createEnd, pageable)
     }
 }

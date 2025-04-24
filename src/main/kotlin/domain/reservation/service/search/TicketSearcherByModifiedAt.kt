@@ -19,13 +19,18 @@ class TicketSearcherByModifiedAt(
     }
 
     @Transactional(readOnly = true)
-    override fun search(uketEventId: Long, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto> {
+    override fun search(
+        uketEventId: Long,
+        uketEventRoundId: Long?,
+        searchRequest: SearchRequest,
+        pageable: Pageable,
+    ): Page<TicketSearchDto> {
         val modifiedAt = searchRequest.modifiedAt
             ?: throw IllegalStateException("modifiedAt은 null일 수 없습니다.")
 
         val modifyStart = modifiedAt.toLocalDate().atTime(LocalTime.MIN)
         val modifyEnd = modifiedAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByUpdatedAtBetween(uketEventId, modifyStart, modifyEnd, pageable)
+        return ticketRepository.findByUpdatedAtBetween(uketEventId, uketEventRoundId, modifyStart, modifyEnd, pageable)
     }
 }

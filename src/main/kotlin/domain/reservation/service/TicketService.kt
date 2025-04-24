@@ -34,12 +34,12 @@ class TicketService(
         return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
     }
 
-    fun findLiveEnterTickets(eventId: Long, pageable: Pageable): Page<LiveEnterUserDto> {
-        return ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(eventId, TicketStatus.FINISH_ENTER, pageable)
+    fun findLiveEnterTickets(uketEventId: Long, uketEventRoundId: Long?, pageable: Pageable): Page<LiveEnterUserDto> {
+        return ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(uketEventId, uketEventRoundId, TicketStatus.FINISH_ENTER, pageable)
     }
 
-    fun searchAllTickets(eventId: Long, pageable: Pageable): Page<TicketSearchDto> {
-        return ticketRepository.findAllByEventId(eventId, pageable)
+    fun searchAllTickets(eventId: Long, uketEventRoundId: Long?, pageable: Pageable): Page<TicketSearchDto> {
+        return ticketRepository.findAllByEventId(eventId, uketEventRoundId, pageable)
     }
 
     @Transactional

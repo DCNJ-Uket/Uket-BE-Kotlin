@@ -20,13 +20,18 @@ class TicketSearcherByEventRoundDateTime(
     }
 
     @Transactional(readOnly = true)
-    override fun search(uketEventId: Long, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto> {
+    override fun search(
+        uketEventId: Long,
+        uketEventRoundId: Long?,
+        searchRequest: SearchRequest,
+        pageable: Pageable,
+    ): Page<TicketSearchDto> {
         val showDate = searchRequest.showDate
             ?: throw IllegalStateException("showDate가 null일 수 없습니다.")
 
         val showStart: LocalDateTime = showDate.atStartOfDay()
         val showEnd: LocalDateTime = showDate.atTime(LocalTime.MAX)
 
-        return ticketRepository.findByEventRoundTime(uketEventId, showStart, showEnd, pageable);
+        return ticketRepository.findByEventRoundTime(uketEventId, uketEventRoundId, showStart, showEnd, pageable);
     }
 }
