@@ -52,6 +52,7 @@ class UserController(
         return ResponseEntity.ok(response)
     }
 
+    @Operation(summary = "유저 회원가입", description = "유저의 추가 정보를 등록하고 회원가입을 완료합니다")
     @PostMapping("/users/register")
     fun register(
         @Parameter(hidden = true)
