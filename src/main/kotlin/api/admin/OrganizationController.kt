@@ -12,7 +12,7 @@ import uket.domain.admin.service.OrganizationService
 
 @Tag(name = "단체 관련 API", description = "단체 관련 API 입니다.")
 @RestController
-@ApiResponse(responseCode = "200", description = "단체")
+@ApiResponse(responseCode = "200", description = "OK")
 class OrganizationController(
     private val organizationService: OrganizationService,
 ) {
