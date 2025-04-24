@@ -21,4 +21,7 @@ class JwtConfig(
 
     @Bean
     fun jwtAuthTokenUtil(): JwtAuthTokenUtil = JwtAuthTokenUtil(tokenProperties, secretKey)
+
+    @Bean
+    fun jwtTicketUtil(): JwtTicketUtil = JwtTicketUtil(tokenProperties, secretKey)
 }
