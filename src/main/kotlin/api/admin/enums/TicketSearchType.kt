@@ -8,9 +8,10 @@ enum class TicketSearchType {
     RESERVATION_USER_TYPE,
     CREATED_AT,
     MODIFIED_AT,
-    NONE;
+    NONE,
+    ;
 
-    companion object  {
+    companion object {
         val default: TicketSearchType
             get() = NONE
     }
