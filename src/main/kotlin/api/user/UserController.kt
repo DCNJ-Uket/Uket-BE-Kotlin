@@ -57,6 +57,7 @@ class UserController(
         @Parameter(hidden = true)
         @LoginUserId
         userId: Long,
+        @RequestBody
         request: UserRegisterRequest,
     ): ResponseEntity<AuthResponse> {
         val registerUserCommand = RegisterUserCommand(
