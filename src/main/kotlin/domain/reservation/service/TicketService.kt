@@ -5,7 +5,9 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.api.admin.dto.LiveEnterUserDto
 import uket.domain.reservation.dto.CreateTicketCommand
+import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
@@ -32,9 +34,13 @@ class TicketService(
         return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
     }
 
-    fun searchAllTickets(pageable: Pageable): Page<Ticket> {
-        val tickets = ticketRepository.findAll(pageable)
-        return tickets
+    fun findLiveEnterTickets(eventId: Long, pageable: Pageable): Page<LiveEnterUserDto> {
+        return ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(eventId, TicketStatus.FINISH_ENTER, pageable)
+    }
+
+    fun searchAllTickets(eventId: Long, pageable: Pageable): Page<TicketSearchDto> {
+        val tickets = ticketRepository.findAllByEventId(eventId, pageable)
+        return tickets.map(TicketSearchDto::from)
     }
 
     @Transactional

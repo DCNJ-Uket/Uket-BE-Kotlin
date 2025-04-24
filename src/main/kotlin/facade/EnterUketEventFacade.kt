@@ -1,8 +1,12 @@
 package uket.facade
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.api.admin.dto.LiveEnterUserDto
 import uket.api.admin.response.EnterUketEventResponse
+import uket.api.admin.response.LiveEnterUserResponse
 import uket.auth.filter.TokenValidator
 import uket.auth.jwt.JwtTicketUtil
 import uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_TICKET
@@ -36,6 +40,12 @@ class EnterUketEventFacade(
         ticket.enter()
 
         return EnterUketEventResponse.of(ticket, user)
+    }
+
+    @Transactional(readOnly = true)
+    fun searchLiveEnterUsers(uketEventId: Long, pageable: Pageable): Page<LiveEnterUserResponse> {
+        val liveEnterUserDto: Page<LiveEnterUserDto> = ticketService.findLiveEnterTickets(uketEventId, pageable)
+        return liveEnterUserDto.map {dto -> LiveEnterUserResponse.from(dto)}
     }
 
     private fun validateBeforePaymentTicket(status: TicketStatus) {
