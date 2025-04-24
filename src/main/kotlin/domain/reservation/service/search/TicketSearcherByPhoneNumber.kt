@@ -18,7 +18,12 @@ class TicketSearcherByPhoneNumber(
     }
 
     @Transactional(readOnly = true)
-    override fun search(uketEventId: Long, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto> {
-        return ticketRepository.findByPhoneNumberEndingWith(uketEventId, searchRequest.phoneNumberLastFourDigits!!, pageable)
+    override fun search(
+        uketEventId: Long,
+        uketEventRoundId: Long?,
+        searchRequest: SearchRequest,
+        pageable: Pageable,
+    ): Page<TicketSearchDto> {
+        return ticketRepository.findByPhoneNumberEndingWith(uketEventId, uketEventRoundId, searchRequest.phoneNumberLastFourDigits!!, pageable)
     }
 }

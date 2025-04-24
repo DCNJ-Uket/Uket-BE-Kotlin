@@ -8,7 +8,7 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.repository.TicketRepository
 
 interface SearchTicket {
-    fun search(uketEventId: Long, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto>
+    fun search(uketEventId: Long, uketEventRoundId: Long?, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto>
 }
 
 abstract class TicketSearcher(

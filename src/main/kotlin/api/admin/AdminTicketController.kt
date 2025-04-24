@@ -79,6 +79,7 @@ class AdminTicketController(
     @Operation(summary = "티켓 검색 API", description = "다양한 기준으로 티켓을 페이지별로 조회합니다. 페이지는 1Page부터 시작합니다.")
     @GetMapping("/search/{uketEventId}")
     fun searchTickets(
+        @RequestParam(required = false) uketEventRoundId: Long?,
         @RequestParam searchType: TicketSearchType,
         @ModelAttribute searchRequest: SearchRequest,
         @RequestParam(defaultValue = "1") page: Int,
@@ -90,7 +91,7 @@ class AdminTicketController(
 
         val tickets: Page<TicketSearchDto> =
             if (ticketSearchType == TicketSearchType.NONE) {
-                ticketService.searchAllTickets(uketEventId, pageRequest)
+                ticketService.searchAllTickets(uketEventId, uketEventRoundId, pageRequest)
             } else {
                 ticketSearchers.stream()
                     .filter { it.isSupport(ticketSearchType) }
@@ -101,7 +102,7 @@ class AdminTicketController(
                             title = "잘못된 검색 타입"
                         )
                     }
-                    .search(uketEventId, searchRequest, pageRequest);
+                    .search(uketEventId, uketEventRoundId, searchRequest, pageRequest);
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))

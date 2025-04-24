@@ -18,7 +18,12 @@ class TicketSearcherByStatus(
     }
 
     @Transactional(readOnly = true)
-    override fun search(uketEventId: Long, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto> {
-        return ticketRepository.findByStatus(uketEventId, searchRequest.status!!, pageable)
+    override fun search(
+        uketEventId: Long,
+        uketEventRoundId: Long?,
+        searchRequest: SearchRequest,
+        pageable: Pageable,
+    ): Page<TicketSearchDto> {
+        return ticketRepository.findByStatus(uketEventId, uketEventRoundId, searchRequest.status!!, pageable)
     }
 }
