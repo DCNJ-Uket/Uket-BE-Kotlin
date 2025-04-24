@@ -39,8 +39,7 @@ class TicketService(
     }
 
     fun searchAllTickets(eventId: Long, pageable: Pageable): Page<TicketSearchDto> {
-        val tickets = ticketRepository.findAllByEventId(eventId, pageable)
-        return tickets.map(TicketSearchDto::from)
+        return ticketRepository.findAllByEventId(eventId, pageable)
     }
 
     @Transactional

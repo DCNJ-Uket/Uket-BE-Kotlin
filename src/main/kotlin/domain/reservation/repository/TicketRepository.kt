@@ -206,18 +206,28 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
 
     @Query(
         """
-    SELECT t
+    SELECT new uket.domain.reservation.dto.TicketSearchDto(
+        t.id,
+        u.depositorName,
+        u.phoneNumber,
+        ur.eventRoundDateTime,
+        t.createdAt,
+        t.updatedAt,
+        t.status,
+        ''
+    )
     FROM Ticket t
     JOIN EntryGroup eg ON eg.id = t.entryGroupId
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
+    JOIN User u ON u.id = t.userId
     WHERE e.id = :uketEventId
 """
     )
     fun findAllByEventId(
         @Param("uketEventId") uketEventId: Long,
         pageable: Pageable,
-    ): Page<Ticket>
+    ): Page<TicketSearchDto>
 
     @Query(
         """
