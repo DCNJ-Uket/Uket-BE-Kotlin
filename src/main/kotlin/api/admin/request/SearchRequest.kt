@@ -14,5 +14,5 @@ data class SearchRequest(
     @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
     val createdAt: LocalDateTime? = null,
     @DateTimeFormat(pattern = "yy.MM.dd HH:mm")
-    val modifiedAt: LocalDateTime? = null
+    val modifiedAt: LocalDateTime? = null,
 )

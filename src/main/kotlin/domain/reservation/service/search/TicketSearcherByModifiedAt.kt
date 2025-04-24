@@ -7,15 +7,13 @@ import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
 import uket.domain.reservation.dto.TicketSearchDto
-import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.repository.TicketRepository
 import java.time.LocalTime
 
 @Service
 class TicketSearcherByModifiedAt(
-    ticketRepository: TicketRepository
+    ticketRepository: TicketRepository,
 ) : TicketSearcher(ticketRepository) {
-
     override fun isSupport(searchType: TicketSearchType): Boolean {
         return searchType == TicketSearchType.MODIFIED_AT
     }

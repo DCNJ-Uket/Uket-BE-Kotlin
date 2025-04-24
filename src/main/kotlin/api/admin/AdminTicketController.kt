@@ -7,7 +7,13 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
 import uket.api.admin.response.EnterUketEventResponse
@@ -23,7 +29,6 @@ import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
 import uket.domain.reservation.service.search.TicketSearcher
 import uket.facade.EnterUketEventFacade
-import java.util.*
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController
@@ -37,7 +42,7 @@ class AdminTicketController(
     @Operation(summary = "입장 확인 API", description = "QR code를 통한 Token값으로 입장 확인을 할 수 있습니다.")
     @PostMapping("/{token}/enter")
     fun enterShow(
-        @PathVariable("token") ticketToken: String
+        @PathVariable("token") ticketToken: String,
     ): ResponseEntity<EnterUketEventResponse> {
         val response: EnterUketEventResponse = enterUketEventFacade.enterUketEvent(ticketToken)
         return ResponseEntity.ok(response)
@@ -87,14 +92,14 @@ class AdminTicketController(
             } else {
                 ticketSearchers.stream()
                     .filter { it.isSupport(ticketSearchType) }
-                    .findFirst().orElseThrow{
+                    .findFirst().orElseThrow {
                         throw PublicException(
                             publicMessage = "잘못된 검색 타입입니다.",
                             systemMessage = "Not Valid TicketSearchType : TICKETSEARCHTYPE =$ticketSearchType",
                             title = "잘못된 검색 타입"
                         )
                     }
-                    .search(uketEventId,searchRequest,pageRequest);
+                    .search(uketEventId, searchRequest, pageRequest);
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))

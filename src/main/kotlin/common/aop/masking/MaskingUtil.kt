@@ -1,7 +1,6 @@
 package uket.common.aop.masking
 
 object MaskingUtil {
-
     fun maskingOf(type: MaskingType, value: String?): String {
         if (value.isNullOrBlank()) return value ?: ""
         return when (type) {

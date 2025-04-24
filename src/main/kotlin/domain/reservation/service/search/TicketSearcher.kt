@@ -12,7 +12,7 @@ interface SearchTicket {
 }
 
 abstract class TicketSearcher(
-    protected val ticketRepository: TicketRepository
+    protected val ticketRepository: TicketRepository,
 ) : SearchTicket {
     abstract fun isSupport(searchType: TicketSearchType): Boolean
 }

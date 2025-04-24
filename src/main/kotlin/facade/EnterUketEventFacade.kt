@@ -45,7 +45,7 @@ class EnterUketEventFacade(
     @Transactional(readOnly = true)
     fun searchLiveEnterUsers(uketEventId: Long, pageable: Pageable): Page<LiveEnterUserResponse> {
         val liveEnterUserDto: Page<LiveEnterUserDto> = ticketService.findLiveEnterTickets(uketEventId, pageable)
-        return liveEnterUserDto.map {dto -> LiveEnterUserResponse.from(dto)}
+        return liveEnterUserDto.map { dto -> LiveEnterUserResponse.from(dto) }
     }
 
     private fun validateBeforePaymentTicket(status: TicketStatus) {

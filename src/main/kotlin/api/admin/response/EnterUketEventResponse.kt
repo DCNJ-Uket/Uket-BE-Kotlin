@@ -15,7 +15,7 @@ data class EnterUketEventResponse(
         fun of(ticket: Ticket, user: User): EnterUketEventResponse {
             return EnterUketEventResponse(
                 ticketId = ticket.id,
-                userId =  ticket.userId,
+                userId = ticket.userId,
                 userName = user.name,
                 status = ticket.status,
                 msg = ticket.status.msg,

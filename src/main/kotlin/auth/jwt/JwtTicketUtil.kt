@@ -4,14 +4,13 @@ import io.jsonwebtoken.Jwts
 import uket.auth.jwt.JwtValues.JWT_PAYLOAD_KEY_CATEGORY
 import uket.auth.jwt.JwtValues.JWT_PAYLOAD_KEY_ID
 import uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_TICKET
-import java.util.*
+import java.util.Date
 import javax.crypto.SecretKey
 
 class JwtTicketUtil(
     private val tokenProperties: TokenProperties,
     private val secretKey: SecretKey,
 ) {
-
     fun getTicketId(token: String?): Long {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).payload
             .get(JwtValues.JWT_PAYLOAD_KEY_ID, Long::class.java)

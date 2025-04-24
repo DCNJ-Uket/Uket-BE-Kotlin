@@ -81,8 +81,8 @@ dependencies {
     implementation("com.google.zxing:core:3.4.1")
     implementation("com.google.zxing:javase:3.4.1")
 
-    //ratelimit
-    implementation ("com.bucket4j:bucket4j-core:8.3.0")
+    // ratelimit
+    implementation("com.bucket4j:bucket4j-core:8.3.0")
 }
 
 tasks.test {
