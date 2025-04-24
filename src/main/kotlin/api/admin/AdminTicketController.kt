@@ -84,7 +84,7 @@ class AdminTicketController(
         @PathVariable("uketEventId") uketEventId: Long,
     ): ResponseEntity<CustomPageResponse<TicketSearchResponse>> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "modifiedAt"))
-        val ticketSearchType = searchType ?: TicketSearchType.DEFAULT
+        val ticketSearchType = searchType ?: TicketSearchType.default
 
         val tickets: Page<TicketSearchDto> =
             if (ticketSearchType == TicketSearchType.NONE) {
