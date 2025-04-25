@@ -3,7 +3,6 @@ spring:
     url: "jdbc:h2:mem:test"
     username : sa
     password :
-
   jpa:
     show_sql: true
     hibernate:
@@ -45,6 +44,7 @@ app:
       access-token-expiration: 600_000
       refresh-token-expiration: 7_200_000
       email-token-expiration: 86_400_000
+      ticket-token-expiration: 1_200_000
   kakao:
     token_uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me

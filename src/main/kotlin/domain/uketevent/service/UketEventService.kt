@@ -3,7 +3,7 @@ package uket.domain.uketevent.service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.api.user.EventListQueryType
+import uket.api.user.request.EventListQueryType
 import uket.api.user.response.EventDetailResponse
 import uket.common.LoggerDelegate
 import uket.common.enums.EventType

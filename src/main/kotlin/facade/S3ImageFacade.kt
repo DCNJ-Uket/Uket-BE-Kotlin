@@ -1,6 +1,7 @@
 package uket.facade
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import uket.api.admin.response.EventImageUploadResponse
 import uket.domain.images.entity.Image
@@ -13,6 +14,7 @@ class S3ImageFacade(
     private val imageRepository: ImageRepository,
     private val s3Service: S3Service,
 ) {
+    @Transactional
     fun uploadUketEventImages(
         eventImage: MultipartFile?,
         thumbnailImage: MultipartFile?,

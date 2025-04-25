@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import uket.api.user.request.EventListQueryType
 import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EventDetailResponse
 import uket.domain.uketevent.service.UketEventService

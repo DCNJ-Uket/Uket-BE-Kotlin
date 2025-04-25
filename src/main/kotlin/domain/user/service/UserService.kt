@@ -51,7 +51,7 @@ class UserService(
     /*
         유저 정보 등록
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     fun registerUser(registerUserCommand: RegisterUserCommand) {
         val user = this.getById(registerUserCommand.userId)
         user.register(registerUserCommand.depositorName, registerUserCommand.phoneNumber)
