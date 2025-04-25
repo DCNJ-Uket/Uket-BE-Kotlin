@@ -10,6 +10,7 @@ import uket.auth.oauth.OAuth2TokenManager
 import uket.auth.util.AuthTokenGenerator
 import uket.auth.util.OAuth2UserInfoManager
 import uket.domain.user.dto.CreateUserCommand
+import uket.domain.user.dto.RegisterUserCommand
 import uket.domain.user.entity.User
 import uket.domain.user.enums.Platform
 import uket.domain.user.service.UserService
@@ -30,10 +31,8 @@ class UserAuthFacade(
         val userInfo = oAuth2UserInfoManager.getUserInfo(platform, tokenResponse)
 
         val newUser = userService.createUser(generateCreateUserDto(userInfo))
+        val userAuthToken: UserAuthToken = issueToken(newUser)
 
-        val userAuthToken: UserAuthToken = authTokenGenerator.generateAuthToken(newUser)
-
-        rotateTokenService.storeToken(userAuthToken.refreshToken, userAuthToken.accessToken, newUser.id)
         return userAuthToken
     }
 
@@ -51,10 +50,24 @@ class UserAuthFacade(
         tokenValidator.validateTokenSignature(refreshToken)
 
         val findUser: User = userService.getById(rotateTokenService.getUserIdForToken(refreshToken))
+        val userAuthToken: UserAuthToken = issueToken(findUser)
 
-        val userAuthToken: UserAuthToken = authTokenGenerator.generateAuthToken(findUser)
+        return userAuthToken
+    }
 
-        rotateTokenService.storeToken(userAuthToken.refreshToken, userAuthToken.accessToken, findUser.id)
+    @Transactional
+    fun register(command: RegisterUserCommand): UserAuthToken {
+        userService.registerUser(command)
+
+        val findUser = userService.getById(command.userId)
+        val authToken = issueToken(findUser)
+
+        return authToken
+    }
+
+    private fun issueToken(user: User): UserAuthToken {
+        val userAuthToken: UserAuthToken = authTokenGenerator.generateAuthToken(user)
+        rotateTokenService.storeToken(userAuthToken.refreshToken, userAuthToken.accessToken, user.id)
         return userAuthToken
     }
 
