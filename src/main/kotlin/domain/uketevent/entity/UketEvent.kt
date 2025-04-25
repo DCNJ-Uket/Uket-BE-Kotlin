@@ -57,11 +57,11 @@ class UketEvent(
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
 ) : BaseTimeEntity() {
-    @Column(name = "event_start_datetime")
-    var eventStartDateTime: LocalDateTime = ticketingEndDateTime
+    @Column(name = "first_round_datetime")
+    var firstRoundDateTime: LocalDateTime = ticketingEndDateTime
 
-    @Column(name = "event_end_datetime")
-    var eventEndDateTime: LocalDateTime = ticketingEndDateTime
+    @Column(name = "last_round_datetime")
+    var lastRoundDateTime: LocalDateTime = ticketingEndDateTime
 
     @OneToMany(
         mappedBy = "uketEvent",
@@ -107,8 +107,8 @@ class UketEvent(
         this.uketEventRounds += uketEventRound
         uketEventRound.uketEvent = this
 
-        this.eventStartDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
-        this.eventEndDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
+        this.firstRoundDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
+        this.lastRoundDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
     }
 
     fun addBanner(banner: Banner) {

@@ -167,8 +167,8 @@ class UketEventRandomUtil {
                     totalTicketCount,
                     eventImageId,
                     thumbnailImageId,
-                    eventStartDateTime,
-                    eventEndDateTime,
+                    firstRoundDateTime,
+                    lastRoundDateTime,
                     createdAt,
                     updatedAt
                 ).map { toSqlValue(it) }

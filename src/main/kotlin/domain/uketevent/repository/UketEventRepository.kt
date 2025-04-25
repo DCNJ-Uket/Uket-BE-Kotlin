@@ -19,7 +19,7 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
     @Query(
         """
             SELECT ue FROM UketEvent ue 
-            WHERE ue.eventEndDateTime >= CURRENT_DATE AND
+            WHERE ue.lastRoundDateTime >= CURRENT_DATE AND
             ue.eventType = :eventType
         """
     )
@@ -28,7 +28,7 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
     @Query(
         """
             SELECT ue FROM UketEvent ue 
-            WHERE ue.eventEndDateTime >= CURRENT_DATE
+            WHERE ue.lastRoundDateTime >= CURRENT_DATE
         """
     )
     fun findAllByEventEndDateBeforeNowWithUketEventRound(): List<UketEvent>

@@ -17,8 +17,8 @@ data class EventListItem(
         fun of(event: UketEvent, status: TicketingStatus): EventListItem = EventListItem(
             eventName = event.eventName,
             eventThumbnailImagePath = event.thumbnailImageId,
-            eventStartDate = event.eventStartDateTime,
-            eventEndDate = event.eventEndDateTime,
+            eventStartDate = event.firstRoundDateTime,
+            eventEndDate = event.lastRoundDateTime,
             ticketingStartDate = event.ticketingStartDateTime,
             ticketingEndDate = event.ticketingEndDateTime,
             ticketingStatus = status

@@ -24,7 +24,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         AND t.status NOT IN :status
         AND t.entryGroupId IN (
             SELECT eg.id FROM EntryGroup eg 
-            WHERE eg.uketEventRound.uketEvent.eventEndDateTime >= CURRENT_DATE
+            WHERE eg.uketEventRound.uketEvent.lastRoundDateTime >= CURRENT_DATE
         )
     """,
     )
