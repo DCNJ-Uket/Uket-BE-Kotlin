@@ -38,8 +38,8 @@ class TicketService(
         return ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
     }
 
-    fun searchAllTickets(organizationId: Long, pageable: Pageable): Page<TicketSearchDto> {
-        return ticketRepository.findAllByOrganizationId(organizationId, pageable)
+    fun searchAllTickets(organizationId: Long,uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> {
+        return ticketRepository.findAllByOrganizationId(organizationId,uketEventId, pageable)
     }
 
     @Transactional

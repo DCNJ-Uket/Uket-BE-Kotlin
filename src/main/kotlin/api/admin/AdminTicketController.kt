@@ -105,7 +105,7 @@ class AdminTicketController(
 
         val tickets: Page<TicketSearchDto> =
             if (ticketSearchType == TicketSearchType.NONE) {
-                ticketService.searchAllTickets(adminInfo.organizationId, pageRequest)
+                ticketService.searchAllTickets(adminInfo.organizationId,uketEventId, pageRequest)
             } else {
                 ticketSearchers.stream()
                     .filter { it.isSupport(ticketSearchType) }
