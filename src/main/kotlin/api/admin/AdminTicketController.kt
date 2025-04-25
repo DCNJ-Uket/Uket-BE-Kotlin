@@ -1,7 +1,9 @@
 package uket.api.admin
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -20,9 +22,12 @@ import uket.api.admin.response.EnterUketEventResponse
 import uket.api.admin.response.LiveEnterUserResponse
 import uket.api.admin.response.TicketSearchResponse
 import uket.api.admin.response.UpdateTicketStatusResponse
+import uket.auth.config.adminId.LoginAdminId
 import uket.common.PublicException
 import uket.common.aop.ratelimit.LimitRequest
 import uket.common.response.CustomPageResponse
+import uket.domain.admin.dto.AdminWithOrganizationDto
+import uket.domain.admin.service.AdminService
 import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
@@ -37,8 +42,9 @@ class AdminTicketController(
     private val enterUketEventFacade: EnterUketEventFacade,
     private val ticketService: TicketService,
     private val ticketSearchers: List<TicketSearcher>,
-
+    private val adminService: AdminService,
 ) {
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "입장 확인 API", description = "QR code를 통한 Token값으로 입장 확인을 할 수 있습니다.")
     @PostMapping("/{token}/enter")
     fun enterShow(
@@ -48,6 +54,7 @@ class AdminTicketController(
         return ResponseEntity.ok(response)
     }
 
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "티켓 상태 변경 API", description = "어드민용 티켓 상태를 변경합니다.")
     @PatchMapping("/{ticketId}/status/{ticketStatus}")
     fun updateTicketStatus(
@@ -60,38 +67,45 @@ class AdminTicketController(
     }
 
     @LimitRequest
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "실시간 입장 내역 조회 API", description = "실시간 입장내역 조회를 합니다. 페이지는 1Page부터 시작합니다.")
-    @GetMapping("/live/enter-users/{uketEventId}")
+    @GetMapping("/live/enter-users")
     fun searchLiveEnterUsers(
         @RequestParam(required = false) uketEventRoundId: Long?,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
-        @PathVariable("uketEventId") uketEventId: Long,
+        @RequestParam(required = false) uketEventId: Long?,
+        @Parameter(hidden = true)
+        @LoginAdminId adminId: Long,
     ): ResponseEntity<CustomPageResponse<LiveEnterUserResponse>> {
+        val adminInfo = adminService.getAdminInfo(adminId)
         val response = enterUketEventFacade.searchLiveEnterUsers(
+            adminInfo.organizationId,
             uketEventId,
-            uketEventRoundId,
             PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "modifiedAt"))
         )
         return ResponseEntity.ok(CustomPageResponse(response))
     }
 
+    @SecurityRequirement(name = "JWT")
     @Operation(summary = "티켓 검색 API", description = "다양한 기준으로 티켓을 페이지별로 조회합니다. 페이지는 1Page부터 시작합니다.")
-    @GetMapping("/search/{uketEventId}")
+    @GetMapping("/search")
     fun searchTickets(
-        @RequestParam(required = false) uketEventRoundId: Long?,
         @RequestParam searchType: TicketSearchType,
         @ModelAttribute searchRequest: SearchRequest,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
-        @PathVariable("uketEventId") uketEventId: Long,
+        @RequestParam(required = false) uketEventId: Long?,
+        @Parameter(hidden = true)
+        @LoginAdminId adminId: Long,
     ): ResponseEntity<CustomPageResponse<TicketSearchResponse>> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "modifiedAt"))
         val ticketSearchType = searchType ?: TicketSearchType.default
+        val adminInfo = adminService.getAdminInfo(adminId)
 
         val tickets: Page<TicketSearchDto> =
             if (ticketSearchType == TicketSearchType.NONE) {
-                ticketService.searchAllTickets(uketEventId, uketEventRoundId, pageRequest)
+                ticketService.searchAllTickets(adminInfo.organizationId, pageRequest)
             } else {
                 ticketSearchers.stream()
                     .filter { it.isSupport(ticketSearchType) }
@@ -102,7 +116,7 @@ class AdminTicketController(
                             title = "잘못된 검색 타입"
                         )
                     }
-                    .search(uketEventId, uketEventRoundId, searchRequest, pageRequest);
+                    .search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))

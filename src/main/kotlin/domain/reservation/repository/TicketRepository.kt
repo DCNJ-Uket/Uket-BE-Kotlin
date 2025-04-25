@@ -205,14 +205,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-    AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+    AND (:uketEventId IS NULL OR e.id = :uketEventId)
     AND t.status = :status
 """
     )
     fun findLiveEnterUserDtosByUketEventAndRoundId(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("status") status: TicketStatus,
         pageable: Pageable,
     ): Page<LiveEnterUserDto>
@@ -234,13 +234,12 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-    AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+    AND (:uketEventId IS NULL OR e.id = :uketEventId)
 """
     )
-    fun findAllByEventId(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+    fun findAllByOrganizationId(
+        organizationId: Long,
         pageable: Pageable,
     ): Page<TicketSearchDto>
 

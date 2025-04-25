@@ -20,8 +20,8 @@ class TicketSearcherByCreatedAt(
 
     @Transactional(readOnly = true)
     override fun search(
-        uketEventId: Long,
-        uketEventRoundId: Long?,
+        organizationId:Long,
+        uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
