@@ -20,8 +20,8 @@ class TicketSearcherByCreatedAt(
 
     @Transactional(readOnly = true)
     override fun search(
-        uketEventId: Long,
-        uketEventRoundId: Long?,
+        organizationId: Long,
+        uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
@@ -31,6 +31,6 @@ class TicketSearcherByCreatedAt(
         val createStart = createdAt.toLocalDate().atTime(LocalTime.MIN)
         val createEnd = createdAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByCreatedAtBetween(uketEventId, uketEventRoundId, createStart, createEnd, pageable)
+        return ticketRepository.findByCreatedAtBetween(organizationId, uketEventId, createStart, createEnd, pageable)
     }
 }
