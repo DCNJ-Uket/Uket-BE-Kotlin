@@ -41,7 +41,7 @@ class EnterUketEventFacade(
     }
 
     @Transactional(readOnly = true)
-    fun searchLiveEnterUsers(organizationId:Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserResponse> {
+    fun searchLiveEnterUsers(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserResponse> {
         val liveEnterUserDto: Page<LiveEnterUserDto> = ticketService.findLiveEnterTickets(organizationId, uketEventId, pageable)
         return liveEnterUserDto.map { dto -> LiveEnterUserResponse.from(dto) }
     }

@@ -32,6 +32,6 @@ class TicketSearcherByEventRoundDateTime(
         val showStart: LocalDateTime = showDate.atStartOfDay()
         val showEnd: LocalDateTime = showDate.atTime(LocalTime.MAX)
 
-        return ticketRepository.findByEventRoundTime(organizationId, uketEventId,showStart, showEnd, pageable);
+        return ticketRepository.findByEventRoundTime(organizationId, uketEventId, showStart, showEnd, pageable);
     }
 }

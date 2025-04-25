@@ -24,6 +24,6 @@ class TicketSearcherByStatus(
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
-        return ticketRepository.findByStatus(organizationId, uketEventId,searchRequest.status!!, pageable)
+        return ticketRepository.findByStatus(organizationId, uketEventId, searchRequest.status!!, pageable)
     }
 }

@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
 import uket.api.admin.response.EnterUketEventResponse
+import uket.api.admin.response.FilterEventResponse
 import uket.api.admin.response.LiveEnterUserResponse
 import uket.api.admin.response.TicketSearchResponse
 import uket.api.admin.response.UpdateTicketStatusResponse
@@ -26,23 +28,25 @@ import uket.auth.config.adminId.LoginAdminId
 import uket.common.PublicException
 import uket.common.aop.ratelimit.LimitRequest
 import uket.common.response.CustomPageResponse
-import uket.domain.admin.dto.AdminWithOrganizationDto
 import uket.domain.admin.service.AdminService
 import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
 import uket.domain.reservation.service.search.TicketSearcher
+import uket.domain.uketevent.service.UketEventService
 import uket.facade.EnterUketEventFacade
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController
+@RequestMapping("/admin")
 @ApiResponse(responseCode = "200", description = "OK")
 class AdminTicketController(
     private val enterUketEventFacade: EnterUketEventFacade,
     private val ticketService: TicketService,
     private val ticketSearchers: List<TicketSearcher>,
     private val adminService: AdminService,
+    private val uketEventService: UketEventService,
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "입장 확인 API", description = "QR code를 통한 Token값으로 입장 확인을 할 수 있습니다.")
@@ -105,7 +109,7 @@ class AdminTicketController(
 
         val tickets: Page<TicketSearchDto> =
             if (ticketSearchType == TicketSearchType.NONE) {
-                ticketService.searchAllTickets(adminInfo.organizationId,uketEventId, pageRequest)
+                ticketService.searchAllTickets(adminInfo.organizationId, uketEventId, pageRequest)
             } else {
                 ticketSearchers.stream()
                     .filter { it.isSupport(ticketSearchType) }
@@ -121,5 +125,17 @@ class AdminTicketController(
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))
         return ResponseEntity.ok(response)
+    }
+
+    @SecurityRequirement(name = "JWT")
+    @Operation(summary = "필터 행사 목록 조회 API", description = "예매 내역 및 실시간조회에서 내가 속해있는 단체가 가지고있는 행사 목록의 이름을 반환합니다.")
+    @GetMapping("/filtering/events")
+    fun getOrganizationFilterEvents(
+        @Parameter(hidden = true)
+        @LoginAdminId adminId: Long,
+    ): ResponseEntity<FilterEventResponse> {
+        val adminInfo = adminService.getAdminInfo(adminId)
+        val eventList = uketEventService.getEventsByOrganizationId(adminInfo.organizationId)
+        return ResponseEntity.ok(FilterEventResponse(eventList))
     }
 }

@@ -24,6 +24,6 @@ class TicketSearcherByPhoneNumber(
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
-        return ticketRepository.findByPhoneNumberEndingWith(organizationId,uketEventId, searchRequest.phoneNumberLastFourDigits!!, pageable)
+        return ticketRepository.findByPhoneNumberEndingWith(organizationId, uketEventId, searchRequest.phoneNumberLastFourDigits!!, pageable)
     }
 }
