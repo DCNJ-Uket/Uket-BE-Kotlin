@@ -65,7 +65,7 @@ class EventRegistration(
     @Embedded
     val paymentInfo: PaymentInfo,
 
-    @Column(name = "uket_event_image_id")
+    @Column(name = "event_image_id")
     val uketEventImageId: String,
 
     @Column(name = "thumbnail_image_id")
