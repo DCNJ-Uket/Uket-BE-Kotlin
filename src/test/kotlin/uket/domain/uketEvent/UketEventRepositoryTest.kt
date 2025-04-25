@@ -70,31 +70,28 @@ private fun setDB3(entityManager: EntityManager) {
             now.minusDays(2),
             now.plusDays(2)
         )
-    entityManager.persist(uketEvent1)
     val uketEventRounds1 =
         UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(6), now.plusDays(7)))
-    uketEventRounds1.forEach { entityManager.persist(it) }
+    entityManager.persist(uketEvent1)
 
     val uketEvent2 =
         UketEventRandomUtil.createUketEventWithDates(
             now.minusDays(3),
             now.plusDays(3)
         )
-    entityManager.persist(uketEvent2)
     val uketEventRounds2 =
         UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(8)))
-    uketEventRounds2.forEach { entityManager.persist(it) }
+    entityManager.persist(uketEvent2)
 
     val closedEvent = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(4),
         now.minusDays(3)
     )
-    entityManager.persist(closedEvent)
     val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDate(
         closedEvent,
         listOf(now.minusDays(2), now.minusDays(1))
     )
-    uketEventRounds3.forEach { entityManager.persist(it) }
+    entityManager.persist(closedEvent)
 
     entityManager.flush()
 }
@@ -107,30 +104,27 @@ private fun setDB2(entityManager: EntityManager) {
             now.plusDays(2)
         )
 
-    entityManager.persist(uketEvent1)
     val uketEventRounds1 =
         UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(3), now.plusDays(4)))
-    uketEventRounds1.forEach { entityManager.persist(it) }
+    entityManager.persist(uketEvent1)
 
     val uketEvent2 =
         UketEventRandomUtil.createUketEventWithDates(
             now.minusDays(3),
             now.plusDays(3)
         )
-    entityManager.persist(uketEvent2)
     val uketEventRounds2 =
         UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
-    uketEventRounds2.forEach { entityManager.persist(it) }
+    entityManager.persist(uketEvent2)
 
     val uketEvent3 =
         UketEventRandomUtil.createUketEventWithDates(
             now.minusDays(4),
             now.plusDays(4)
         )
-    entityManager.persist(uketEvent3)
     val uketEventRounds3 =
         UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now.plusDays(5)))
-    uketEventRounds3.forEach { entityManager.persist(it) }
+    entityManager.persist(uketEvent3)
 
     entityManager.flush()
 }
@@ -154,10 +148,8 @@ private fun setDB(entityManager: EntityManager): Long {
         details = UketEvent.EventDetails(
             "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
         ),
-        uketEventImageId = "",
+        eventImageId = "",
         thumbnailImageId = "",
-        bannerImageIds = listOf(),
-        _uketEventRounds = listOf()
     )
     entityManager.persist(uketEvent)
     entityManager.flush()

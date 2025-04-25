@@ -28,6 +28,7 @@ class UketEventService(
     @Transactional(readOnly = true)
     fun getActiveEventItemList(type: EventListQueryType): List<EventListItem> {
         val startTime = System.currentTimeMillis()
+
         lateinit var eventList: List<UketEvent>
         if (type.name.equals("ALL")) {
             eventList = uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound()
@@ -39,21 +40,13 @@ class UketEventService(
         val itemList = eventList
             .map {
                 val ticketingStatus = getCurrentEventTicketingStatus(now, it)
-
-                EventListItem(
-                    eventName = it.eventName,
-                    eventThumbnailImagePath = it.thumbnailImageId,
-                    eventStartDate = it.uketEventRounds.minOf { it.eventRoundDateTime },
-                    eventEndDate = it.uketEventRounds.maxOf { it.eventRoundDateTime },
-                    ticketingStartDate = it.ticketingStartDateTime,
-                    ticketingEndDate = it.ticketingEndDateTime,
-                    ticketingStatus = ticketingStatus
-                )
+                EventListItem.of(it, ticketingStatus)
             }
         val orderedList = itemList.sortedWith(
             compareBy<EventListItem> { it.ticketingStatus }
                 .thenBy { it.eventStartDate }
         )
+
         val endTime = System.currentTimeMillis()
         log.debug("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
         return orderedList

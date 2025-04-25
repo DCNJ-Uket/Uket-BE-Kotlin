@@ -98,12 +98,10 @@ class DomainEntityTest {
             details = UketEvent.EventDetails(
                 "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
             ),
-            uketEventImageId = "",
+            eventImageId = "",
             thumbnailImageId = "",
-            bannerImageIds = listOf(),
-            _uketEventRounds = listOf(uketEventRound)
         )
-        uketEventRound.uketEvent = uketEvent
+        uketEvent.addUketEventRound(uketEventRound)
         val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 
         // when
