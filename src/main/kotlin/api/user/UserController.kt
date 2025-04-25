@@ -2,6 +2,7 @@ package uket.api.user
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,6 +21,7 @@ import uket.domain.user.enums.Platform
 import uket.domain.user.service.UserService
 import uket.facade.UserAuthFacade
 
+@Tag(name = "멤버 관련 API", description = "멤버 관련 API 입니다")
 @RestController
 class UserController(
     private val userAuthFacade: UserAuthFacade,
