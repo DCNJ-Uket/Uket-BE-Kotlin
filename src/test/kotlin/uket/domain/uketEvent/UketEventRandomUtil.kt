@@ -150,8 +150,8 @@ class UketEventRandomUtil {
                     "total_ticket_count",
                     "event_image_id",
                     "thumbnail_image_id",
-                    "event_start_datetime",
-                    "event_end_datetime",
+                    "first_round_datetime",
+                    "last_round_datetime",
                     "created_at",
                     "updated_at"
                 )
