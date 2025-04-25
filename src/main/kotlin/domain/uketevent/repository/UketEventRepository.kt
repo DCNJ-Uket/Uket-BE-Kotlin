@@ -43,4 +43,6 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
         """
     )
     fun findAllByEventEndDateBeforeNowWithUketEventRound(): List<UketEvent>
+
+    fun findAllByOrganizationId(organizationId: Long): List<UketEvent>
 }

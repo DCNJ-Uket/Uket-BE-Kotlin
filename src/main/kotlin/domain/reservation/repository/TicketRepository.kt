@@ -29,14 +29,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-      AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+      AND (:uketEventId IS NULL OR e.id = :uketEventId)
       AND t.status = :status
 """
     )
     fun findByStatus(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("status") status: TicketStatus,
         pageable: Pageable,
     ): Page<TicketSearchDto>
@@ -58,14 +58,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-      AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+      AND (:uketEventId IS NULL OR e.id = :uketEventId)
       AND t.createdAt BETWEEN :startAt AND :endAt
 """
     )
     fun findByCreatedAtBetween(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("startAt") startAt: LocalDateTime,
         @Param("endAt") endAt: LocalDateTime,
         pageable: Pageable,
@@ -88,14 +88,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-      AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+      AND (:uketEventId IS NULL OR e.id = :uketEventId)
       AND t.createdAt BETWEEN :startAt AND :endAt
 """
     )
     fun findByUpdatedAtBetween(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("startAt") startAt: LocalDateTime,
         @Param("endAt") endAt: LocalDateTime,
         pageable: Pageable,
@@ -120,14 +120,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-      AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+      AND (:uketEventId IS NULL OR e.id = :uketEventId)
       AND u.name = :userName
 """
     )
     fun findByUserName(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("userName") userName: String,
         pageable: Pageable,
     ): Page<TicketSearchDto>
@@ -149,14 +149,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-      AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+      AND (:uketEventId IS NULL OR e.id = :uketEventId)
       AND ur.eventRoundDateTime BETWEEN :startAt AND :endAt
 """
     )
     fun findByEventRoundTime(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("startAt") startAt: LocalDateTime,
         @Param("endAt") endAt: LocalDateTime,
         pageable: Pageable,
@@ -205,14 +205,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-    AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+    AND (:uketEventId IS NULL OR e.id = :uketEventId)
     AND t.status = :status
 """
     )
     fun findLiveEnterUserDtosByUketEventAndRoundId(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("status") status: TicketStatus,
         pageable: Pageable,
     ): Page<LiveEnterUserDto>
@@ -234,13 +234,13 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-    AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+    AND (:uketEventId IS NULL OR e.id = :uketEventId)
 """
     )
-    fun findAllByEventId(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+    fun findAllByOrganizationId(
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         pageable: Pageable,
     ): Page<TicketSearchDto>
 
@@ -261,14 +261,14 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN eg.uketEventRound ur
     JOIN ur.uketEvent e
     JOIN User u ON u.id = t.userId
-    WHERE e.id = :uketEventId
-      AND (:uketEventRoundId IS NULL OR ur.id = :uketEventRoundId)
+    WHERE e.organizationId = :organizationId
+      AND (:uketEventId IS NULL OR e.id = :uketEventId)
       AND u.phoneNumber LIKE %:lastFourDigits
 """
     )
     fun findByPhoneNumberEndingWith(
-        @Param("uketEventId") uketEventId: Long,
-        @Param("uketEventRoundId") uketEventRoundId: Long?,
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long?,
         @Param("lastFourDigits") lastFourDigits: String,
         pageable: Pageable,
     ): Page<TicketSearchDto>

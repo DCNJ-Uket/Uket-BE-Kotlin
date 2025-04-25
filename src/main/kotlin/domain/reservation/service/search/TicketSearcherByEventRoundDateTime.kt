@@ -21,8 +21,8 @@ class TicketSearcherByEventRoundDateTime(
 
     @Transactional(readOnly = true)
     override fun search(
-        uketEventId: Long,
-        uketEventRoundId: Long?,
+        organizationId: Long,
+        uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
@@ -32,6 +32,6 @@ class TicketSearcherByEventRoundDateTime(
         val showStart: LocalDateTime = showDate.atStartOfDay()
         val showEnd: LocalDateTime = showDate.atTime(LocalTime.MAX)
 
-        return ticketRepository.findByEventRoundTime(uketEventId, uketEventRoundId, showStart, showEnd, pageable);
+        return ticketRepository.findByEventRoundTime(organizationId, uketEventId, showStart, showEnd, pageable);
     }
 }

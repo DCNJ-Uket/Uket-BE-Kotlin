@@ -20,8 +20,8 @@ class TicketSearcherByModifiedAt(
 
     @Transactional(readOnly = true)
     override fun search(
-        uketEventId: Long,
-        uketEventRoundId: Long?,
+        organizationId: Long,
+        uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
@@ -31,6 +31,6 @@ class TicketSearcherByModifiedAt(
         val modifyStart = modifiedAt.toLocalDate().atTime(LocalTime.MIN)
         val modifyEnd = modifiedAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByUpdatedAtBetween(uketEventId, uketEventRoundId, modifyStart, modifyEnd, pageable)
+        return ticketRepository.findByUpdatedAtBetween(organizationId, uketEventId, modifyStart, modifyEnd, pageable)
     }
 }

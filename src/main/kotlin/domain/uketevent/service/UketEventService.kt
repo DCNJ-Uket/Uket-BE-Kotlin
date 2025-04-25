@@ -3,6 +3,7 @@ package uket.domain.uketevent.service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.api.admin.dto.EventNameDto
 import uket.api.user.request.EventListQueryType
 import uket.common.LoggerDelegate
 import uket.common.enums.EventType
@@ -78,5 +79,11 @@ class UketEventService(
         val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId)
             ?: throw IllegalStateException("해당 행사의 이름을 찾을 수 없습니다.")
         return name
+    }
+
+    @Transactional(readOnly = true)
+    fun getEventsByOrganizationId(organizationId: Long): List<EventNameDto> {
+        val events = uketEventRepository.findAllByOrganizationId(organizationId)
+        return events.map { event -> EventNameDto.of(organizationId, event) }
     }
 }

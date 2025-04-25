@@ -19,11 +19,11 @@ class TicketSearcherByUserName(
 
     @Transactional(readOnly = true)
     override fun search(
-        uketEventId: Long,
-        uketEventRoundId: Long?,
+        organizationId: Long,
+        uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
     ): Page<TicketSearchDto> {
-        return ticketRepository.findByUserName(uketEventId, uketEventRoundId, searchRequest.userName!!, pageable)
+        return ticketRepository.findByUserName(organizationId, uketEventId, searchRequest.userName!!, pageable)
     }
 }
