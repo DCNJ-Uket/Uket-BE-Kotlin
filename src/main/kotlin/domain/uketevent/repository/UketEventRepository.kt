@@ -23,7 +23,7 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
             ue.eventType = :eventType
         """
     )
-    fun findAllByEventTypeAndEventEndDateBeforeNowWithUketEventRound(eventType: EventType): List<UketEvent>
+    fun findAllByEventTypeAndEventEndDateAfterNowWithUketEventRound(eventType: EventType): List<UketEvent>
 
     @Query(
         """
@@ -31,8 +31,15 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
             WHERE ue.lastRoundDateTime >= CURRENT_DATE
         """
     )
-    fun findAllByEventEndDateBeforeNowWithUketEventRound(): List<UketEvent>
+    fun findAllByEventEndDateAfterNowWithUketEventRound(): List<UketEvent>
 
-    @Query("""SELECT ue from UketEvent ue JOIN FETCH Banner b WHERE ue.id = :uketEventId""")
-    fun findByIdWithBanners(uketEventId: Long): UketEvent?
+    @Query(
+        """
+            SELECT ue from UketEvent ue 
+            LEFT JOIN FETCH ue.banners b
+            WHERE ue.id = :uketEventId AND 
+            ue.lastRoundDateTime >= CURRENT_DATE
+        """
+    )
+    fun findByIdAndLastRoundDateAfterNowWithBanners(uketEventId: Long): UketEvent?
 }

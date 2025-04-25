@@ -22,7 +22,7 @@ class UketEventServiceTest :
         describe("유효한 행사 목록 조회") {
             context("티켓팅 진행 중인 행사 3개가 있을 때") {
                 val (uketEvent1, uketEvent2, uketEvent3) = setDB(uketEventRepository)
-                every { uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound() } returns listOf(
+                every { uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound() } returns listOf(
                     uketEvent1,
                     uketEvent2,
                     uketEvent3
@@ -41,7 +41,7 @@ class UketEventServiceTest :
                 val (uketEvent1, uketEvent2) = setDB2(now)
                 val (notOpenedEvent, closedEvent) = setDB3(now, uketEvent2)
 
-                every { uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound() } returns listOf(
+                every { uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound() } returns listOf(
                     uketEvent1,
                     uketEvent2,
                     notOpenedEvent,

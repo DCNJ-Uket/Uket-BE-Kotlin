@@ -5,10 +5,12 @@ import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
+import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.repository.UketEventRepository
 import java.time.LocalDateTime
@@ -42,7 +44,7 @@ class UketEventRepositoryTest(
                 it("3개의 이벤트 조회") {
                     setDB2(entityManager)
 
-                    val eventList = uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound()
+                    val eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
                     eventList.size shouldBe 3
                 }
             }
@@ -51,8 +53,38 @@ class UketEventRepositoryTest(
                 it("조건에 맞는 단체가 없는 경우") {
                     setDB3(entityManager)
 
-                    val eventList = uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound()
+                    val eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
                     eventList.size shouldBe 2
+                }
+            }
+        }
+
+        describe("findByIdWithBanners") {
+            context("이벤트가 1개 있고, 배너가 없는 경우") {
+                it("해당 이벤트를 찾는 경우") {
+                    val event = setDB4(entityManager)
+
+                    println("event.id = ${event.id}")
+                    val findEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(event.id)
+                    findEvent shouldNotBe null
+                    findEvent!!.banners.size shouldBe 0
+                }
+                it("해당 이벤트가 아닌 이벤트를 찾는 경우") {
+                    val event = setDB4(entityManager)
+
+                    val findEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(999L)
+                    findEvent shouldBe null
+                }
+            }
+
+            context("이벤트가 1개 있고, 배너가 1개 있는 경우") {
+                it("해당 이벤트를 찾는 경우") {
+                    val event = setDB5(entityManager)
+
+                    println("event.id = ${event.id}")
+                    val findEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(event.id)
+                    findEvent shouldNotBe null
+                    findEvent!!.banners.size shouldBe 3
                 }
             }
         }
@@ -61,6 +93,40 @@ class UketEventRepositoryTest(
     override fun extensions(): List<Extension> {
         return super.extensions() + listOf(SpringExtension) // SpringExtension 활성화
     }
+}
+
+private fun setDB5(entityManager: EntityManager): UketEvent {
+    val now = LocalDateTime.now()
+    val uketEvent =
+        UketEventRandomUtil.createUketEventWithDates(
+            now.minusDays(2),
+            now.plusDays(2)
+        )
+    val uketEventRounds = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent, listOf(now.plusDays(3)))
+    val banners = listOf(
+        Banner(id = 0L, uketEvent = uketEvent, imageId = 1, link = "link1"),
+        Banner(id = 0L, uketEvent = uketEvent, imageId = 2, link = "link2"),
+        Banner(id = 0L, uketEvent = uketEvent, imageId = 3, link = "link3")
+    )
+    banners.forEach { uketEvent.addBanner(it) }
+    entityManager.persist(uketEvent)
+
+    entityManager.flush()
+    return uketEvent
+}
+
+private fun setDB4(entityManager: EntityManager): UketEvent {
+    val now = LocalDateTime.now()
+    val uketEvent =
+        UketEventRandomUtil.createUketEventWithDates(
+            now.minusDays(2),
+            now.plusDays(2)
+        )
+    val uketEventRounds = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent, listOf(now.plusDays(3)))
+    entityManager.persist(uketEvent)
+
+    entityManager.flush()
+    return uketEvent
 }
 
 private fun setDB3(entityManager: EntityManager) {

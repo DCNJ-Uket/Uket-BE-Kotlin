@@ -4,6 +4,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.user.EventListQueryType
+import uket.api.user.response.EventDetailResponse
 import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.uketevent.dto.EventListItem
@@ -26,14 +27,21 @@ class UketEventService(
     }
 
     @Transactional(readOnly = true)
+    fun getDetailById(uketEventId: Long): EventDetailResponse {
+        val uketEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(uketEventId)
+            ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
+        return EventDetailResponse.from(uketEvent)
+    }
+
+    @Transactional(readOnly = true)
     fun getActiveEventItemList(type: EventListQueryType): List<EventListItem> {
         val startTime = System.currentTimeMillis()
 
         lateinit var eventList: List<UketEvent>
         if (type.name.equals("ALL")) {
-            eventList = uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound()
+            eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
         } else {
-            eventList = uketEventRepository.findAllByEventTypeAndEventEndDateBeforeNowWithUketEventRound(EventType.valueOf(type.name))
+            eventList = uketEventRepository.findAllByEventTypeAndEventEndDateAfterNowWithUketEventRound(EventType.valueOf(type.name))
         }
 
         val now = LocalDateTime.now()
