@@ -1,7 +1,7 @@
 package uket.api.user.response
 
-import uket.domain.terms.entity.Terms
 import uket.domain.terms.enums.TermsType
+import uket.uket.domain.terms.dto.CheckRequiredTerms
 
 data class TermsResponse(
     val termsId: Long,
@@ -11,12 +11,12 @@ data class TermsResponse(
     val isAgreed: Boolean,
 ) {
     companion object {
-        fun of(terms: Terms, isAgreed: Boolean, link: String): TermsResponse = TermsResponse(
-            termsId = terms.id,
+        fun of(terms: CheckRequiredTerms): TermsResponse = TermsResponse(
+            termsId = terms.termsId,
             name = terms.name,
             type = terms.termsType,
-            link = link,
-            isAgreed = isAgreed
+            link = terms.link,
+            isAgreed = false
         )
     }
 }
