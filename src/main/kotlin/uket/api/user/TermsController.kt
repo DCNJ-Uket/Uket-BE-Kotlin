@@ -44,12 +44,10 @@ class TermsController(
         requests: List<TermsAgreeRequest>,
     ): ResponseEntity<ListResponse<TermsAgreeResponse>> {
         val userAnswers = requests
-            .map { TermsAgreeAnswer(it.termsId, it.isAgree, it.documentVersion) }
-            .toList()
+            .map { TermsAgreeAnswer(it.termsId, it.isAgree, it.version) }
         val termsSigns: List<TermSign> = termsService.agreeTerms(userId, userAnswers)
         val responses = termsSigns
             .map(TermsAgreeResponse::from)
-            .toList()
         return ResponseEntity.ok(ListResponse(responses))
     }
 }

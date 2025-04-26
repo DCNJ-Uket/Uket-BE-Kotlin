@@ -39,7 +39,7 @@ class TermsService(
                 term.checkMandatory(isAgreed)
 
                 if (isAgreed) TermSign.agree(userId, term, documentVersion) else TermSign.agreeNot(userId, term, documentVersion)
-            }.toList()
+            }
 
         return termSignRepository.saveAll(termsSigns)
     }

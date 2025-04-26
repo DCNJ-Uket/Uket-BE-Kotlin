@@ -5,7 +5,7 @@ import uket.domain.terms.entity.TermSign
 data class TermsAgreeResponse(
     val termId: Long,
     val isAgreed: Boolean,
-    val documentVersion: Long,
+    val version: Long,
 ) {
     companion object {
         fun from(termSign: TermSign): TermsAgreeResponse = TermsAgreeResponse(
