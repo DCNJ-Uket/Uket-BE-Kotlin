@@ -5,7 +5,6 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import uket.api.user.request.EventListQueryType
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.repository.UketEventRepository
 import uket.domain.uketevent.service.UketEventService
@@ -29,7 +28,7 @@ class UketEventServiceTest :
                 )
 
                 it("행사 시작 순서대로 출력") {
-                    val eventList = uketEventService.getActiveEventItemList(EventListQueryType.ALL)
+                    val eventList = uketEventService.getActiveEventItemList("ALL")
                     eventList.size shouldBe 3
                     eventList.get(0).eventName shouldBe uketEvent3.eventName
                     eventList.get(1).eventName shouldBe uketEvent1.eventName
@@ -49,7 +48,7 @@ class UketEventServiceTest :
                 )
 
                 it("티켓팅 진행 중, 시작 전, 종료 순으로 출력") {
-                    val eventList = uketEventService.getActiveEventItemList(EventListQueryType.ALL)
+                    val eventList = uketEventService.getActiveEventItemList("ALL")
                     eventList.size shouldBe 4
                     eventList.get(0).eventName shouldBe uketEvent2.eventName
                     eventList.get(1).eventName shouldBe uketEvent1.eventName
