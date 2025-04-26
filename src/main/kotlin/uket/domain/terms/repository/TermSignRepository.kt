@@ -11,7 +11,7 @@ interface TermSignRepository : JpaRepository<TermSign, Long> {
             FROM TermSign ts
             JOIN FETCH ts.terms
             WHERE ts.userId = :userId
-              AND ts.terms.id IN :termsIds
+              AND ts.terms.id IN :termIds
               AND ts.agreeAt = (
                   SELECT MAX(subTs.agreeAt)
                   FROM TermSign subTs
