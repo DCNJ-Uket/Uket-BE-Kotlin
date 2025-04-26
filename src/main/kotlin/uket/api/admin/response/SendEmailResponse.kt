@@ -7,11 +7,9 @@ data class SendEmailResponse(
     val email: String,
 ) {
     companion object {
-        fun from(admin: Admin): SendEmailResponse {
-            return SendEmailResponse(
-                success = true,
-                email = admin.email,
-            )
-        }
+        fun from(admin: Admin): SendEmailResponse = SendEmailResponse(
+            success = true,
+            email = admin.email,
+        )
     }
 }

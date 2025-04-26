@@ -5,7 +5,6 @@ enum class TicketSearchType {
     USER_NAME,
     PHONE_NUMBER,
     SHOW_DATE,
-    RESERVATION_USER_TYPE,
     CREATED_AT,
     MODIFIED_AT,
     NONE,

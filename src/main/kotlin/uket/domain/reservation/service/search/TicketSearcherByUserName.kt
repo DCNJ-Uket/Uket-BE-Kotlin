@@ -14,7 +14,7 @@ class TicketSearcherByUserName(
     ticketRepository: TicketRepository,
 ) : TicketSearcher(ticketRepository) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
-        return searchType == TicketSearchType.STATUS
+        return searchType == TicketSearchType.USER_NAME
     }
 
     @Transactional(readOnly = true)

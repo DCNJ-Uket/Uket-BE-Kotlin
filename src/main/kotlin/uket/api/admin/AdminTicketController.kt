@@ -75,7 +75,6 @@ class AdminTicketController(
     @Operation(summary = "실시간 입장 내역 조회 API", description = "실시간 입장내역 조회를 합니다. 페이지는 1Page부터 시작합니다.")
     @GetMapping("/live/enter-users")
     fun searchLiveEnterUsers(
-        @RequestParam(required = false) uketEventRoundId: Long?,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(required = false) uketEventId: Long?,
@@ -86,7 +85,7 @@ class AdminTicketController(
         val response = enterUketEventFacade.searchLiveEnterUsers(
             adminInfo.organizationId,
             uketEventId,
-            PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "modifiedAt"))
+            PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "updatedAt"))
         )
         return ResponseEntity.ok(CustomPageResponse(response))
     }
@@ -103,7 +102,7 @@ class AdminTicketController(
         @Parameter(hidden = true)
         @LoginAdminId adminId: Long,
     ): ResponseEntity<CustomPageResponse<TicketSearchResponse>> {
-        val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "modifiedAt"))
+        val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "updatedAt"))
         val ticketSearchType = searchType ?: TicketSearchType.default
         val adminInfo = adminService.getAdminInfo(adminId)
 
@@ -111,16 +110,17 @@ class AdminTicketController(
             if (ticketSearchType == TicketSearchType.NONE) {
                 ticketService.searchAllTickets(adminInfo.organizationId, uketEventId, pageRequest)
             } else {
-                ticketSearchers.stream()
+                ticketSearchers
+                    .stream()
                     .filter { it.isSupport(ticketSearchType) }
-                    .findFirst().orElseThrow {
+                    .findFirst()
+                    .orElseThrow {
                         throw PublicException(
                             publicMessage = "잘못된 검색 타입입니다.",
                             systemMessage = "Not Valid TicketSearchType : TICKETSEARCHTYPE =$ticketSearchType",
                             title = "잘못된 검색 타입"
                         )
-                    }
-                    .search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
+                    }.search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))

@@ -63,7 +63,7 @@ class TicketService(
     @Transactional
     fun updateTicketStatus(ticketId: Long, ticketStatus: TicketStatus): Ticket {
         val ticket: Ticket = ticketRepository.findById(ticketId).get()
-        ticket.updateStatus(ticketStatus)
+        if (ticketStatus == TicketStatus.FINISH_ENTER) ticket.enter() else ticket.updateStatus(ticketStatus)
         return ticketRepository.save(ticket)
     }
 

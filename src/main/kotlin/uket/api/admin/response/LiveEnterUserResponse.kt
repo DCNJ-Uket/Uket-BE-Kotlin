@@ -18,14 +18,12 @@ class LiveEnterUserResponse(
     companion object {
         private val zoneId = ZoneId.of("Asia/Seoul")
 
-        fun from(dto: LiveEnterUserDto): LiveEnterUserResponse {
-            return LiveEnterUserResponse(
-                enterTime = dto.enterTime.atZone(zoneId),
-                name = dto.name,
-                ticketDate = dto.ticketDate.atZone(zoneId),
-                phoneNumber = dto.phoneNumber,
-                ticketStatus = dto.ticketStatus
-            )
-        }
+        fun from(dto: LiveEnterUserDto): LiveEnterUserResponse = LiveEnterUserResponse(
+            enterTime = dto.enterTime.atZone(zoneId),
+            name = dto.name,
+            ticketDate = dto.ticketDate.atZone(zoneId),
+            phoneNumber = dto.phoneNumber,
+            ticketStatus = dto.ticketStatus
+        )
     }
 }
