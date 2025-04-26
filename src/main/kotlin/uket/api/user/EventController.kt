@@ -20,7 +20,7 @@ class EventController(
     fun getEvents(
         @RequestParam("type") type: EventListQueryType,
     ): ResponseEntity<ActiveEventsResponse> {
-        val itemList = uketEventService.getActiveEventItemList(type = type)
+        val itemList = uketEventService.getActiveEventItemList(type = type.name)
         return ResponseEntity.ok(ActiveEventsResponse(itemList))
     }
 
@@ -29,7 +29,7 @@ class EventController(
     fun getEvents(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<EventDetailResponse> {
-        val response = uketEventService.getDetailById(eventId)
-        return ResponseEntity.ok(response)
+        val event = uketEventService.getDetailById(eventId)
+        return ResponseEntity.ok(EventDetailResponse.from(event))
     }
 }
