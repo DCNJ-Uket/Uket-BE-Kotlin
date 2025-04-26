@@ -7,7 +7,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import org.springframework.data.repository.findByIdOrNull
 import uket.common.PublicException
 import uket.domain.terms.entity.Document
 import uket.domain.terms.entity.TermSign
@@ -36,7 +35,7 @@ class TermsServiceTest :
         describe("agreeTerms") {
             context("필수 약관 1개가 있을 때") {
                 val userAnswerYes = listOf(TermsAgreeAnswer(terms.id, true, document.version))
-                every { termsRepository.findByIdOrNull(terms.id) } returns terms
+                every { termsRepository.findAllByIdIn(listOf(terms.id)) } returns listOf(terms)
 
                 val slot = slot<List<TermSign>>()
                 every { termsSignRepository.saveAll(capture(slot)) } returns listOf(TermSign.agree(userId, terms, document.version))
