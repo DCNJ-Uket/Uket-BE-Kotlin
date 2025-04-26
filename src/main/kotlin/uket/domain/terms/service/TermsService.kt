@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional
 import uket.domain.terms.entity.Document
 import uket.domain.terms.entity.TermSign
 import uket.domain.terms.entity.Terms
-import uket.domain.terms.enums.TermsType
 import uket.domain.terms.repository.DocumentRepository
 import uket.domain.terms.repository.TermSignRepository
 import uket.domain.terms.repository.TermsRepository
 import uket.uket.domain.terms.dto.CheckRequiredTerms
+import uket.uket.domain.terms.dto.TermsAgreeAnswer
 
 @Service
 class TermsService(
@@ -27,6 +27,23 @@ class TermsService(
         return terms
     }
 
+    @Transactional
+    fun agreeTerms(userId: Long, agreeAnswers: List<TermsAgreeAnswer>): List<TermSign> {
+        val termsSigns: List<TermSign> = agreeAnswers
+            .map { answer ->
+                val termsId = answer.termsId
+                val isAgreed = answer.isAgree
+                val documentVersion = answer.documentVersion
+
+                val term = this.getById(termsId)
+                term.checkMandatory(isAgreed)
+
+                if (isAgreed) TermSign.agree(userId, term, documentVersion) else TermSign.agreeNot(userId, term, documentVersion)
+            }.toList()
+
+        return termSignRepository.saveAll(termsSigns)
+    }
+
     @Transactional(readOnly = true)
     fun getAllActiveAndCheckRequiredByUser(userId: Long): List<CheckRequiredTerms> {
         val activeTerms = termsRepository.findAllByIsActiveTrue()
@@ -39,11 +56,6 @@ class TermsService(
 
             // 약관에 대한 동의 여부가 없는 경우
             val termSign = termSignMap[it.id] ?: return@mapNotNull CheckRequiredTerms.of(it, latestDocument)
-
-            // 필수 약관이지만 동의하지 않은 경우
-            if (it.termsType == TermsType.MANDATORY && !termSign.isAgreed) {
-                return@mapNotNull CheckRequiredTerms.of(it, latestDocument)
-            }
 
             // 최신 약관문에 대한 동의 여부가 없는 경우
             if (termSign.documentVersion < latestDocument.version) {

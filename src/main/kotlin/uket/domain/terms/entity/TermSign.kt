@@ -34,4 +34,22 @@ class TermSign(
 
     @Column(name = "agree_at")
     val agreeAt: LocalDateTime,
-) : BaseTimeEntity()
+) : BaseTimeEntity() {
+    companion object {
+        fun agree(userId: Long, terms: Terms, documentVersion: Long): TermSign = TermSign(
+            userId = userId,
+            terms = terms,
+            isAgreed = true,
+            documentVersion = documentVersion,
+            agreeAt = LocalDateTime.now()
+        )
+
+        fun agreeNot(userId: Long, terms: Terms, documentVersion: Long): TermSign = TermSign(
+            userId = userId,
+            terms = terms,
+            isAgreed = false,
+            documentVersion = documentVersion,
+            agreeAt = LocalDateTime.now()
+        )
+    }
+}

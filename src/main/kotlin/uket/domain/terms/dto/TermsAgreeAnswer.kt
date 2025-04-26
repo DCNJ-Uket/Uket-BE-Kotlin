@@ -1,6 +1,6 @@
-package uket.api.user.request
+package uket.uket.domain.terms.dto
 
-data class TermsAgreeRequest(
+data class TermsAgreeAnswer(
     val termsId: Long,
     val isAgree: Boolean,
     val documentVersion: Long,
