@@ -8,11 +8,9 @@ data class UpdateTicketStatusResponse(
     val status: TicketStatus,
 ) {
     companion object {
-        fun from(ticket: Ticket): UpdateTicketStatusResponse {
-            return UpdateTicketStatusResponse(
-                ticketId = ticket.id,
-                status = ticket.status,
-            )
-        }
+        fun from(ticket: Ticket): UpdateTicketStatusResponse = UpdateTicketStatusResponse(
+            ticketId = ticket.id,
+            status = ticket.status,
+        )
     }
 }
