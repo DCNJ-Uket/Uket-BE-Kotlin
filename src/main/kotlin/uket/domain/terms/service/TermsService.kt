@@ -29,13 +29,16 @@ class TermsService(
 
     @Transactional
     fun agreeTerms(userId: Long, agreeAnswers: List<TermsAgreeAnswer>): List<TermSign> {
+        val termIds = agreeAnswers.map { it.termsId }
+        val termsMap = termsRepository.findAllByIdIn(termIds).associateBy { it.id }
+
         val termsSigns: List<TermSign> = agreeAnswers
             .map { answer ->
                 val termsId = answer.termsId
                 val isAgreed = answer.isAgree
                 val documentVersion = answer.documentVersion
 
-                val term = this.getById(termsId)
+                val term = termsMap[termsId] ?: throw IllegalStateException("약관을 찾을 수 없습니다.")
                 term.checkMandatory(isAgreed)
 
                 if (isAgreed) TermSign.agree(userId, term, documentVersion) else TermSign.agreeNot(userId, term, documentVersion)
@@ -72,7 +75,7 @@ class TermsService(
         val activeTermIds = activeTerms.map { it.id }
         val termSignVersionsMap = termSignRepository
             .findLatestByUserIdAndTermsIdsWithTerms(userId, activeTermIds)
-            .associateBy({ it.terms.id }, { it })
+            .associateBy { it.terms.id }
         return termSignVersionsMap
     }
 
@@ -80,7 +83,7 @@ class TermsService(
         val activeDocumentNos = activeTerms.map { it.documentNo }
         val latestDocumentsMap = documentRepository
             .findLatestDocumentsByDocumentNos(activeDocumentNos)
-            .associateBy({ it.documentNo }, { it })
+            .associateBy { it.documentNo }
         return latestDocumentsMap
     }
 }
