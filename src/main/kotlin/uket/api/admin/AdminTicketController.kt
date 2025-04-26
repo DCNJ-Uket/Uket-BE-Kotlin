@@ -110,16 +110,17 @@ class AdminTicketController(
             if (ticketSearchType == TicketSearchType.NONE) {
                 ticketService.searchAllTickets(adminInfo.organizationId, uketEventId, pageRequest)
             } else {
-                ticketSearchers.stream()
+                ticketSearchers
+                    .stream()
                     .filter { it.isSupport(ticketSearchType) }
-                    .findFirst().orElseThrow {
+                    .findFirst()
+                    .orElseThrow {
                         throw PublicException(
                             publicMessage = "잘못된 검색 타입입니다.",
                             systemMessage = "Not Valid TicketSearchType : TICKETSEARCHTYPE =$ticketSearchType",
                             title = "잘못된 검색 타입"
                         )
-                    }
-                    .search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
+                    }.search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))
