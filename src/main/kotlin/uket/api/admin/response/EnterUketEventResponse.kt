@@ -12,14 +12,12 @@ data class EnterUketEventResponse(
     val msg: String,
 ) {
     companion object {
-        fun of(ticket: Ticket, user: User): EnterUketEventResponse {
-            return EnterUketEventResponse(
-                ticketId = ticket.id,
-                userId = ticket.userId,
-                userName = user.name,
-                status = ticket.status,
-                msg = ticket.status.msg,
-            )
-        }
+        fun of(ticket: Ticket, user: User): EnterUketEventResponse = EnterUketEventResponse(
+            ticketId = ticket.id,
+            userId = ticket.userId,
+            userName = user.name,
+            status = ticket.status,
+            msg = ticket.status.msg,
+        )
     }
 }

@@ -122,7 +122,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND u.name = :userName
+      AND (u.name LIKE CONCAT('%', :userName, '%'))
 """
     )
     fun findByUserName(
