@@ -13,8 +13,10 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import uket.common.PublicException
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
+import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
 @Entity
@@ -116,6 +118,28 @@ class UketEvent(
         enum class ContactType {
             INSTAGRAM,
             KAKAO,
+        }
+    }
+
+    fun getTicketingStatusFrom(now: LocalDateTime): TicketingStatus {
+        var ticketingStatus = TicketingStatus.오픈_예정
+        if (now.isAfter(this.ticketingStartDateTime)) {
+            ticketingStatus = TicketingStatus.티켓팅_진행중
+        }
+        if (now.isAfter(this.ticketingEndDateTime)) {
+            ticketingStatus = TicketingStatus.티켓팅_종료
+        }
+        return ticketingStatus
+    }
+
+    fun validateNowTicketing(now: LocalDateTime) {
+        val ticketingStatus = this.getTicketingStatusFrom(now)
+        if (ticketingStatus != TicketingStatus.티켓팅_진행중) {
+            throw PublicException(
+                publicMessage = "예매가 불가능 한 행사입니다",
+                systemMessage = "[UketEventService] 티켓팅이 진행 중이지 않은 행사 validation",
+                title = "예매 불가능 한 행사"
+            )
         }
     }
 }

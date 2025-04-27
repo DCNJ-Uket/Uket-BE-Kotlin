@@ -18,8 +18,10 @@ class EntryGroupService(
         return entryGroup
     }
 
-    fun findByUketEventRoundId(uketEventRoundId: Long): List<EntryGroup> =
-        entryGroupRepository.findByUketEventRoundId(uketEventRoundId, EntryGroup::class.java)
+    fun findValidByUketEventRoundId(uketEventRoundId: Long): List<EntryGroup> {
+        val entryGroups = entryGroupRepository.findByUketEventRoundId(uketEventRoundId, EntryGroup::class.java)
+        return entryGroups.mapNotNull { if (it.ticketCount >= it.totalTicketCount) null else it }
+    }
 
     @Transactional
     fun increaseReservedCount(entryGroupId: Long) {

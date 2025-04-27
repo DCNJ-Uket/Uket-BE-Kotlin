@@ -25,6 +25,8 @@ class AuthConfig(
             .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/error")
             .excludePathPatterns("/admin/users/login")
             .excludePathPatterns("/auth/**")
+            .addPathPatterns("/uket-events/*/rounds/**")
+            .addPathPatterns("/rounds/*/entry-groups/**")
             .excludePathPatterns("/uket-events/**")
             .excludePathPatterns("/users/register")
             .excludePathPatterns("/terms/**")
