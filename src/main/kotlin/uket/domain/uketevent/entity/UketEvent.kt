@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
+import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
 @Entity
@@ -114,5 +115,16 @@ class UketEvent(
     fun addBanner(banner: Banner) {
         this.banners += banner
         banner.uketEvent = this
+    }
+
+    fun getTicketingStatus(now: LocalDateTime): TicketingStatus {
+        var ticketingStatus = TicketingStatus.오픈_예정
+        if (now.isAfter(this.ticketingStartDateTime)) {
+            ticketingStatus = TicketingStatus.티켓팅_진행중
+        }
+        if (now.isAfter(this.ticketingEndDateTime)) {
+            ticketingStatus = TicketingStatus.티켓팅_종료
+        }
+        return ticketingStatus
     }
 }

@@ -20,7 +20,7 @@ class UketEventServiceTest :
 
         describe("유효한 행사 목록 조회") {
             context("티켓팅 진행 중인 행사 3개가 있을 때") {
-                val (uketEvent1, uketEvent2, uketEvent3) = setDB(uketEventRepository)
+                val (uketEvent1, uketEvent2, uketEvent3) = setDB()
                 every { uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound() } returns listOf(
                     uketEvent1,
                     uketEvent2,
@@ -38,7 +38,7 @@ class UketEventServiceTest :
             context("티켓팅 진행 중인 행사 2개, 티켓팅 시작 전인 행사 1개, 티켓팅 종료된 행사 1개가 있을 때") {
                 val now = LocalDateTime.now()
                 val (uketEvent1, uketEvent2) = setDB2(now)
-                val (notOpenedEvent, closedEvent) = setDB3(now, uketEvent2)
+                val (notOpenedEvent, closedEvent) = setDB3(now)
 
                 every { uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound() } returns listOf(
                     uketEvent1,
@@ -65,7 +65,6 @@ class UketEventServiceTest :
 
 private fun setDB3(
     now: LocalDateTime,
-    uketEvent2: UketEvent,
 ): Pair<UketEvent, UketEvent> {
     val notOpenedEvent = UketEventRandomUtil.createUketEventWithDates(
         now.plusDays(3),
@@ -98,7 +97,7 @@ private fun setDB2(now: LocalDateTime): Pair<UketEvent, UketEvent> {
     return Pair(uketEvent1, uketEvent2)
 }
 
-private fun setDB(uketEventRepository: UketEventRepository): Triple<UketEvent, UketEvent, UketEvent> {
+private fun setDB(): Triple<UketEvent, UketEvent, UketEvent> {
     val now = LocalDateTime.now()
     val uketEvent1 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(2),

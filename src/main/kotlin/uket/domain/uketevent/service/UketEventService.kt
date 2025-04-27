@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.dto.EventNameDto
 import uket.common.LoggerDelegate
+import uket.common.PublicException
 import uket.common.enums.EventType
 import uket.domain.uketevent.dto.EventListItem
 import uket.domain.uketevent.entity.UketEvent
@@ -23,6 +24,18 @@ class UketEventService(
         val uketEvent = uketEventRepository.findByIdOrNull(uketEventId)
             ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
         return uketEvent
+    }
+
+    @Transactional(readOnly = true)
+    fun validateNowTicketing(uketEvent: UketEvent) {
+        val ticketingStatus = uketEvent.getTicketingStatus(LocalDateTime.now())
+        if (ticketingStatus != TicketingStatus.티켓팅_진행중) {
+            throw PublicException(
+                publicMessage = "예매가 불가능 한 행사입니다",
+                systemMessage = "[UketEventService] 티켓팅이 진행 중이지 않은 행사 validation",
+                title = "예매 불가능 한 행사"
+            )
+        }
     }
 
     @Transactional(readOnly = true)
@@ -46,7 +59,7 @@ class UketEventService(
         val now = LocalDateTime.now()
         val itemList = eventList
             .map {
-                val ticketingStatus = getCurrentEventTicketingStatus(now, it)
+                val ticketingStatus = it.getTicketingStatus(now)
                 EventListItem.of(it, ticketingStatus)
             }
         val orderedList = itemList.sortedWith(
@@ -57,20 +70,6 @@ class UketEventService(
         val endTime = System.currentTimeMillis()
         log.debug("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
         return orderedList
-    }
-
-    private fun getCurrentEventTicketingStatus(
-        now: LocalDateTime,
-        it: UketEvent,
-    ): TicketingStatus {
-        var ticketingStatus = TicketingStatus.오픈_예정
-        if (now.isAfter(it.ticketingStartDateTime)) {
-            ticketingStatus = TicketingStatus.티켓팅_진행중
-        }
-        if (now.isAfter(it.ticketingEndDateTime)) {
-            ticketingStatus = TicketingStatus.티켓팅_종료
-        }
-        return ticketingStatus
     }
 
     @Transactional(readOnly = true)
