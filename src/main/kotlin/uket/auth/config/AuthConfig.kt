@@ -27,6 +27,7 @@ class AuthConfig(
             .excludePathPatterns("/auth/**")
             .excludePathPatterns("/uket-events/**")
             .excludePathPatterns("/users/register")
+            .excludePathPatterns("/terms/check-required")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
