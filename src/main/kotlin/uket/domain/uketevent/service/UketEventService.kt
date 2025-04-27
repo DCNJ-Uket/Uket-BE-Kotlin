@@ -8,7 +8,6 @@ import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.uketevent.dto.EventListItem
 import uket.domain.uketevent.entity.UketEvent
-import uket.domain.uketevent.enums.TicketingStatus
 import uket.domain.uketevent.repository.UketEventRepository
 import java.time.LocalDateTime
 
@@ -46,7 +45,7 @@ class UketEventService(
         val now = LocalDateTime.now()
         val itemList = eventList
             .map {
-                val ticketingStatus = getCurrentEventTicketingStatus(now, it)
+                val ticketingStatus = it.getTicketingStatusFrom(now)
                 EventListItem.of(it, ticketingStatus)
             }
         val orderedList = itemList.sortedWith(
@@ -57,20 +56,6 @@ class UketEventService(
         val endTime = System.currentTimeMillis()
         log.debug("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
         return orderedList
-    }
-
-    private fun getCurrentEventTicketingStatus(
-        now: LocalDateTime,
-        it: UketEvent,
-    ): TicketingStatus {
-        var ticketingStatus = TicketingStatus.오픈_예정
-        if (now.isAfter(it.ticketingStartDateTime)) {
-            ticketingStatus = TicketingStatus.티켓팅_진행중
-        }
-        if (now.isAfter(it.ticketingEndDateTime)) {
-            ticketingStatus = TicketingStatus.티켓팅_종료
-        }
-        return ticketingStatus
     }
 
     @Transactional(readOnly = true)
