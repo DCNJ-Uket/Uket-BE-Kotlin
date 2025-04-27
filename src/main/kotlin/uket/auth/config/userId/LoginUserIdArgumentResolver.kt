@@ -1,4 +1,4 @@
-package uket.auth.config.adminId
+package uket.auth.config.userId
 
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.context.SecurityContextHolder

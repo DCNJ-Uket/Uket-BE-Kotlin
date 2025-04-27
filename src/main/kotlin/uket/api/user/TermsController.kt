@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import uket.api.user.request.TermsAgreeRequest
 import uket.api.user.response.TermsAgreeResponse
 import uket.api.user.response.TermsResponse
-import uket.auth.config.adminId.LoginUserId
+import uket.auth.config.userId.LoginUserId
 import uket.common.response.ListResponse
 import uket.domain.terms.entity.TermSign
 import uket.domain.terms.service.TermsService

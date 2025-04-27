@@ -13,7 +13,7 @@ import uket.api.user.request.TokenReissueRequest
 import uket.api.user.request.UserRegisterRequest
 import uket.api.user.response.AuthResponse
 import uket.api.user.response.UserTokenResponse
-import uket.auth.config.adminId.LoginUserId
+import uket.auth.config.userId.LoginUserId
 import uket.auth.dto.UserAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
 import uket.domain.user.dto.RegisterUserCommand

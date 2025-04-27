@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import uket.auth.config.adminId.LoginAdminIdArgumentResolver
-import uket.auth.config.adminId.LoginUserIdArgumentResolver
+import uket.auth.config.userId.LoginUserIdArgumentResolver
 import uket.auth.interceptor.LoginInterceptor
 
 @Configuration
