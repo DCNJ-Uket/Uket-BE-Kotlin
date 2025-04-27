@@ -46,7 +46,7 @@ private fun setDB(entityManager: EntityManager): Long {
         )
 
     val uketEventRounds =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent, listOf(now.minusDays(1), now))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent, listOf(now.minusDays(1), now))
     entityManager.persist(uketEvent)
     entityManager.flush()
 

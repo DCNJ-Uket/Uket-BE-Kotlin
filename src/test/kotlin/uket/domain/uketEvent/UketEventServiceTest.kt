@@ -71,14 +71,14 @@ private fun setDB3(
         now.plusDays(5)
     )
     val uketEventRounds3 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(notOpenedEvent, listOf(now.plusDays(7), now.plusDays(8)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(notOpenedEvent, listOf(now.plusDays(7), now.plusDays(8)))
 
     val closedEvent = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(4),
         now.minusDays(3)
     )
     val uketEventRounds4 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(closedEvent, listOf(now.minusDays(2), now.plusDays(1)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(closedEvent, listOf(now.minusDays(2), now.plusDays(1)))
     return Pair(notOpenedEvent, closedEvent)
 }
 
@@ -87,13 +87,13 @@ private fun setDB2(now: LocalDateTime): Pair<UketEvent, UketEvent> {
         now.minusDays(2),
         now.plusDays(2)
     )
-    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(5), now.plusDays(6)))
+    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent1, listOf(now.plusDays(5), now.plusDays(6)))
 
     val uketEvent2 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(3),
         now.plusDays(3)
     )
-    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
+    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
     return Pair(uketEvent1, uketEvent2)
 }
 
@@ -103,16 +103,16 @@ private fun setDB(): Triple<UketEvent, UketEvent, UketEvent> {
         now.minusDays(2),
         now.plusDays(2)
     )
-    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(7), now.plusDays(8)))
+    val uketEventRounds1 = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent1, listOf(now.plusDays(7), now.plusDays(8)))
     val uketEvent2 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(3),
         now.plusDays(3)
     )
-    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(9), now.plusDays(10)))
+    val uketEventRounds2 = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent2, listOf(now.plusDays(9), now.plusDays(10)))
     val uketEvent3 = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(4),
         now.plusDays(4)
     )
-    val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now.plusDays(5), now.plusDays(6)))
+    val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent3, listOf(now.plusDays(5), now.plusDays(6)))
     return Triple(uketEvent1, uketEvent2, uketEvent3)
 }

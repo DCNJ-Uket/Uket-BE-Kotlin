@@ -102,7 +102,7 @@ private fun setDB5(entityManager: EntityManager): UketEvent {
             now.minusDays(2),
             now.plusDays(2)
         )
-    val uketEventRounds = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent, listOf(now.plusDays(3)))
+    val uketEventRounds = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent, listOf(now.plusDays(3)))
     val banners = listOf(
         Banner(id = 0L, uketEvent = uketEvent, imageId = 1, link = "link1"),
         Banner(id = 0L, uketEvent = uketEvent, imageId = 2, link = "link2"),
@@ -122,7 +122,7 @@ private fun setDB4(entityManager: EntityManager): UketEvent {
             now.minusDays(2),
             now.plusDays(2)
         )
-    val uketEventRounds = UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent, listOf(now.plusDays(3)))
+    val uketEventRounds = UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent, listOf(now.plusDays(3)))
     entityManager.persist(uketEvent)
 
     entityManager.flush()
@@ -137,7 +137,7 @@ private fun setDB3(entityManager: EntityManager) {
             now.plusDays(2)
         )
     val uketEventRounds1 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(6), now.plusDays(7)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent1, listOf(now.plusDays(6), now.plusDays(7)))
     entityManager.persist(uketEvent1)
 
     val uketEvent2 =
@@ -146,14 +146,14 @@ private fun setDB3(entityManager: EntityManager) {
             now.plusDays(3)
         )
     val uketEventRounds2 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(8)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent2, listOf(now.plusDays(8)))
     entityManager.persist(uketEvent2)
 
     val closedEvent = UketEventRandomUtil.createUketEventWithDates(
         now.minusDays(4),
         now.minusDays(3)
     )
-    val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDate(
+    val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundWithDateAndId(
         closedEvent,
         listOf(now.minusDays(2), now.minusDays(1))
     )
@@ -171,7 +171,7 @@ private fun setDB2(entityManager: EntityManager) {
         )
 
     val uketEventRounds1 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent1, listOf(now.plusDays(3), now.plusDays(4)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent1, listOf(now.plusDays(3), now.plusDays(4)))
     entityManager.persist(uketEvent1)
 
     val uketEvent2 =
@@ -180,7 +180,7 @@ private fun setDB2(entityManager: EntityManager) {
             now.plusDays(3)
         )
     val uketEventRounds2 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent2, listOf(now.plusDays(7), now.plusDays(8)))
     entityManager.persist(uketEvent2)
 
     val uketEvent3 =
@@ -189,7 +189,7 @@ private fun setDB2(entityManager: EntityManager) {
             now.plusDays(4)
         )
     val uketEventRounds3 =
-        UketEventRandomUtil.createUketEventsRoundWithDate(uketEvent3, listOf(now.plusDays(5)))
+        UketEventRandomUtil.createUketEventsRoundWithDateAndId(uketEvent3, listOf(now.plusDays(5)))
     entityManager.persist(uketEvent3)
 
     entityManager.flush()

@@ -4,6 +4,7 @@ import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.FieldPredicates.named
 import uket.domain.uketevent.entity.Banner
+import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import java.time.LocalDateTime
@@ -52,14 +53,17 @@ class UketEventRandomUtil {
             return uketEvent
         }
 
-        fun createUketEventsRoundWithDate(
+        fun createUketEventsRoundWithDateAndId(
             uketEvent: UketEvent,
             uketEventRoundDates: List<LocalDateTime>,
+            startId: Long = 0L,
         ): List<UketEventRound> {
+            var id = startId
             val eventRounds = uketEventRoundDates.map {
+                id += 1
                 val easyRandomEventRound = EasyRandom(
                     EasyRandomParameters()
-                        .randomize(named("id")) { 0L }
+                        .randomize(named("id")) { id }
                         .randomize(named("uketEvent")) { null }
                         .randomize(named("eventRoundDateTime")) { it }
                 )
@@ -71,12 +75,33 @@ class UketEventRandomUtil {
             return eventRounds
         }
 
+        fun createEntryGroupWithTime(
+            uketEventRound: UketEventRound,
+            entryGroupStartTimes: List<LocalDateTime>,
+        ): List<EntryGroup> {
+            val entryGroups = entryGroupStartTimes.map {
+                val easyRandomEntryGroup = EasyRandom(
+                    EasyRandomParameters()
+                        .randomize(named("id")) { 0L }
+                        .randomize(named("entryStartDateTime")) { it }
+                        .randomize(named("entryEndDateTime")) { it.plusMinutes(10) }
+                )
+                easyRandomEntryGroup.nextObject(EntryGroup::class.java)
+            }
+
+            entryGroups.forEach { it.uketEventRound = uketEventRound }
+
+            return entryGroups
+        }
+
         fun createDummyData() {
             val now = LocalDateTime.now()
             val events = mutableListOf<UketEvent>()
             val rounds = mutableListOf<UketEventRound>()
+            val groups = mutableListOf<EntryGroup>()
+            var roundStartId = 0
 
-            repeat(100) { i ->
+            repeat(10) { i ->
                 val ticketingStart = now.plusDays(Random.nextLong(-10, 10))
                 val ticketingEnd = now.plusDays(Random.nextLong(0, 3))
                 val event = createUketEventWithDatesAndNameAndId(ticketingStart, ticketingEnd, "행사$i", i.toLong() + 1)
@@ -88,8 +113,14 @@ class UketEventRandomUtil {
                 repeat(roundSize) { s ->
                     roundList.add(roundDate.plusDays(s.toLong()))
                 }
-                val uketEventRounds = createUketEventsRoundWithDate(event, roundList)
+                val uketEventRounds = createUketEventsRoundWithDateAndId(event, roundList, roundStartId.toLong())
+                roundStartId += roundList.size
                 rounds.addAll(uketEventRounds)
+            }
+
+            rounds.forEach {
+                val entryGroups = createEntryGroupWithTime(it, listOf(it.eventRoundDateTime, it.eventRoundDateTime.plusHours(1)))
+                groups.addAll(entryGroups)
             }
 
             println("-- Insert Events")
@@ -101,6 +132,46 @@ class UketEventRandomUtil {
             rounds.forEach {
                 println(toInsertSqlForUketEventRound(it))
             }
+
+            println("-- Insert Entry Groups")
+            groups.forEach {
+                println(toInsertSqlForEntryGroup(it))
+            }
+        }
+
+        fun toInsertSqlForEntryGroup(entryGroup: EntryGroup): String {
+            val tableName = "entry_group"
+
+            val columns = mutableListOf<String>()
+            val values = mutableListOf<String>()
+
+            // 직접 필드 접근 (중첩 필드도 분해해서 처리)
+            with(entryGroup) {
+                // 일반 필드
+                columns += listOf(
+                    "uket_event_round_id",
+                    "entry_group_name",
+                    "entry_start_datetime",
+                    "entry_end_datetime",
+                    "ticket_count",
+                    "total_ticket_count",
+                    "created_at",
+                    "updated_at"
+                )
+
+                values += listOf(
+                    uketEventRound!!.id,
+                    entryGroupName,
+                    entryStartDateTime,
+                    entryEndDateTime,
+                    ticketCount,
+                    totalTicketCount,
+                    createdAt,
+                    updatedAt
+                ).map { toSqlValue(it) }
+            }
+
+            return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
         }
 
         fun toInsertSqlForUketEventRound(uketEventRound: UketEventRound): String {
