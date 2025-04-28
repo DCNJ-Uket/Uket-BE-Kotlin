@@ -22,12 +22,15 @@ import uket.api.admin.response.EventImageUploadResponse
 import uket.api.admin.response.RegisterUketEventResponse
 import uket.api.admin.response.UketEventRegistrationSummaryResponse
 import uket.api.admin.response.UketRegistrationEventResponse
+import uket.auth.config.adminId.LoginAdminId
 import uket.common.enums.EventType
 import uket.common.response.CustomPageResponse
 import uket.common.toEnum
+import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.facade.S3ImageFacade
+import uket.uket.domain.eventregistration.service.EventRegistrationStatusStateResolver
 
 @Tag(name = "어드민 행사 관련 API", description = "어드민 행사 관련 API 입니다.")
 @RestController
@@ -35,7 +38,8 @@ class EventRegistrationController(
     private val organizationService: OrganizationService,
     private val eventRegistrationService: EventRegistrationService,
     private val s3ImageFacade: S3ImageFacade,
-
+    private val adminService: AdminService,
+    private val eventRegistrationStatusStateResolver: EventRegistrationStatusStateResolver,
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 행사 사진 업로드", description = "행사를 등록하기전 해당 행사의 사진들을 먼저 등록합니다.")
@@ -98,14 +102,18 @@ class EventRegistrationController(
     @Operation(summary = "행사 상태 변경", description = "해당 행사의 등록 상태를 변경합니다.")
     @PutMapping("/admin/uket-event-registrations/{uketEventRegistrationId}/status/{registrationStatus}")
     fun changeRegistrationStatus(
+        @LoginAdminId adminId: Long,
         @PathVariable("uketEventRegistrationId") uketEventRegistrationId: Long,
         @PathVariable("registrationStatus") registrationStatusString: String,
     ): ChangeEventRegistrationStatusResponse {
-        // TODO(영준): Admin이 슈퍼 어드민인지 체크 필요
+        val admin = adminService.getById(adminId)
+        check(admin.isSuperAdmin) { "슈퍼 어드민이 아닌데 호출되었습니다." }
 
-        val eventRegistration = eventRegistrationService.updateStatus(
+        val eventRegistrationStatusState = eventRegistrationStatusStateResolver.resolve(registrationStatusString.toEnum())
+
+        val eventRegistration = eventRegistrationStatusState.invoke(
             id = uketEventRegistrationId,
-            registrationStatus = registrationStatusString.toEnum()
+            currentStatus = eventRegistrationService.getById(uketEventRegistrationId).status
         )
 
         return ChangeEventRegistrationStatusResponse(

@@ -19,3 +19,4 @@ ktlint_standard_trailing-comma-on-call-site = disabled
 ktlint_standard_max-line-length = disabled
 ktlint_standard_argument-list-wrapping = disabled
 ktlint_standard_no-blank-line-in-list = disabled
+ktlint_standard_class-naming = disabled
