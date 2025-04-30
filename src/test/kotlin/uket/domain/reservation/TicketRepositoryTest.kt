@@ -35,7 +35,6 @@ class TicketRepositoryTest(
                 eventRoundDateTime = LocalDateTime.now()
             )
 
-            entityManager.persist(uketEventRound)
             val uketEvent = UketEvent(
                 organizationId = 1L,
                 eventName = "uketEventA",
@@ -50,13 +49,14 @@ class TicketRepositoryTest(
                 ),
                 eventImageId = "",
                 thumbnailImageId = "",
+                _uketEventRounds = listOf(uketEventRound),
+                _banners = listOf()
             )
-            uketEvent.addUketEventRound(uketEventRound)
             entityManager.persist(uketEvent)
 
             // 엔트리 그룹 저장
             val entryGroup = EntryGroup(
-                uketEventRound = uketEventRound,
+                uketEventRound = uketEvent.uketEventRounds[0],
                 entryGroupName = "nameA",
                 entryStartDateTime = LocalDateTime.now(),
                 entryEndDateTime = LocalDateTime.now(),

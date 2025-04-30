@@ -56,12 +56,29 @@ class UketEvent(
 
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
+
+    _uketEventRounds: List<UketEventRound>,
+    _banners: List<Banner>,
 ) : BaseTimeEntity() {
+    @OneToMany(
+        mappedBy = "uketEvent",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    val uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
+        UketEventRound(
+            id = it.id,
+            uketEvent = this,
+            eventRoundDateTime = it.eventRoundDateTime
+        )
+    }
+
     @Column(name = "first_round_datetime")
-    var firstRoundDateTime: LocalDateTime = ticketingEndDateTime
+    val firstRoundDateTime: LocalDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
 
     @Column(name = "last_round_datetime")
-    var lastRoundDateTime: LocalDateTime = ticketingEndDateTime
+    val lastRoundDateTime: LocalDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
 
     @OneToMany(
         mappedBy = "uketEvent",
@@ -69,15 +86,14 @@ class UketEvent(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    var uketEventRounds: List<UketEventRound> = listOf()
-
-    @OneToMany(
-        mappedBy = "uketEvent",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    var banners: List<Banner> = listOf()
+    var banners: List<Banner> = _banners.map {
+        Banner(
+            id = it.id,
+            uketEvent = this,
+            imageId = it.imageId,
+            link = it.link
+        )
+    }
 
     @Embeddable
     data class EventDetails(
@@ -101,18 +117,5 @@ class UketEvent(
             INSTAGRAM,
             KAKAO,
         }
-    }
-
-    fun addUketEventRound(uketEventRound: UketEventRound) {
-        this.uketEventRounds += uketEventRound
-        uketEventRound.uketEvent = this
-
-        this.firstRoundDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
-        this.lastRoundDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
-    }
-
-    fun addBanner(banner: Banner) {
-        this.banners += banner
-        banner.uketEvent = this
     }
 }

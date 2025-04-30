@@ -100,8 +100,9 @@ class DomainEntityTest {
             ),
             eventImageId = "",
             thumbnailImageId = "",
+            _uketEventRounds = listOf(uketEventRound),
+            _banners = listOf()
         )
-        uketEvent.addUketEventRound(uketEventRound)
         val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 
         // when

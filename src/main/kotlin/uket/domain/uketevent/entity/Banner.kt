@@ -19,7 +19,7 @@ class Banner(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uket_event_id")
-    var uketEvent: UketEvent,
+    var uketEvent: UketEvent?,
 
     @Column(name = "image_id")
     val imageId: Long,
