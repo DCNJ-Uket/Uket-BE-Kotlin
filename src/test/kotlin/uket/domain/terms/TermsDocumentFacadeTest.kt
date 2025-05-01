@@ -19,6 +19,7 @@ import uket.domain.terms.service.DocumentService
 import uket.domain.terms.service.TermSignService
 import uket.domain.terms.service.TermsService
 import uket.uket.domain.terms.dto.TermsAgreeAnswer
+import uket.uket.domain.terms.repository.TermSignJdbcRepository
 import uket.uket.facade.TermsDocumentFacade
 import java.time.LocalDateTime
 
@@ -27,10 +28,11 @@ class TermsDocumentFacadeTest :
         isolationMode = IsolationMode.InstancePerLeaf
 
         val termsRepository = mockk<TermsRepository>()
-        val termsSignRepository = mockk<TermSignRepository>()
+        val termSignRepository = mockk<TermSignRepository>()
         val documentRepository = mockk<DocumentRepository>()
+        val termSignJdbcRepository = mockk<TermSignJdbcRepository>()
         val termsService = TermsService(termsRepository)
-        val termSignService = TermSignService(termsSignRepository)
+        val termSignService = TermSignService(termSignRepository, termSignJdbcRepository)
         val documentService = DocumentService(documentRepository)
         val termsDocumentFacade = TermsDocumentFacade(termsService, termSignService, documentService)
 
@@ -42,11 +44,11 @@ class TermsDocumentFacadeTest :
             context("필수 약관 1개가 있을 때") {
                 val userAnswerYes = listOf(TermsAgreeAnswer(terms.id, true, document.version))
                 every { termsRepository.findAllByIdIn(listOf(terms.id)) } returns listOf(terms)
+                every { documentRepository.findAllByIdIn(listOf(document.id)) } returns listOf(document)
 
                 val slot = slot<List<TermSign>>()
-                every { termsSignRepository.saveAll(capture(slot)) } returns listOf(TermSign.agree(userId, terms, document))
-
-                every { documentService.findAllByIdIn(listOf(document.id)) } returns listOf(document)
+                every { termSignJdbcRepository.batchSaveAll(capture(slot)) } returns Unit
+                every { termSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(terms.id)) } returns listOf()
 
                 it("유저가 동의 요청을 제출하면 TermSign 객체가 생성됨") {
                     val returnedTermSigns = termsDocumentFacade.agreeTerms(userId, userAnswerYes)
@@ -68,7 +70,7 @@ class TermsDocumentFacadeTest :
         describe("getAllActiveAndCheckRequiredByUser") {
             context("약관이 하나 있고, 유저가 해당 약관을 확인한 내역이 없는 경우") {
                 every { termsRepository.findAllByIsActiveTrue() } returns listOf(terms)
-                every { termsSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(1L)) } returns listOf()
+                every { termSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(1L)) } returns listOf()
                 every { documentRepository.findLatestDocumentsByDocumentNos(listOf(terms.documentNo)) } returns listOf(document)
 
                 it("해당 약관을 포함한 목록 제공") {
@@ -86,7 +88,7 @@ class TermsDocumentFacadeTest :
                 val termSign = TermSign(1L, terms, document, userId, true, LocalDateTime.now())
 
                 every { termsRepository.findAllByIsActiveTrue() } returns listOf(terms)
-                every { termsSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(1L)) } returns listOf(termSign)
+                every { termSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(1L)) } returns listOf(termSign)
                 every { documentRepository.findLatestDocumentsByDocumentNos(listOf(terms.documentNo)) } returns listOf(document)
 
                 it("해당 약관을 포함한 목록 제공") {
@@ -100,7 +102,7 @@ class TermsDocumentFacadeTest :
                 val termSign = TermSign(1L, terms, document, userId, true, LocalDateTime.now())
 
                 every { termsRepository.findAllByIsActiveTrue() } returns listOf(terms)
-                every { termsSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(1L)) } returns listOf(termSign)
+                every { termSignRepository.findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, listOf(1L)) } returns listOf(termSign)
                 every { documentRepository.findLatestDocumentsByDocumentNos(listOf(terms.documentNo)) } returns listOf(newDocument)
 
                 it("해당 약관을 포함한 목록 제공") {
