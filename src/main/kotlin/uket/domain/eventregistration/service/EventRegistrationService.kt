@@ -45,11 +45,11 @@ class EventRegistrationService(
     @Transactional
     fun updateStatus(
         id: Long,
-        registrationStatus: EventRegistrationStatus,
+        nextStatus: EventRegistrationStatus,
     ): EventRegistration {
         val eventRegistration = getById(id)
 
-        eventRegistration.updateStatus(registrationStatus)
+        eventRegistration.updateStatus(nextStatus)
 
         return eventRegistrationRepository.save(eventRegistration)
     }
