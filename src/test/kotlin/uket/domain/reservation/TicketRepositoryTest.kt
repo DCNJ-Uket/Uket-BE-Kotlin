@@ -30,6 +30,11 @@ class TicketRepositoryTest(
         lateinit var savedTicket: Ticket
 
         beforeEach {
+            val uketEventRound = UketEventRound(
+                uketEvent = null,
+                eventRoundDateTime = LocalDateTime.now()
+            )
+
             val uketEvent = UketEvent(
                 organizationId = 1L,
                 eventName = "uketEventA",
@@ -42,23 +47,16 @@ class TicketRepositoryTest(
                 details = UketEvent.EventDetails(
                     "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
                 ),
-                uketEventImageId = "",
+                eventImageId = "",
                 thumbnailImageId = "",
-                bannerImageIds = listOf(),
-                _uketEventRounds = listOf()
+                _uketEventRounds = listOf(uketEventRound),
+                _banners = listOf()
             )
             entityManager.persist(uketEvent)
 
-            val uketEventRound = UketEventRound(
-                uketEvent = uketEvent,
-                eventRoundDateTime = LocalDateTime.now()
-            )
-            entityManager.persist(uketEventRound)
-            uketEvent.addUketEventRound(uketEventRound)
-
             // 엔트리 그룹 저장
             val entryGroup = EntryGroup(
-                uketEventRound = uketEventRound,
+                uketEventRound = uketEvent.uketEventRounds[0],
                 entryGroupName = "nameA",
                 entryStartDateTime = LocalDateTime.now(),
                 entryEndDateTime = LocalDateTime.now(),

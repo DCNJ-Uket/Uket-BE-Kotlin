@@ -17,7 +17,6 @@ data class EventData(
     val contact: ContactInfoDto,
     val uketEventImageId: String,
     val thumbnailImageId: String,
-    val bannerImageIds: List<String>,
     val banners: List<BannerInfoDto>,
     val paymentInfo: PaymentInfoDto,
 ) {
@@ -56,50 +55,47 @@ data class EventData(
     )
 
     companion object {
-        fun from(eventRegistration: EventRegistration): EventData {
-            return with(eventRegistration) {
-                EventData(
-                    eventName = eventName,
-                    location = location,
-                    eventRound = eventRound.map {
-                        EventRoundDto(
-                            date = it.eventRoundDate, startTime = it.eventStartTime
-                        )
-                    },
-                    ticketingStartDateTime = ticketingStartDateTime,
-                    ticketingEndDateTime = ticketingEndDateTime,
-                    entryGroup = entryGroup.map {
-                        EntryGroupDto(
-                            ticketCount = it.ticketCount,
-                            entryStartTime = it.entryStartTime,
-                            entryEndTime = it.entryEndTime
-                        )
-                    },
-                    totalTicketCount = totalTicketCount,
-                    details = EventDetailsDto(
-                        information = details.information, caution = details.caution
-                    ),
-                    contact = ContactInfoDto(
-                        type = details.contact.type.name,
-                        content = details.contact.content,
-                    ),
-                    uketEventImageId = uketEventImageId,
-                    thumbnailImageId = thumbnailImageId,
-                    bannerImageIds = bannerImageIds,
-                    banners = banners.map {
-                        BannerInfoDto(
-                            imageId = it.imageId, link = it.link
-                        )
-                    },
-                    paymentInfo = PaymentInfoDto(
-                        ticketPrice = paymentInfo.ticketPrice,
-                        bankCode = paymentInfo.bankCode,
-                        accountNumber = paymentInfo.accountNumber,
-                        depositorName = paymentInfo.depositorName,
-                        depositUrl = paymentInfo.depositUrl
+        fun from(eventRegistration: EventRegistration): EventData = with(eventRegistration) {
+            EventData(
+                eventName = eventName,
+                location = location,
+                eventRound = eventRound.map {
+                    EventRoundDto(
+                        date = it.eventRoundDate, startTime = it.eventStartTime
                     )
+                },
+                ticketingStartDateTime = ticketingStartDateTime,
+                ticketingEndDateTime = ticketingEndDateTime,
+                entryGroup = entryGroup.map {
+                    EntryGroupDto(
+                        ticketCount = it.ticketCount,
+                        entryStartTime = it.entryStartTime,
+                        entryEndTime = it.entryEndTime
+                    )
+                },
+                totalTicketCount = totalTicketCount,
+                details = EventDetailsDto(
+                    information = details.information, caution = details.caution
+                ),
+                contact = ContactInfoDto(
+                    type = details.contact.type.name,
+                    content = details.contact.content,
+                ),
+                uketEventImageId = uketEventImageId,
+                thumbnailImageId = thumbnailImageId,
+                banners = banners.map {
+                    BannerInfoDto(
+                        imageId = it.imageId, link = it.link
+                    )
+                },
+                paymentInfo = PaymentInfoDto(
+                    ticketPrice = paymentInfo.ticketPrice,
+                    bankCode = paymentInfo.bankCode,
+                    accountNumber = paymentInfo.accountNumber,
+                    depositorName = paymentInfo.depositorName,
+                    depositUrl = paymentInfo.depositUrl
                 )
-            }
+            )
         }
     }
 }

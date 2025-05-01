@@ -2,7 +2,6 @@ package uket.domain.eventregistration.entity
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
-import jakarta.persistence.Convert
 import jakarta.persistence.Embeddable
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
@@ -18,7 +17,6 @@ import org.hibernate.annotations.BatchSize
 import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
-import uket.domain.eventregistration.converter.ListToStringConverter
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -67,15 +65,11 @@ class EventRegistration(
     @Embedded
     val paymentInfo: PaymentInfo,
 
-    @Column(name = "uket_event_image_id")
+    @Column(name = "event_image_id")
     val uketEventImageId: String,
 
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
-
-    @Convert(converter = ListToStringConverter::class)
-    @Column(name = "banner_image_ids")
-    val bannerImageIds: List<String>,
 
     _banners: List<BannerRegistration>,
     _eventRound: List<EventRoundRegistration>,

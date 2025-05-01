@@ -52,7 +52,6 @@ data class RegisterUketEventRequest(
                 ),
                 uketEventImageId = uketEventImageId,
                 thumbnailImageId = thumbnailImageId,
-                bannerImageIds = bannerImageIds.map { it },
                 _banners = banners.map {
                     BannerRegistration(
                         imageId = it.imageId, link = it.link

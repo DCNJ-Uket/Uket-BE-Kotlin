@@ -9,20 +9,21 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
-import uket.domain.BaseTimeEntity
-import java.time.LocalDateTime
 
 @Entity
-@Table(name = "uket_event_round")
-class UketEventRound(
+@Table(name = "banner")
+class Banner(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
+    val id: Long = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uket_event_id")
     var uketEvent: UketEvent?,
 
-    @Column(name = "event_round_datetime")
-    val eventRoundDateTime: LocalDateTime,
-) : BaseTimeEntity()
+    @Column(name = "image_id")
+    val imageId: Long,
+
+    @Column(name = "link")
+    val link: String,
+)

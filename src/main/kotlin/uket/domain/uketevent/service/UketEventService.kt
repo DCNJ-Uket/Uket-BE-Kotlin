@@ -4,7 +4,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.dto.EventNameDto
-import uket.api.user.request.EventListQueryType
 import uket.common.LoggerDelegate
 import uket.common.enums.EventType
 import uket.domain.uketevent.dto.EventListItem
@@ -27,34 +26,34 @@ class UketEventService(
     }
 
     @Transactional(readOnly = true)
-    fun getActiveEventItemList(type: EventListQueryType): List<EventListItem> {
+    fun getDetailById(uketEventId: Long): UketEvent {
+        val uketEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(uketEventId)
+            ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
+        return uketEvent
+    }
+
+    @Transactional(readOnly = true)
+    fun getActiveEventItemList(type: String): List<EventListItem> {
         val startTime = System.currentTimeMillis()
+
         lateinit var eventList: List<UketEvent>
-        if (type.name.equals("ALL")) {
-            eventList = uketEventRepository.findAllByEventEndDateBeforeNowWithUketEventRound()
+        if (type == "ALL") {
+            eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
         } else {
-            eventList = uketEventRepository.findAllByEventTypeAndEventEndDateBeforeNowWithUketEventRound(EventType.valueOf(type.name))
+            eventList = uketEventRepository.findAllByEventTypeAndEventEndDateAfterNowWithUketEventRound(EventType.valueOf(type))
         }
 
         val now = LocalDateTime.now()
         val itemList = eventList
             .map {
                 val ticketingStatus = getCurrentEventTicketingStatus(now, it)
-
-                EventListItem(
-                    eventName = it.eventName,
-                    eventThumbnailImagePath = it.thumbnailImageId,
-                    eventStartDate = it.uketEventRounds.minOf { it.eventRoundDateTime },
-                    eventEndDate = it.uketEventRounds.maxOf { it.eventRoundDateTime },
-                    ticketingStartDate = it.ticketingStartDateTime,
-                    ticketingEndDate = it.ticketingEndDateTime,
-                    ticketingStatus = ticketingStatus
-                )
+                EventListItem.of(it, ticketingStatus)
             }
         val orderedList = itemList.sortedWith(
             compareBy<EventListItem> { it.ticketingStatus }
                 .thenBy { it.eventStartDate }
         )
+
         val endTime = System.currentTimeMillis()
         log.debug("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
         return orderedList

@@ -3,6 +3,7 @@ package uket.domain.uketEvent
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.FieldPredicates.named
+import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import java.time.LocalDateTime
@@ -10,49 +11,97 @@ import kotlin.random.Random
 
 class UketEventRandomUtil {
     companion object {
-        fun createUketEventWithDates(ticketingStartDateTime: LocalDateTime, ticketingEndDateTime: LocalDateTime): UketEvent {
+        fun createUketEventWithDatesAndEventRoundsAndBanners(
+            ticketingStartDateTime: LocalDateTime,
+            ticketingEndDateTime: LocalDateTime,
+            uketEventRounds: List<UketEventRound>,
+            banners: List<Banner>,
+        ): UketEvent {
             val easyRandom = EasyRandom(
                 EasyRandomParameters()
                     .randomize(named("id")) {
                         0L
                     }.randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
                     .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
-                    .randomize(named("uketEventRounds")) { listOf<UketEvent>() }
+                    .randomize(named("banners")) {
+                        banners.map {
+                            Banner(
+                                id = it.id,
+                                uketEvent = null,
+                                imageId = it.imageId,
+                                link = it.link
+                            )
+                        }
+                    }.randomize(named("uketEventRounds")) {
+                        uketEventRounds.map {
+                            UketEventRound(
+                                id = it.id,
+                                uketEvent = null,
+                                eventRoundDateTime = it.eventRoundDateTime
+                            )
+                        }
+                    }.randomize(named("firstRoundDateTime")) {
+                        uketEventRounds.minOf { it.eventRoundDateTime }
+                    }.randomize(named("lastRoundDateTime")) {
+                        uketEventRounds.maxOf { it.eventRoundDateTime }
+                    }
             )
             val uketEvent = easyRandom.nextObject(UketEvent::class.java)
+            uketEvent.uketEventRounds.forEach { it.uketEvent = uketEvent }
+            uketEvent.banners.forEach { it.uketEvent = uketEvent }
 
             return uketEvent
         }
 
-        fun createUketEventWithDatesAndNameAndId(ticketingStartDateTime: LocalDateTime, ticketingEndDateTime: LocalDateTime, eventName: String, id: Long): UketEvent {
+        fun createUketEventWithDatesAndNameAndIdAndEventRounds(
+            ticketingStartDateTime: LocalDateTime,
+            ticketingEndDateTime: LocalDateTime,
+            eventName: String,
+            id: Long,
+            uketEventRounds: List<UketEventRound>,
+        ): UketEvent {
             val easyRandom = EasyRandom(
                 EasyRandomParameters()
                     .randomize(named("id")) {
                         id
                     }.randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
                     .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
-                    .randomize(named("uketEventRounds")) { listOf<UketEvent>() }
                     .randomize(named("eventName")) {
                         eventName
+                    }.randomize(named("banners")) {
+                        listOf<Banner>()
+                    }.randomize(named("uketEventRounds")) {
+                        uketEventRounds.map {
+                            UketEventRound(
+                                id = it.id,
+                                uketEvent = null,
+                                eventRoundDateTime = it.eventRoundDateTime
+                            )
+                        }
+                    }.randomize(named("firstRoundDateTime")) {
+                        uketEventRounds.minOf { it.eventRoundDateTime }
+                    }.randomize(named("lastRoundDateTime")) {
+                        uketEventRounds.maxOf { it.eventRoundDateTime }
                     }
             )
             val uketEvent = easyRandom.nextObject(UketEvent::class.java)
+            uketEvent.uketEventRounds.forEach { it.uketEvent = uketEvent }
 
             return uketEvent
         }
 
-        fun createUketEventsRoundWithDate(uketEvent: UketEvent, uketEventRoundDates: List<LocalDateTime>): List<UketEventRound> {
+        fun createUketEventsRoundWithDate(
+            uketEventRoundDates: List<LocalDateTime>,
+        ): List<UketEventRound> {
             val eventRounds = uketEventRoundDates.map {
                 val easyRandomEventRound = EasyRandom(
                     EasyRandomParameters()
                         .randomize(named("id")) { 0L }
+                        .randomize(named("uketEvent")) { null }
                         .randomize(named("eventRoundDateTime")) { it }
                 )
                 easyRandomEventRound.nextObject(UketEventRound::class.java)
             }
-
-            eventRounds.forEach { uketEvent.addUketEventRound(it) }
-            println("uketEventRounds : ${uketEvent.uketEventRounds}")
 
             return eventRounds
         }
@@ -65,18 +114,25 @@ class UketEventRandomUtil {
             repeat(100) { i ->
                 val ticketingStart = now.plusDays(Random.nextLong(-10, 10))
                 val ticketingEnd = now.plusDays(Random.nextLong(0, 3))
-                val event = createUketEventWithDatesAndNameAndId(ticketingStart, ticketingEnd, "행사$i", i.toLong() + 1)
-                events.add(event)
 
                 val roundDate = ticketingEnd.plusDays(Random.nextLong(1, 30))
                 val roundSize = Random.nextInt(1, 3)
-                val roundList = mutableListOf<LocalDateTime>()
+                val roundDateTimeList = mutableListOf<LocalDateTime>()
                 repeat(roundSize) { s ->
-                    roundList.add(roundDate.plusDays(s.toLong()))
+                    roundDateTimeList.add(roundDate.plusDays(s.toLong()))
                 }
-                val uketEventRounds = createUketEventsRoundWithDate(event, roundList)
-                uketEventRounds.forEach { r -> event.addUketEventRound(r) }
-                rounds.addAll(uketEventRounds)
+                val uketEventRounds = createUketEventsRoundWithDate(roundDateTimeList)
+
+                val event = createUketEventWithDatesAndNameAndIdAndEventRounds(
+                    ticketingStart,
+                    ticketingEnd,
+                    "행사$i",
+                    i.toLong() + 1,
+                    uketEventRounds
+                )
+
+                events.add(event)
+                rounds.addAll(event.uketEventRounds)
             }
 
             println("-- Insert Events")
@@ -135,9 +191,10 @@ class UketEventRandomUtil {
                     "ticketing_end_datetime",
                     "ticket_price",
                     "total_ticket_count",
-                    "uket_event_image_id",
+                    "event_image_id",
                     "thumbnail_image_id",
-                    "banner_image_ids",
+                    "first_round_datetime",
+                    "last_round_datetime",
                     "created_at",
                     "updated_at"
                 )
@@ -151,9 +208,10 @@ class UketEventRandomUtil {
                     ticketingEndDateTime,
                     ticketPrice,
                     totalTicketCount,
-                    uketEventImageId,
+                    eventImageId,
                     thumbnailImageId,
-                    bannerImageIds.joinToString(","),
+                    firstRoundDateTime,
+                    lastRoundDateTime,
                     createdAt,
                     updatedAt
                 ).map { toSqlValue(it) }

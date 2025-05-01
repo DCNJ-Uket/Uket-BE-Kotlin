@@ -2,7 +2,6 @@ package uket.domain.uketevent.entity
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
-import jakarta.persistence.Convert
 import jakarta.persistence.Embeddable
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
@@ -16,7 +15,6 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
-import uket.domain.uketevent.converter.ListToStringConverter
 import java.time.LocalDateTime
 
 @Entity
@@ -53,17 +51,14 @@ class UketEvent(
     @Embedded
     val details: EventDetails,
 
-    @Column(name = "uket_event_image_id")
-    val uketEventImageId: String,
+    @Column(name = "event_image_id")
+    val eventImageId: String,
 
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
 
-    @Convert(converter = ListToStringConverter::class)
-    @Column(name = "banner_image_ids")
-    val bannerImageIds: List<String>,
-
     _uketEventRounds: List<UketEventRound>,
+    _banners: List<Banner>,
 ) : BaseTimeEntity() {
     @OneToMany(
         mappedBy = "uketEvent",
@@ -71,11 +66,32 @@ class UketEvent(
         orphanRemoval = true,
         cascade = [CascadeType.ALL],
     )
-    var uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
+    val uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
         UketEventRound(
             id = it.id,
             uketEvent = this,
             eventRoundDateTime = it.eventRoundDateTime
+        )
+    }
+
+    @Column(name = "first_round_datetime")
+    val firstRoundDateTime: LocalDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
+
+    @Column(name = "last_round_datetime")
+    val lastRoundDateTime: LocalDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
+
+    @OneToMany(
+        mappedBy = "uketEvent",
+        fetch = FetchType.LAZY,
+        orphanRemoval = true,
+        cascade = [CascadeType.ALL],
+    )
+    var banners: List<Banner> = _banners.map {
+        Banner(
+            id = it.id,
+            uketEvent = this,
+            imageId = it.imageId,
+            link = it.link
         )
     }
 
@@ -101,10 +117,5 @@ class UketEvent(
             INSTAGRAM,
             KAKAO,
         }
-    }
-
-    fun addUketEventRound(uketEventRound: UketEventRound) {
-        this.uketEventRounds += uketEventRound
-        uketEventRound.uketEvent = this
     }
 }
