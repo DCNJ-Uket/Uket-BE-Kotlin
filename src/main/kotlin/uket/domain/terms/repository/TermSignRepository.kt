@@ -18,7 +18,6 @@ interface TermSignRepository : JpaRepository<TermSign, Long> {
                   FROM TermSign subTs
                   WHERE subTs.terms.id = ts.terms.id AND subTs.userId = ts.userId
               )
-    
         """
     )
     fun findLatestByUserIdAndTermsIdsWithTermsAndDocument(

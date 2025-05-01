@@ -6,11 +6,13 @@ import org.springframework.transaction.annotation.Transactional
 import uket.domain.terms.entity.TermSign
 import uket.domain.terms.entity.Terms
 import uket.domain.terms.repository.TermSignRepository
+import uket.uket.domain.terms.repository.TermSignJdbcRepository
 
 @Service
 @Transactional(readOnly = true)
 class TermSignService(
     private val termSignRepository: TermSignRepository,
+    private val termSignJdbcRepository: TermSignJdbcRepository,
 ) {
     @Transactional(readOnly = true)
     fun getById(termSignId: Long): TermSign {
@@ -20,7 +22,8 @@ class TermSignService(
     }
 
     @Transactional
-    fun saveAll(termsSigns: List<TermSign>): List<TermSign> = termSignRepository.saveAll(termsSigns)
+    fun batchSaveAllWithJdbc(termsSigns: List<TermSign>) =
+        termSignJdbcRepository.batchSaveAll(termsSigns)
 
     @Transactional(readOnly = true)
     fun getLatestTermSignMap(
@@ -33,4 +36,11 @@ class TermSignService(
             .associateBy { it.terms.id }
         return termSignVersionsMap
     }
+
+    @Transactional(readOnly = true)
+    fun findByUserIdAndIdsIn(
+        termIds: List<Long>,
+        userId: Long,
+    ): List<TermSign> = termSignRepository
+        .findLatestByUserIdAndTermsIdsWithTermsAndDocument(userId, termIds)
 }

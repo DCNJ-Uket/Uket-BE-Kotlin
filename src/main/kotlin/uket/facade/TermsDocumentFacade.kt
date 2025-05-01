@@ -56,6 +56,7 @@ class TermsDocumentFacade(
                 if (isAgreed) TermSign.agree(userId, term, document) else TermSign.agreeNot(userId, term, document)
             }
 
-        return termSignService.saveAll(termsSigns)
+        termSignService.batchSaveAllWithJdbc(termsSigns)
+        return termSignService.findByUserIdAndIdsIn(termIds, userId)
     }
 }
