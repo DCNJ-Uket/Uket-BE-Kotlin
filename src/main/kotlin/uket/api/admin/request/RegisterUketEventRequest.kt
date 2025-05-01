@@ -1,11 +1,10 @@
 package uket.api.admin.request
 
-import uket.domain.eventregistration.EventData
 import uket.common.enums.EventType
+import uket.domain.eventregistration.EventData
 import uket.domain.eventregistration.entity.BannerRegistration
 import uket.domain.eventregistration.entity.EntryGroupRegistration
 import uket.domain.eventregistration.entity.EventRegistration
-import uket.domain.eventregistration.entity.EventRegistration.EventContact.ContactType
 import uket.domain.eventregistration.entity.EventRoundRegistration
 
 data class RegisterUketEventRequest(
