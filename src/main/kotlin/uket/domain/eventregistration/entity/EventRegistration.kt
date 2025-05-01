@@ -127,7 +127,6 @@ class EventRegistration(
             id = it.id,
             eventRegistration = this,
             entryStartTime = it.entryStartTime,
-            entryEndTime = it.entryEndTime,
             ticketCount = it.ticketCount,
         )
     }

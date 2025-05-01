@@ -28,7 +28,6 @@ data class EventData(
     data class EntryGroupDto(
         val ticketCount: Int,
         val entryStartTime: LocalTime, // hh:mm:ss
-        val entryEndTime: LocalTime, // hh:mm:ss
     )
 
     data class EventDetailsDto(
@@ -70,7 +69,6 @@ data class EventData(
                     EntryGroupDto(
                         ticketCount = it.ticketCount,
                         entryStartTime = it.entryStartTime,
-                        entryEndTime = it.entryEndTime
                     )
                 },
                 totalTicketCount = totalTicketCount,

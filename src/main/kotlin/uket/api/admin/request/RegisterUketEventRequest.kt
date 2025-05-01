@@ -66,7 +66,6 @@ data class RegisterUketEventRequest(
                 _entryGroup = entryGroup.map {
                     EntryGroupRegistration(
                         entryStartTime = it.entryStartTime,
-                        entryEndTime = it.entryEndTime,
                         ticketCount = it.ticketCount,
                     )
                 },
