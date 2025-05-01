@@ -9,7 +9,9 @@ data class CheckRequiredTerms(
     val name: String,
     val termsType: TermsType,
     val link: String,
-    val version: Long,
+    val documentId: Long,
+    val documentNo: Long,
+    val documentVersion: Long,
 ) {
     companion object {
         fun of(it: Terms, document: Document): CheckRequiredTerms = CheckRequiredTerms(
@@ -17,7 +19,9 @@ data class CheckRequiredTerms(
             name = it.name,
             termsType = it.termsType,
             link = document.link,
-            version = document.version
+            documentId = document.id,
+            documentNo = document.documentNo,
+            documentVersion = document.version
         )
     }
 }

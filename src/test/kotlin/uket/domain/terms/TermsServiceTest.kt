@@ -70,12 +70,12 @@ class TermsServiceTest :
                     checkRequiredTerms[0].name shouldBe terms.name
                     checkRequiredTerms[0].termsType shouldBe terms.termsType
                     checkRequiredTerms[0].link shouldBe document.link
-                    checkRequiredTerms[0].version shouldBe document.version
+                    checkRequiredTerms[0].documentVersion shouldBe document.version
                 }
             }
 
             context("약관이 하나 있고, 유저가 해당 약관을 확인한 내역이 있는 경우") {
-                val termSign = TermSign(1L, terms, document.version, userId, true, LocalDateTime.now())
+                val termSign = TermSign(1L, terms, document.documentNo, document.version, userId, true, LocalDateTime.now())
 
                 every { termsRepository.findAllByIsActiveTrue() } returns listOf(terms)
                 every { termsSignRepository.findLatestByUserIdAndTermsIdsWithTerms(userId, listOf(1L)) } returns listOf(termSign)
@@ -89,7 +89,7 @@ class TermsServiceTest :
 
             context("약관이 하나 있고, 유저가 해당 약관에 동의를 했었지만, 새로운 약관문이 추가된 경우") {
                 val newDocument = Document(2L, 1L, "문서2", "samplelink2", 2L)
-                val termSign = TermSign(1L, terms, document.version, userId, true, LocalDateTime.now())
+                val termSign = TermSign(1L, terms, document.documentNo, document.version, userId, true, LocalDateTime.now())
 
                 every { termsRepository.findAllByIsActiveTrue() } returns listOf(terms)
                 every { termsSignRepository.findLatestByUserIdAndTermsIdsWithTerms(userId, listOf(1L)) } returns listOf(termSign)
@@ -102,7 +102,7 @@ class TermsServiceTest :
                     checkRequiredTerms[0].name shouldBe terms.name
                     checkRequiredTerms[0].termsType shouldBe terms.termsType
                     checkRequiredTerms[0].link shouldBe newDocument.link
-                    checkRequiredTerms[0].version shouldBe newDocument.version
+                    checkRequiredTerms[0].documentVersion shouldBe newDocument.version
                 }
             }
         }

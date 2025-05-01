@@ -14,13 +14,13 @@ import uket.api.user.response.TermsResponse
 import uket.auth.config.userId.LoginUserId
 import uket.common.response.ListResponse
 import uket.domain.terms.entity.TermSign
-import uket.domain.terms.service.TermsService
 import uket.uket.domain.terms.dto.TermsAgreeAnswer
+import uket.uket.facade.TermsDocumentFacade
 
 @Tag(name = "약관 관련 API", description = "약관 관련 API 입니다")
 @RestController
 class TermsController(
-    private val termsService: TermsService,
+    private val termsDocumentFacade: TermsDocumentFacade,
 ) {
     @Operation(summary = "유저 확인 필요 약관 목록 제공", description = "유저가 확인해야하는 약관 목록을 제공합니다")
     @GetMapping("/terms/check-required")
@@ -29,7 +29,7 @@ class TermsController(
         @Parameter(hidden = true)
         userId: Long,
     ): ResponseEntity<ListResponse<TermsResponse>> {
-        val checkRequireTerms = termsService.getAllActiveAndCheckRequiredByUser(userId)
+        val checkRequireTerms = termsDocumentFacade.getAllActiveAndCheckRequiredByUser(userId)
         val responses = checkRequireTerms.map { TermsResponse.of(it) }
         return ResponseEntity.ok(ListResponse(responses))
     }
@@ -44,8 +44,8 @@ class TermsController(
         requests: List<TermsAgreeRequest>,
     ): ResponseEntity<ListResponse<TermsAgreeResponse>> {
         val userAnswers = requests
-            .map { TermsAgreeAnswer(it.termsId, it.isAgree, it.version) }
-        val termsSigns: List<TermSign> = termsService.agreeTerms(userId, userAnswers)
+            .map { TermsAgreeAnswer(it.termsId, it.isAgree, it.documentId) }
+        val termsSigns: List<TermSign> = termsDocumentFacade.agreeTerms(userId, userAnswers)
         val responses = termsSigns
             .map(TermsAgreeResponse::from)
         return ResponseEntity.ok(ListResponse(responses))

@@ -28,7 +28,7 @@ class Terms(
             return
         }
 
-        if (java.lang.Boolean.FALSE == isAgreed) {
+        check(isAgreed) {
             throw PublicException(
                 publicMessage = "서비스 이용을 위해선 필수 약관 동의가 필요합니다",
                 systemMessage = "[Terms] 필수 약관은 거부할 수 없습니다",

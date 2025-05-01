@@ -23,8 +23,9 @@ class TermSign(
     @JoinColumn(name = "terms_id")
     val terms: Terms,
 
-    @Column(name = "document_version")
-    val documentVersion: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "document_id")
+    val document: Document,
 
     @Column(name = "user_id")
     val userId: Long,
@@ -36,19 +37,19 @@ class TermSign(
     val agreeAt: LocalDateTime,
 ) : BaseTimeEntity() {
     companion object {
-        fun agree(userId: Long, terms: Terms, documentVersion: Long): TermSign = TermSign(
+        fun agree(userId: Long, terms: Terms, document: Document): TermSign = TermSign(
             userId = userId,
             terms = terms,
             isAgreed = true,
-            documentVersion = documentVersion,
+            document = document,
             agreeAt = LocalDateTime.now()
         )
 
-        fun agreeNot(userId: Long, terms: Terms, documentVersion: Long): TermSign = TermSign(
+        fun agreeNot(userId: Long, terms: Terms, document: Document): TermSign = TermSign(
             userId = userId,
             terms = terms,
             isAgreed = false,
-            documentVersion = documentVersion,
+            document = document,
             agreeAt = LocalDateTime.now()
         )
     }

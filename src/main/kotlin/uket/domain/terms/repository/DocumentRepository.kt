@@ -20,4 +20,6 @@ interface DocumentRepository : JpaRepository<Document, Long> {
     fun findLatestDocumentsByDocumentNos(
         documentNos: List<Long>,
     ): List<Document>
+
+    fun findAllByIdIn(documentIds: List<Long>): List<Document>
 }

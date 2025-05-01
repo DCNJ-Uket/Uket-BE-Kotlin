@@ -9,7 +9,9 @@ data class TermsResponse(
     val type: TermsType,
     val link: String,
     val isAgreed: Boolean,
-    val version: Long,
+    val documentId: Long,
+    val documentNo: Long,
+    val documentVersion: Long,
 ) {
     companion object {
         fun of(terms: CheckRequiredTerms): TermsResponse = TermsResponse(
@@ -18,7 +20,9 @@ data class TermsResponse(
             type = terms.termsType,
             link = terms.link,
             isAgreed = false,
-            version = terms.version
+            documentId = terms.documentId,
+            documentNo = terms.documentNo,
+            documentVersion = terms.documentVersion
         )
     }
 }

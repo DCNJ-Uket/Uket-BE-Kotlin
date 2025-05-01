@@ -10,6 +10,7 @@ interface TermSignRepository : JpaRepository<TermSign, Long> {
             SELECT ts
             FROM TermSign ts
             JOIN FETCH ts.terms
+            JOIN FETCH ts.document
             WHERE ts.userId = :userId
               AND ts.terms.id IN :termIds
               AND ts.agreeAt = (
@@ -20,7 +21,7 @@ interface TermSignRepository : JpaRepository<TermSign, Long> {
     
         """
     )
-    fun findLatestByUserIdAndTermsIdsWithTerms(
+    fun findLatestByUserIdAndTermsIdsWithTermsAndDocument(
         userId: Long,
         termIds: List<Long>,
     ): List<TermSign>
