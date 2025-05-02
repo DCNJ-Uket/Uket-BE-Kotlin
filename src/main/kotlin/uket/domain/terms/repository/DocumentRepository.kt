@@ -2,7 +2,6 @@ package uket.domain.terms.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
 import uket.domain.terms.entity.Document
 
 interface DocumentRepository : JpaRepository<Document, Long> {
@@ -19,6 +18,8 @@ interface DocumentRepository : JpaRepository<Document, Long> {
     """,
     )
     fun findLatestDocumentsByDocumentNos(
-        @Param("documentNos") documentNos: List<Long>,
+        documentNos: List<Long>,
     ): List<Document>
+
+    fun findAllByIdIn(documentIds: List<Long>): List<Document>
 }

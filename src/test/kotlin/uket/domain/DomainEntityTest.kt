@@ -82,7 +82,7 @@ class DomainEntityTest {
 
         val document = Document(0L, 0L, "nameA", "linkA", 0L)
         val terms = Terms(0L, "nameA", TermsType.MANDATORY, 0L, true)
-        val termSign = TermSign(0L, 0L, 0L, true, LocalDateTime.now())
+        val termSign = TermSign(0L, terms, document, 0L, true, LocalDateTime.now())
 
         val uketEventRound = UketEventRound(0L, null, LocalDateTime.now())
         val uketEvent = UketEvent(

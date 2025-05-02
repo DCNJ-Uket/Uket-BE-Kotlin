@@ -1,4 +1,4 @@
-package uket.auth.config.adminId
+package uket.auth.config.userId
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
