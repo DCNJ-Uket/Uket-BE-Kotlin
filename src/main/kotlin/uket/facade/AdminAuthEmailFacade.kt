@@ -8,6 +8,7 @@ import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
+import uket.common.PublicException
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.AdminService
@@ -111,6 +112,12 @@ class AdminAuthEmailFacade(
     }
 
     private fun validateRegistered(admin: Admin) {
-        checkNotNull(admin.password) { "회원가입 후 이용해주세요" }
+        checkNotNull(admin.password) {
+            throw PublicException(
+                publicMessage = "회원가입 후 이용해주세요.",
+                systemMessage = "Not Registered Admin : ADMINID =${admin.id}",
+                title = "회원 미가입"
+            )
+        }
     }
 }

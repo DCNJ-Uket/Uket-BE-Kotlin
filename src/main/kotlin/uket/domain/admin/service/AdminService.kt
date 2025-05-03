@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.common.PublicException
 import uket.domain.admin.dto.AdminWithOrganizationDto
 import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.entity.Admin
@@ -92,6 +93,12 @@ class AdminService(
 
     fun checkPassword(email: String, password: String) {
         val admin = getByEmail(email)
-        require(admin.password == password) { "비밀번호가 일치하지 않습니다." }
+        require(admin.password == password) {
+            throw PublicException(
+                publicMessage = "비밀번호가 일치하지 않습니다.",
+                systemMessage = "Not Valid Password : PASSWORD =$password",
+                title = "비밀번호 불일치"
+            )
+        }
     }
 }
