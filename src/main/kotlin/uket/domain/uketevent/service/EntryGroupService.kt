@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.repository.EntryGroupRepository
 import uket.modules.redis.aop.DistributedLock
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
@@ -18,8 +19,8 @@ class EntryGroupService(
         return entryGroup
     }
 
-    fun findValidByUketEventRoundId(uketEventRoundId: Long): List<EntryGroup> {
-        val entryGroups = entryGroupRepository.findByUketEventRoundId(uketEventRoundId, EntryGroup::class.java)
+    fun findValidByUketEventRoundIdAfter(uketEventRoundId: Long, at: LocalDateTime): List<EntryGroup> {
+        val entryGroups = entryGroupRepository.findByUketEventRoundIdAfter(uketEventRoundId, at)
         return entryGroups.mapNotNull { if (it.ticketCount >= it.totalTicketCount) null else it }
     }
 

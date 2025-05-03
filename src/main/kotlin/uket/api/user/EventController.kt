@@ -72,7 +72,7 @@ class EventController(
         val uketEvent = uketEventRound.uketEvent!!
         uketEvent.validateNowTicketing(now)
 
-        val entryGroups = entryGroupService.findValidByUketEventRoundId(eventRoundId)
+        val entryGroups = entryGroupService.findValidByUketEventRoundIdAfter(eventRoundId, now)
         val responses = entryGroups.map { EntryGroupListItemResponse.of(it) }
         return ResponseEntity.ok(ListResponse(responses))
     }
