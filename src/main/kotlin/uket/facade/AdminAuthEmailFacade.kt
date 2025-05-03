@@ -66,6 +66,7 @@ class AdminAuthEmailFacade(
         checkNotNull(admin.password) { "초대 메일을 통해 회원가입 후 이용 바랍니다." }
 
         validateRegistered(admin)
+        validatePassword(email, password)
         val accessToken = jwtAuthTokenUtil.createAccessToken(
             admin.id,
             admin.name,
@@ -77,6 +78,10 @@ class AdminAuthEmailFacade(
 
     private fun validateEmail(email: String) {
         adminService.checkDuplicateEmail(email)
+    }
+
+    private fun validatePassword(email:String, password: String) {
+        adminService.checkPassword(email, password)
     }
 
     private fun validateOrganization(organizationName: String) {

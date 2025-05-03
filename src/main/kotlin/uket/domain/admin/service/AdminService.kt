@@ -89,4 +89,9 @@ class AdminService(
     fun checkDuplicateEmail(email: String) {
         check(adminRepository.existsByEmail(email).not()) { "이미 가입된 사용자입니다." }
     }
+
+    fun checkPassword(email: String, password: String) {
+        val admin = getByEmail(email)
+        require(admin.password == password) { "비밀번호가 일치하지 않습니다." }
+    }
 }
