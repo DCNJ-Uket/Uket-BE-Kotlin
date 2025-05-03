@@ -230,17 +230,17 @@ class UketEventRepositoryTest(
                 eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
                 location = "locationA",
-                ticketPrice = 1000,
                 ticketingStartDateTime = LocalDateTime.now(),
                 ticketingEndDateTime = LocalDateTime.now(),
                 totalTicketCount = 0,
                 details = UketEvent.EventDetails(
-                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
+                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")
                 ),
                 eventImageId = "",
                 thumbnailImageId = "",
                 _uketEventRounds = listOf(uketEventRound),
-                _banners = listOf()
+                _banners = listOf(),
+                paymentInfo = UketEvent.PaymentInfo(1000, "", "", "", "")
             )
 
             entityManager.persist(uketEvent)

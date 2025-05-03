@@ -93,15 +93,15 @@ class DomainEntityTest {
             location = "00시00구",
             ticketingStartDateTime = LocalDateTime.now(),
             ticketingEndDateTime = LocalDateTime.now(),
-            ticketPrice = 0,
             totalTicketCount = 0,
             details = UketEvent.EventDetails(
-                "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
+                "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "@as", "")
             ),
             eventImageId = "",
             thumbnailImageId = "",
             _uketEventRounds = listOf(uketEventRound),
-            _banners = listOf()
+            _banners = listOf(),
+            paymentInfo = UketEvent.PaymentInfo(1000, "", "", "", "")
         )
         val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 
