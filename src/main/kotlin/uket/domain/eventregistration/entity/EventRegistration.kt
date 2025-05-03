@@ -127,7 +127,6 @@ class EventRegistration(
             id = it.id,
             eventRegistration = this,
             entryStartTime = it.entryStartTime,
-            entryEndTime = it.entryEndTime,
             ticketCount = it.ticketCount,
         )
     }
@@ -163,6 +162,8 @@ class EventRegistration(
         val type: ContactType,
         @Column(name = "contact_content")
         val content: String,
+        @Column(name = "contact_link")
+        val link: String?,
     ) {
         enum class ContactType {
             INSTAGRAM,

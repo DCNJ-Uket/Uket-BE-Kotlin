@@ -1,4 +1,4 @@
-package domain.eventregistration
+package uket.domain.eventregistration
 
 import uket.domain.eventregistration.entity.EventRegistration
 import java.time.LocalDate
@@ -28,7 +28,6 @@ data class EventData(
     data class EntryGroupDto(
         val ticketCount: Int,
         val entryStartTime: LocalTime, // hh:mm:ss
-        val entryEndTime: LocalTime, // hh:mm:ss
     )
 
     data class EventDetailsDto(
@@ -37,8 +36,9 @@ data class EventData(
     )
 
     data class ContactInfoDto(
-        val type: String, // 예: INSTAGRAM
+        val type: EventRegistration.EventContact.ContactType, // 예: INSTAGRAM
         val content: String, // 예: @soritor
+        val link: String?, // 예: https://~
     )
 
     data class PaymentInfoDto(
@@ -70,7 +70,6 @@ data class EventData(
                     EntryGroupDto(
                         ticketCount = it.ticketCount,
                         entryStartTime = it.entryStartTime,
-                        entryEndTime = it.entryEndTime
                     )
                 },
                 totalTicketCount = totalTicketCount,
@@ -78,8 +77,9 @@ data class EventData(
                     information = details.information, caution = details.caution
                 ),
                 contact = ContactInfoDto(
-                    type = details.contact.type.name,
+                    type = details.contact.type,
                     content = details.contact.content,
+                    link = details.contact.link
                 ),
                 uketEventImageId = uketEventImageId,
                 thumbnailImageId = thumbnailImageId,

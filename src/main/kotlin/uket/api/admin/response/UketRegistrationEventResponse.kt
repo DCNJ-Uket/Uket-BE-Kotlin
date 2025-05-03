@@ -1,7 +1,7 @@
 package uket.api.admin.response
 
-import domain.eventregistration.EventData
 import uket.common.enums.EventType
+import uket.domain.eventregistration.EventData
 import uket.domain.eventregistration.entity.EventRegistration
 
 data class UketRegistrationEventResponse(

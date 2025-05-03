@@ -1,11 +1,10 @@
 package uket.api.admin.request
 
-import domain.eventregistration.EventData
 import uket.common.enums.EventType
+import uket.domain.eventregistration.EventData
 import uket.domain.eventregistration.entity.BannerRegistration
 import uket.domain.eventregistration.entity.EntryGroupRegistration
 import uket.domain.eventregistration.entity.EventRegistration
-import uket.domain.eventregistration.entity.EventRegistration.EventContact.ContactType
 import uket.domain.eventregistration.entity.EventRoundRegistration
 
 data class RegisterUketEventRequest(
@@ -45,9 +44,9 @@ data class RegisterUketEventRequest(
                     information = details.information,
                     caution = details.caution,
                     contact = EventRegistration.EventContact(
-                        type = ContactType.entries.find { it.name == contact.type }
-                            ?: error("[RegisterUketEventRequest] ContactType을 찾을 수 없습니다."),
+                        type = contact.type,
                         content = contact.content,
+                        link = contact.link
                     ),
                 ),
                 uketEventImageId = uketEventImageId,
@@ -66,7 +65,6 @@ data class RegisterUketEventRequest(
                 _entryGroup = entryGroup.map {
                     EntryGroupRegistration(
                         entryStartTime = it.entryStartTime,
-                        entryEndTime = it.entryEndTime,
                         ticketCount = it.ticketCount,
                     )
                 },
