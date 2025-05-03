@@ -81,7 +81,7 @@ class AdminAuthEmailFacade(
         adminService.checkDuplicateEmail(email)
     }
 
-    private fun validatePassword(email:String, password: String) {
+    private fun validatePassword(email: String, password: String) {
         adminService.checkPassword(email, password)
     }
 
@@ -94,7 +94,7 @@ class AdminAuthEmailFacade(
         val savedEmail = redisUtil.getData(redisKey).orElseThrow {
             throw PublicException(
                 publicMessage = "이메일 인증 토큰이 만료되었거나 유효하지 않습니다.",
-                systemMessage = "Not Registered Token : TOKEN =${token}",
+                systemMessage = "Not Registered Token : TOKEN =$token",
                 title = "토큰 불일치"
             )
         }
@@ -102,7 +102,7 @@ class AdminAuthEmailFacade(
         check(savedEmail == requestEmail) {
             throw PublicException(
                 publicMessage = "요청 이메일과 인증된 이메일이 일치하지 않습니다.",
-                systemMessage = "Invalid Request email : REQUESTEMAIL =${requestEmail}",
+                systemMessage = "Invalid Request email : REQUESTEMAIL =$requestEmail",
                 title = "잘못된 이메일 요청"
             )
         }
