@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController
 import uket.api.user.request.EventListQueryType
 import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EventDetailResponse
-import uket.auth.config.userId.LoginUserId
 import uket.common.response.ListResponse
 import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventRoundService
@@ -47,7 +46,6 @@ class EventController(
     @Operation(summary = "행사 회차 목록 조회", description = "유저가 예매 가능한 행사의 현재 날짜와 이후 회차 목록을 가져옵니다")
     @GetMapping("/uket-events/{id}/rounds")
     fun getEventRounds(
-        @LoginUserId userId: Long,
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<ListResponse<EventRoundListItemResponse>> {
         val now = LocalDateTime.now()
@@ -63,7 +61,6 @@ class EventController(
     @Operation(summary = "회차 입장 그룹 목록 조회", description = "유저가 예매 가능한 회차의 입장 그룹 목록을 가져옵니다")
     @GetMapping("/rounds/{id}/entry-groups")
     fun getEntryGroups(
-        @LoginUserId userId: Long,
         @PathVariable("id") eventRoundId: Long,
     ): ResponseEntity<ListResponse<EntryGroupListItemResponse>> {
         val now = LocalDateTime.now()
