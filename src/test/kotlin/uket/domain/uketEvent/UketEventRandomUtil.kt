@@ -69,6 +69,27 @@ class UketEventRandomUtil {
             return eventRounds
         }
 
+        fun createEntryGroupWithTime(
+            uketEventRound: UketEventRound,
+            entryGroupStartTimes: List<LocalDateTime>,
+        ): List<EntryGroup> {
+            val entryGroups = entryGroupStartTimes.map {
+                val easyRandomEntryGroup = EasyRandom(
+                    EasyRandomParameters()
+                        .randomize(named("id")) { 0L }
+                        .randomize(named("entryStartDateTime")) { it }
+                        .randomize(named("entryEndDateTime")) { it.plusMinutes(10) }
+                        .randomize(named("ticketCount")) { 0 }
+                        .randomize(named("totalTicketCount")) { 10 }
+                )
+                easyRandomEntryGroup.nextObject(EntryGroup::class.java)
+            }
+
+            entryGroups.forEach { it.uketEventRound = uketEventRound }
+
+            return entryGroups
+        }
+
         fun createDummyData() {
             val now = LocalDateTime.now()
             val events = mutableListOf<UketEvent>()
@@ -174,27 +195,6 @@ class UketEventRandomUtil {
             }
 
             return eventRounds
-        }
-
-        private fun createEntryGroupWithTime(
-            uketEventRound: UketEventRound,
-            entryGroupStartTimes: List<LocalDateTime>,
-        ): List<EntryGroup> {
-            val entryGroups = entryGroupStartTimes.map {
-                val easyRandomEntryGroup = EasyRandom(
-                    EasyRandomParameters()
-                        .randomize(named("id")) { 0L }
-                        .randomize(named("entryStartDateTime")) { it }
-                        .randomize(named("entryEndDateTime")) { it.plusMinutes(10) }
-                        .randomize(named("ticketCount")) { 0 }
-                        .randomize(named("totalTicketCount")) { 10 }
-                )
-                easyRandomEntryGroup.nextObject(EntryGroup::class.java)
-            }
-
-            entryGroups.forEach { it.uketEventRound = uketEventRound }
-
-            return entryGroups
         }
 
         private fun toInsertSqlForEntryGroup(entryGroup: EntryGroup): String {
