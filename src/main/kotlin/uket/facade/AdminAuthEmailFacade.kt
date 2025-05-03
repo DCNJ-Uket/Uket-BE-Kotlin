@@ -8,6 +8,7 @@ import uket.api.admin.response.RegisterAdminResponse
 import uket.api.admin.response.SendEmailResponse
 import uket.auth.dto.AdminAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
+import uket.common.PublicException
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.AdminService
@@ -66,6 +67,7 @@ class AdminAuthEmailFacade(
         checkNotNull(admin.password) { "초대 메일을 통해 회원가입 후 이용 바랍니다." }
 
         validateRegistered(admin)
+        validatePassword(email, password)
         val accessToken = jwtAuthTokenUtil.createAccessToken(
             admin.id,
             admin.name,
@@ -79,6 +81,10 @@ class AdminAuthEmailFacade(
         adminService.checkDuplicateEmail(email)
     }
 
+    private fun validatePassword(email: String, password: String) {
+        adminService.checkPassword(email, password)
+    }
+
     private fun validateOrganization(organizationName: String) {
         organizationService.checkDuplicateOrganizationRegister(organizationName)
     }
@@ -86,11 +92,19 @@ class AdminAuthEmailFacade(
     private fun validateEmailInRedis(token: String, requestEmail: String) {
         val redisKey = EMAIL_TOKEN_PREFIX + token
         val savedEmail = redisUtil.getData(redisKey).orElseThrow {
-            throw IllegalStateException("이메일 인증 토큰이 만료되었거나 유효하지 않습니다.")
+            throw PublicException(
+                publicMessage = "이메일 인증 토큰이 만료되었거나 유효하지 않습니다.",
+                systemMessage = "Not Registered Token : TOKEN =$token",
+                title = "토큰 불일치"
+            )
         }
 
         check(savedEmail == requestEmail) {
-            "요청 이메일과 인증된 이메일이 일치하지 않습니다."
+            throw PublicException(
+                publicMessage = "요청 이메일과 인증된 이메일이 일치하지 않습니다.",
+                systemMessage = "Invalid Request email : REQUESTEMAIL =$requestEmail",
+                title = "잘못된 이메일 요청"
+            )
         }
     }
 
@@ -106,6 +120,12 @@ class AdminAuthEmailFacade(
     }
 
     private fun validateRegistered(admin: Admin) {
-        checkNotNull(admin.password) { "회원가입 후 이용해주세요" }
+        checkNotNull(admin.password) {
+            throw PublicException(
+                publicMessage = "회원가입 후 이용해주세요.",
+                systemMessage = "Not Registered Admin : ADMINID =${admin.id}",
+                title = "회원 미가입"
+            )
+        }
     }
 }
