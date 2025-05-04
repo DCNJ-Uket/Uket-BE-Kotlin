@@ -47,9 +47,10 @@ class EntryGroupService(
     }
 
     @Transactional(readOnly = true)
-    fun findValidEntryGroup(eventId: Long, at: LocalDateTime): List<EntryGroup> = entryGroupRepository.findByUketEventIdAndAfterWithUketEventRound(
-        eventId,
-        at.truncatedTo(ChronoUnit.DAYS),
-        at
-    )
+    fun findValidEntryGroup(eventId: Long, at: LocalDateTime): List<EntryGroup> =
+        entryGroupRepository.findByUketEventIdAndAfterWithUketEventRound(
+            eventId,
+            at.truncatedTo(ChronoUnit.DAYS),
+            at
+        )
 }
