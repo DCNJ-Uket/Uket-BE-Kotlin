@@ -7,6 +7,7 @@ import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.repository.EntryGroupRepository
 import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 @Service
 @Transactional(readOnly = true)
@@ -44,4 +45,11 @@ class EntryGroupService(
             "예매된 티켓이 존재하지 않습니다."
         }
     }
+
+    @Transactional(readOnly = true)
+    fun findValidEntryGroup(eventId: Long, at: LocalDateTime): List<EntryGroup> = entryGroupRepository.findByUketEventIdAndAfterWithUketEventRound(
+        eventId,
+        at.truncatedTo(ChronoUnit.DAYS),
+        at
+    )
 }

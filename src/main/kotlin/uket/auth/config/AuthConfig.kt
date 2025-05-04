@@ -26,6 +26,7 @@ class AuthConfig(
             .excludePathPatterns("/admin/users/login")
             .excludePathPatterns("/auth/**")
             .addPathPatterns("/uket-events/*/rounds/**")
+            .addPathPatterns("/uket-events/*/reservation")
             .addPathPatterns("/rounds/*/entry-groups/**")
             .excludePathPatterns("/uket-events/**")
             .excludePathPatterns("/users/register")

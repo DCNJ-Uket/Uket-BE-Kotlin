@@ -16,6 +16,8 @@ import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.uket.api.user.response.EntryGroupListItemResponse
 import uket.uket.api.user.response.EventRoundListItemResponse
+import uket.uket.api.user.response.ReservationInfoResponse
+import uket.uket.facade.UketEventFacade
 import java.time.LocalDateTime
 
 @Tag(name = "행사 관련 API", description = "행사 관련 API 입니다")
@@ -24,6 +26,7 @@ class EventController(
     private val uketEventService: UketEventService,
     private val entryGroupService: EntryGroupService,
     private val uketEventRoundService: UketEventRoundService,
+    private val uketEventFacade: UketEventFacade,
 ) {
     @Operation(summary = "활성화된 행사 목록 조회", description = "누구나 조회 가능한 행사 목록을 가져옵니다")
     @GetMapping("/uket-events")
@@ -72,5 +75,28 @@ class EventController(
         val entryGroups = entryGroupService.findValidByUketEventRoundIdAfter(eventRoundId, now)
         val responses = entryGroups.map { EntryGroupListItemResponse.of(it) }
         return ResponseEntity.ok(ListResponse(responses))
+    }
+
+    @Operation(summary = "예매 관련 정보 조회", description = "유저가 예매 관련 정보를 가져옵니다")
+    @GetMapping("/uket-events/{id}/reservation")
+    fun getReservationInfo(
+        @PathVariable("id") eventId: Long,
+    ): ResponseEntity<ReservationInfoResponse> {
+        val now = LocalDateTime.now()
+
+        val event = uketEventService.getById(eventId)
+        event.validateNowTicketing(now)
+
+        val entryGroupMap = uketEventFacade.findValidEntryGroupMap(eventId, now)
+        val roundResponses = entryGroupMap.keys.map { round ->
+            val groups = entryGroupMap.get(round)
+            val groupResponses = groups!!.map {
+                EntryGroupListItemResponse.of(it)
+            }
+            ReservationInfoResponse.EventRoundWithGroupResponse.of(round, groupResponses)
+        }
+
+        val response = ReservationInfoResponse.of(event, roundResponses)
+        return ResponseEntity.ok(response)
     }
 }

@@ -13,4 +13,16 @@ interface EntryGroupRepository : JpaRepository<EntryGroup, Long> {
         """
     )
     fun findByUketEventRoundIdAfter(uketEventRoundId: Long, at: LocalDateTime): List<EntryGroup>
+
+    @Query(
+        """
+            SELECT eg FROM EntryGroup eg
+            JOIN FETCH eg.uketEventRound uer
+            WHERE uer.uketEvent.id = :eventId
+            AND eg.entryStartDateTime >= :timeAt
+            AND uer.eventRoundDateTime >= :dateAt
+            AND eg.ticketCount < eg.totalTicketCount
+        """
+    )
+    fun findByUketEventIdAndAfterWithUketEventRound(eventId: Long, dateAt: LocalDateTime, timeAt: LocalDateTime): List<EntryGroup>
 }
