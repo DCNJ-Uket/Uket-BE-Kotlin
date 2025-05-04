@@ -46,7 +46,7 @@ class EventController(
         return ResponseEntity.ok(EventDetailResponse.from(event))
     }
 
-    @Operation(summary = "행사 회차 목록 조회", description = "유저가 예매 가능한 행사의 현재 날짜와 이후 회차 목록을 가져옵니다")
+    @Operation(summary = "행사 회차 목록 조회", description = "유저가 티켓팅 중인 행사의 현재 날짜와 이후 회차 목록을 가져옵니다")
     @GetMapping("/uket-events/{id}/rounds")
     fun getEventRounds(
         @PathVariable("id") eventId: Long,
@@ -61,7 +61,7 @@ class EventController(
         return ResponseEntity.ok(ListResponse(responses))
     }
 
-    @Operation(summary = "회차 입장 그룹 목록 조회", description = "유저가 예매 가능한 회차의 입장 그룹 목록을 가져옵니다")
+    @Operation(summary = "회차 입장 그룹 목록 조회", description = "유저가 티켓팅 중인 행사의 특정 회차에 속한 입장 그룹 목록을 가져옵니다")
     @GetMapping("/rounds/{id}/entry-groups")
     fun getEntryGroups(
         @PathVariable("id") eventRoundId: Long,
@@ -77,7 +77,7 @@ class EventController(
         return ResponseEntity.ok(ListResponse(responses))
     }
 
-    @Operation(summary = "예매 관련 정보 조회", description = "유저가 예매 관련 정보를 가져옵니다")
+    @Operation(summary = "예매 관련 정보 조회", description = "유저가 티켓팅 중인 행사의 예매 관련 정보를 가져옵니다")
     @GetMapping("/uket-events/{id}/reservation")
     fun getReservationInfo(
         @PathVariable("id") eventId: Long,
