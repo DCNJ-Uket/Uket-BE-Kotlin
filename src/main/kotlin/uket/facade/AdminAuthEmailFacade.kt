@@ -81,7 +81,7 @@ class AdminAuthEmailFacade(
         adminService.checkDuplicateEmail(email)
     }
 
-    private fun validatePassword(email:String, password: String) {
+    private fun validatePassword(email: String, password: String) {
         adminService.checkPassword(email, password)
     }
 
