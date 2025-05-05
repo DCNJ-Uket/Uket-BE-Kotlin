@@ -9,6 +9,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6" // 스프링 의존성 관리
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0" // 린트
 }
+val springCloudVersion by extra("2024.0.1")
 
 group = "uket"
 version = "0.0.1-SNAPSHOT"
@@ -21,6 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -83,6 +85,11 @@ dependencies {
 
     // ratelimit
     implementation("com.bucket4j:bucket4j-core:8.3.0")
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
 }
 
 tasks.test {
