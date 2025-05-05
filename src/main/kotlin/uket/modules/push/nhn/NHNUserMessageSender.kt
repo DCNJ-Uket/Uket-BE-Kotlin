@@ -19,6 +19,9 @@ class NHNUserMessageSender(
         )
     }
 
+    /**
+     * 최대 1000명까지 동시 발송 가능
+     */
     override fun sendBulk(templateCode: String, receivers: List<UserMessageSender.Receiver>) {
         sendToNHN(
             templateCode = templateCode,
