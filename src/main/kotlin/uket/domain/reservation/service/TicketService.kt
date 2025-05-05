@@ -11,12 +11,14 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
+import uket.uket.domain.reservation.repository.TicketJdbcRepository
 import java.util.UUID
 
 @Service
 @Transactional(readOnly = true)
 class TicketService(
     private val ticketRepository: TicketRepository,
+    private val ticketJdbcRepository: TicketJdbcRepository,
 ) {
     fun getById(ticketId: Long): Ticket {
         val ticket = ticketRepository.findByIdOrNull(ticketId)
@@ -39,16 +41,22 @@ class TicketService(
     fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> = ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
 
     @Transactional
-    fun publishTicket(createTicketCommand: CreateTicketCommand): Ticket {
-        val ticket: Ticket = Ticket(
-            userId = createTicketCommand.userId,
-            entryGroupId = createTicketCommand.entryGroupId,
-            status = createTicketCommand.ticketStatus,
-            ticketNo = UUID.randomUUID().toString(),
-            enterAt = null,
-        )
+    fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
+        val tickets = mutableListOf<Ticket>()
+        for (i in 1..count) {
+            val ticket: Ticket = Ticket(
+                userId = createTicketCommand.userId,
+                entryGroupId = createTicketCommand.entryGroupId,
+                status = createTicketCommand.ticketStatus,
+                ticketNo = UUID.randomUUID().toString(),
+                enterAt = null,
+            )
+            tickets.add(ticket)
+        }
+        ticketJdbcRepository.saveAllBatch(tickets)
 
-        return ticketRepository.save(ticket)
+        val ticketNos = tickets.map { it.ticketNo }
+        return ticketRepository.findByTicketNoIn(ticketNos)
     }
 
     @Transactional
@@ -112,4 +120,6 @@ class TicketService(
             else -> 6
         }
     }
+
+    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, listOf(TicketStatus.RESERVATION_CANCEL))
 }
