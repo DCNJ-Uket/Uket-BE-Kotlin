@@ -280,4 +280,23 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     fun existsByUserIdAndEntryGroupIdAndStatusNot(userId: Long, entryGroupId: Long, status: TicketStatus): Boolean
 
     fun deleteAllByUserId(userId: Long)
+
+    @Query(
+        """
+            SELECT t FROM Ticket t
+            JOIN EntryGroup eg ON eg.id = t.entryGroupId
+            WHERE t.userId = :userId
+            AND eg.uketEventRound.id = :eventRoundId
+            AND t.status NOT IN :status
+        """
+    )
+    fun findAllbyUserIdAndEventRoundIdAndStatusNot(userId: Long, eventRoundId: Long, status: List<TicketStatus>): List<Ticket>
+
+    @Query(
+        """
+            SELECT t FROM Ticket t
+            WHERE t.ticketNo IN :ticketNos
+        """
+    )
+    fun findByTicketNoIn(ticketNos: List<String>): List<Ticket>
 }

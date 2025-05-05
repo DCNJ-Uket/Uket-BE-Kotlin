@@ -25,4 +25,14 @@ interface EntryGroupRepository : JpaRepository<EntryGroup, Long> {
         """
     )
     fun findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup>
+
+    @Query(
+        """
+        SELECT eg FROM EntryGroup eg
+        JOIN FETCH eg.uketEventRound uer
+        JOIN FETCH uer.uketEvent
+        WHERE eg.id = :entryGroupId
+    """
+    )
+    fun findByIdWithUketEventRoundAndUketEvent(entryGroupId: Long): EntryGroup?
 }
