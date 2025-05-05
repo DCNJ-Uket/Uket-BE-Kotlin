@@ -301,12 +301,21 @@ class UketEventRandomUtil {
                 ).map { toSqlValue(it) }
 
                 // Embedded: EventDetails -> information, caution, contact_type, contact_content
-                columns += listOf("information", "caution", "contact_type", "contact_content")
+                columns += listOf(
+                    "information", "caution", "contact_type", "contact_content", "contact_link",
+                    "ticket_price", "bank_code", "account_number", "depositor_name", "deposit_url"
+                )
                 values += listOf(
                     details.information,
                     details.caution,
                     details.contact.type.name,
-                    details.contact.content
+                    details.contact.content,
+                    details.contact.link,
+                    paymentInfo.ticketPrice,
+                    paymentInfo.bankCode,
+                    paymentInfo.accountNumber,
+                    paymentInfo.depositorName,
+                    paymentInfo.depositUrl
                 ).map { toSqlValue(it) }
             }
 

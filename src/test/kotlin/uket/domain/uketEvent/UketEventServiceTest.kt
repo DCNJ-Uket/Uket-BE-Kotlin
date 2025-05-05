@@ -58,9 +58,9 @@ class UketEventServiceTest :
             }
         }
 
-        it("더미데이터 출력") {
-            UketEventRandomUtil.createDummyData()
-        }
+//        it("더미데이터 출력") {
+//            UketEventRandomUtil.createDummyData()
+//        }
     }) {
     companion object {
         private fun setDB3(

@@ -20,17 +20,20 @@ class EntryGroupService(
         return entryGroup
     }
 
+    fun getByIdWithUketEventRoundAndUketEvent(entryGroupId: Long): EntryGroup = entryGroupRepository.findByIdWithUketEventRoundAndUketEvent(entryGroupId)
+        ?: throw IllegalStateException("해당 입장 그룹을 찾을 수 없습니다.")
+
     fun findValidByUketEventRoundIdAfter(uketEventRoundId: Long, at: LocalDateTime): List<EntryGroup> {
         val entryGroups = entryGroupRepository.findByUketEventRoundIdAfter(uketEventRoundId, at)
         return entryGroups.mapNotNull { if (it.ticketCount >= it.totalTicketCount) null else it }
     }
 
     @Transactional
-    fun increaseReservedCount(entryGroupId: Long) {
+    fun increaseReservedCount(entryGroupId: Long, count: Int) {
         val entryGroup = this.getById(entryGroupId)
-        val isSuccess: Boolean = entryGroup.increaseReservedCount()
+        val isSuccess = entryGroup.increaseReservedCount(count)
 
-        if (java.lang.Boolean.FALSE == isSuccess) {
+        check(isSuccess) {
             throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
         }
         entryGroupRepository.save(entryGroup)
