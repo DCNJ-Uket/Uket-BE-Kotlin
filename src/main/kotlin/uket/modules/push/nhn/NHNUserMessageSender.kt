@@ -1,6 +1,8 @@
 package uket.uket.modules.push.nhn
 
 import org.springframework.stereotype.Component
+import uket.uket.modules.client.NHNMessageClient
+import uket.uket.modules.client.NHNMessageSendRequest
 import uket.uket.modules.push.UserMessageSender
 
 @Component

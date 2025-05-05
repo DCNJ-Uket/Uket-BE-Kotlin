@@ -24,7 +24,7 @@ class UserMessageSendExampleService(
                     eventType = EventType.FESTIVAL.krName,
                     예매번호 = "123"
                 ),
-                receiverType = ReceiverType.USER_ID,
+                receiverType = ReceiverType.PHONE_NUMBER,
                 receiverKey = "1"
             )
         )

@@ -26,3 +26,6 @@ springdoc:
     operations-sorter: alpha
     tags-sorter: alpha
 
+logging:
+  level:
+    uket.uket.modules.client: DEBUG

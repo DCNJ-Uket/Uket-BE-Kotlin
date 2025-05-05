@@ -35,7 +35,7 @@ sealed class UserMessageTemplate(
         ) : Command
     }
 
-    data object 티켓취소알림톡 : UserMessageTemplate("uket_event_cancel") {
+    data object 티켓취소알림톡 : UserMessageTemplate("uket_ticket_cancel") {
         override fun makeContext(command: Command): Map<String, String> {
             return with(command as 티켓취소알림톡Command) {
                 mapOf(
