@@ -11,11 +11,10 @@ class RedisUtil(
 ) {
     fun setDataExpire(key: String, value: String, duration: Long) {
         val expireDuration = Duration.ofMillis(duration)
-        valueOperations.set(key, value, expireDuration)
+        with(valueOperations) { set(key, value, expireDuration) }
     }
 
     fun getData(key: String): Optional<String> {
-        val value = valueOperations.get(key)
-        return Optional.ofNullable(value)
+        return Optional.ofNullable(valueOperations[key])
     }
 }
