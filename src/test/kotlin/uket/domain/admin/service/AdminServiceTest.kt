@@ -39,6 +39,7 @@ class AdminServiceTest :
             name = "adminA",
             email = "emailA",
             password = "passwordA",
+            phoneNumber = "01012345678",
             isSuperAdmin = false,
         )
         val admin2: Admin = Admin(
@@ -47,6 +48,7 @@ class AdminServiceTest :
             name = "adminB",
             email = "emailB",
             password = "passwordB",
+            phoneNumber = "01012345678",
             isSuperAdmin = false,
         )
 
