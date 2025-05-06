@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import uket.common.enums.BankCode
 import uket.common.enums.EventType
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
@@ -74,7 +75,16 @@ class DomainEntityTest {
         val organization = Organization(0L, "OrganiationA", null)
         val admin = Admin(0L, organization, "nameA", "emailA", "password123", true)
 
-        val payment = Payment(0L, 0L, "123-12-123457", "linkA")
+        val payment = Payment(
+            id = 0L,
+            organizationId = 0L,
+            account = Payment.Account(
+                bankCode = BankCode.우체국,
+                accountNumber = "123455667",
+                depositorName = "홍길동"
+            ),
+            depositLink = "linkA"
+        )
         val paymentHistory =
             PaymentHistory(0L, 0L, 0L, 0, PaymentStatus.PURCHASED, "categoryA", PaymentManner.DEPOSIT_LINK, null)
 
