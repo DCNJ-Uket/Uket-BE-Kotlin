@@ -13,10 +13,8 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import uket.common.PublicException
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
-import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
 @Entity
@@ -38,20 +36,11 @@ class UketEvent(
     @Column(name = "location")
     val location: String,
 
-    @Column(name = "ticketing_start_datetime")
-    val ticketingStartDateTime: LocalDateTime,
-
-    @Column(name = "ticketing_end_datetime")
-    val ticketingEndDateTime: LocalDateTime,
-
     @Column(name = "total_ticket_count")
     val totalTicketCount: Int,
 
     @Embedded
     val details: EventDetails,
-
-    @Embedded
-    val paymentInfo: PaymentInfo,
 
     @Column(name = "event_image_id")
     val eventImageId: String,
@@ -72,7 +61,9 @@ class UketEvent(
         UketEventRound(
             id = it.id,
             uketEvent = this,
-            eventRoundDateTime = it.eventRoundDateTime
+            eventRoundDateTime = it.eventRoundDateTime,
+            ticketingStartDateTime = it.ticketingStartDateTime,
+            ticketingEndDateTime = it.ticketingEndDateTime
         )
     }
 
@@ -108,20 +99,6 @@ class UketEvent(
     )
 
     @Embeddable
-    data class PaymentInfo(
-        @Column(name = "ticket_price")
-        val ticketPrice: Long,
-        @Column(name = "bank_code")
-        val bankCode: String,
-        @Column(name = "account_number")
-        val accountNumber: String,
-        @Column(name = "depositor_name")
-        val depositorName: String,
-        @Column(name = "deposit_url")
-        val depositUrl: String,
-    )
-
-    @Embeddable
     data class EventContact(
         @Column(name = "contact_type")
         @Enumerated(EnumType.STRING)
@@ -134,28 +111,6 @@ class UketEvent(
         enum class ContactType {
             INSTAGRAM,
             KAKAO,
-        }
-    }
-
-    fun getTicketingStatusFrom(now: LocalDateTime): TicketingStatus {
-        var ticketingStatus = TicketingStatus.오픈_예정
-        if (now.isAfter(this.ticketingStartDateTime)) {
-            ticketingStatus = TicketingStatus.티켓팅_진행중
-        }
-        if (now.isAfter(this.ticketingEndDateTime)) {
-            ticketingStatus = TicketingStatus.티켓팅_종료
-        }
-        return ticketingStatus
-    }
-
-    fun validateNowTicketing(now: LocalDateTime) {
-        val ticketingStatus = this.getTicketingStatusFrom(now)
-        if (ticketingStatus != TicketingStatus.티켓팅_진행중) {
-            throw PublicException(
-                publicMessage = "예매가 불가능 한 행사입니다",
-                systemMessage = "[UketEventService] 티켓팅이 진행 중이지 않은 행사 validation",
-                title = "예매 불가능 한 행사"
-            )
         }
     }
 }
