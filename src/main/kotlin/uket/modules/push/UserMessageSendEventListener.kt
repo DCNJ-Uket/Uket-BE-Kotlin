@@ -17,6 +17,7 @@ class UserMessageSendEventListener(
 
             userMessageSender.send(
                 templateCode = template.code,
+                referrer = template.referrer,
                 receiver = UserMessageSender.Receiver(
                     receiverKey = getPhoneNumber(receiverType, receiverKey),
                     context = template.makeContext(command)
@@ -33,6 +34,7 @@ class UserMessageSendEventListener(
 
             userMessageSender.sendBulk(
                 templateCode = template.code,
+                referrer = template.referrer,
                 receivers = receivers.map {
                     UserMessageSender.Receiver(
                         receiverKey = getPhoneNumber(it.receiverType, it.receiverKey),

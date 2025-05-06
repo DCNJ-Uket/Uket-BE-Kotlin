@@ -24,6 +24,7 @@ interface NHNMessageClient {
 data class NHNMessageSendRequest(
     val senderKey: String,
     val templateCode: String,
+    val statsId: String,
     val recipientList: List<Recipient>,
 ) {
     data class Recipient(

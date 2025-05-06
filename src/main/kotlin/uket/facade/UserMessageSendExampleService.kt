@@ -25,7 +25,7 @@ class UserMessageSendExampleService(
                     예매번호 = "123"
                 ),
                 receiverType = ReceiverType.PHONE_NUMBER,
-                receiverKey = "1"
+                receiverKey = "01053316762"
             )
         )
     }

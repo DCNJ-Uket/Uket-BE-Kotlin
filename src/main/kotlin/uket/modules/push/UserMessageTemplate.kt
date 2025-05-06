@@ -5,12 +5,16 @@ package uket.uket.modules.push
  */
 sealed class UserMessageTemplate(
     val code: String,
+    val referrer: String = "",
 ) {
     interface Command
 
     abstract fun makeContext(command: Command): Map<String, String>
 
-    data object 관람일당일안내알림톡 : UserMessageTemplate("uket_event_today") {
+    data object 관람일당일안내알림톡 : UserMessageTemplate(
+        code = "uket_event_today",
+        referrer = REFERRER_EVENT_TODAY
+    ) {
         private const val 예매내역목록_LINK_PATH = "ticket-list"
 
         override fun makeContext(command: Command): Map<String, String> {
@@ -35,7 +39,38 @@ sealed class UserMessageTemplate(
         ) : Command
     }
 
-    data object 티켓취소알림톡 : UserMessageTemplate("uket_ticket_cancel") {
+    data object 관람일하루전안내알림톡 : UserMessageTemplate(
+        code = "uket_event_remind",
+        referrer = REFERRER_EVENT_REMIND
+    ) {
+        private const val 예매내역목록_LINK_PATH = "ticket-list"
+
+        override fun makeContext(command: Command): Map<String, String> {
+            return with(command as 관람일당일안내Command) {
+                mapOf(
+                    "이름" to userName,
+                    "행사명" to eventName,
+                    "행사타입" to eventType,
+                    "행사일시" to 행사일시,
+                    "행사장소" to 행사장소,
+                    LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
+                )
+            }
+        }
+
+        data class 관람일당일안내Command(
+            val userName: String,
+            val eventName: String,
+            val eventType: String,
+            val 행사일시: String,
+            val 행사장소: String,
+        ) : Command
+    }
+
+    data object 티켓취소알림톡 : UserMessageTemplate(
+        code = "uket_ticket_cancel",
+        referrer = REFERRER_TICKET_CANCEL
+    ) {
         override fun makeContext(command: Command): Map<String, String> {
             return with(command as 티켓취소알림톡Command) {
                 mapOf(
@@ -59,5 +94,9 @@ sealed class UserMessageTemplate(
 
     companion object {
         private const val LINK_CONTEXT_KEY = "link"
+
+        private const val REFERRER_TICKET_CANCEL = "NK3MiV1n"
+        private const val REFERRER_EVENT_REMIND = "WjsTGIUz"
+        private const val REFERRER_EVENT_TODAY = "3x0jJanU"
     }
 }
