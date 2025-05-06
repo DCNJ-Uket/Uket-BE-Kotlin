@@ -54,10 +54,18 @@ class AdminAuthEmailFacade(
         return SendEmailResponse.from(admin)
     }
 
-    @Transactional
-    fun registerAdminWithPassword(token: String, email: String, password: String): RegisterAdminResponse {
+    fun registerAdminWithPassword(
+        token: String,
+        email: String,
+        password: String,
+        phoneNumber: String,
+    ): RegisterAdminResponse {
         validateEmailInRedis(token, email)
-        val admin: Admin = adminService.updatePassword(email, password)
+        val admin: Admin = adminService.updateAdminInfo(
+            email = email,
+            password = password,
+            phoneNumber = phoneNumber
+        )
         return RegisterAdminResponse.of(admin, admin.organization)
     }
 
