@@ -32,10 +32,7 @@ class UketEventRound(
     @Column(name = "ticketing_end_datetime")
     val ticketingEndDateTime: LocalDateTime,
 ) : BaseTimeEntity() {
-    fun isNowTicketing(now: LocalDateTime): Boolean {
-        if (now.isBefore(this.ticketingStartDateTime) || now.isAfter(this.ticketingEndDateTime)) {
-            return false
-        }
-        return true
-    }
+    fun isNowTicketing(at: LocalDateTime): Boolean = !(at.isBefore(this.ticketingStartDateTime) || at.isAfter(this.ticketingEndDateTime))
+
+    fun isTicketingEnd(at: LocalDateTime): Boolean = at.isAfter(ticketingEndDateTime)
 }

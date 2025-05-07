@@ -35,7 +35,8 @@ class EventController(
     fun getEvents(
         @RequestParam("type") type: EventListQueryType,
     ): ResponseEntity<ActiveEventsResponse> {
-        val itemList = uketEventService.getActiveEventItemList(type = type.name)
+        val now = LocalDateTime.now()
+        val itemList = uketEventFacade.getNowActiveEventItemList(type.name, now)
         return ResponseEntity.ok(ActiveEventsResponse(itemList))
     }
 

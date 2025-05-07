@@ -5,11 +5,10 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.dto.EventNameDto
 import uket.common.LoggerDelegate
-import uket.common.enums.EventType
-import uket.domain.uketevent.dto.EventListItem
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.repository.UketEventRepository
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 @Service
 class UketEventService(
@@ -32,33 +31,6 @@ class UketEventService(
     }
 
     @Transactional(readOnly = true)
-    fun getActiveEventItemList(type: String): List<EventListItem> {
-        val startTime = System.currentTimeMillis()
-
-        lateinit var eventList: List<UketEvent>
-        if (type == "ALL") {
-            eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
-        } else {
-            eventList = uketEventRepository.findAllByEventTypeAndEventEndDateAfterNowWithUketEventRound(EventType.valueOf(type))
-        }
-
-        val now = LocalDateTime.now()
-        val itemList = eventList
-            .map {
-                val ticketingStatus = it.getTicketingStatusFrom(now)
-                EventListItem.of(it, ticketingStatus)
-            }
-        val orderedList = itemList.sortedWith(
-            compareBy<EventListItem> { it.ticketingStatus }
-                .thenBy { it.eventStartDate }
-        )
-
-        val endTime = System.currentTimeMillis()
-        log.debug("[UketEventService.getActiveEventItemList] 메서드 실행 시간 : {}", endTime - startTime)
-        return orderedList
-    }
-
-    @Transactional(readOnly = true)
     fun getOrganizationNameByUketEventIid(uketEventId: Long): String {
         val name = uketEventRepository.findOrganizationNameByUketEventId(uketEventId)
             ?: throw IllegalStateException("해당 행사의 이름을 찾을 수 없습니다.")
@@ -70,4 +42,13 @@ class UketEventService(
         val events = uketEventRepository.findAllByOrganizationId(organizationId)
         return events.map { event -> EventNameDto.of(organizationId, event) }
     }
+
+    @Transactional(readOnly = true)
+    fun findAllNowActiveOrdered(at: LocalDateTime): List<UketEvent> = uketEventRepository.findAllByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+
+    @Transactional(readOnly = true)
+    fun findAllNowActiveOrderedFestival(at: LocalDateTime): List<UketEvent> = uketEventRepository.findAllFestivalByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+
+    @Transactional(readOnly = true)
+    fun findAllNowActiveOrderedPerformance(at: LocalDateTime): List<UketEvent> = uketEventRepository.findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
 }

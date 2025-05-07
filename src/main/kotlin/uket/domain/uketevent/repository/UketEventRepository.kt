@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import uket.common.enums.EventType
 import uket.domain.uketevent.entity.UketEvent
+import java.time.LocalDateTime
 
 interface UketEventRepository : JpaRepository<UketEvent, Long> {
     @Query(
@@ -44,4 +45,31 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
     fun findByIdAndLastRoundDateAfterNowWithBanners(uketEventId: Long): UketEvent?
 
     fun findAllByOrganizationId(organizationId: Long): List<UketEvent>
+
+    @Query(
+        """
+            SELECT ue FROM UketEvent ue
+            WHERE ue.lastRoundDateTime >= :date
+            order by ue.firstRoundDateTime
+        """
+    )
+    fun findAllByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
+
+    @Query(
+        """
+            SELECT ue FROM UketEvent ue
+            WHERE ue.lastRoundDateTime >= :date AND ue.eventType = "FESTIVAL"
+            order by ue.firstRoundDateTime
+        """
+    )
+    fun findAllFestivalByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
+
+    @Query(
+        """
+            SELECT ue FROM UketEvent ue
+            WHERE ue.lastRoundDateTime >= :date AND ue.eventType = "PERFORMANCE"
+            order by ue.firstRoundDateTime
+        """
+    )
+    fun findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
 }
