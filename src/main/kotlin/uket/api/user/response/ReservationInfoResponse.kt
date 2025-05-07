@@ -1,6 +1,6 @@
 package uket.uket.api.user.response
 
-import uket.domain.uketevent.entity.UketEvent
+import uket.domain.payment.entity.Payment
 import uket.domain.uketevent.entity.UketEventRound
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -31,11 +31,11 @@ data class ReservationInfoResponse(
 
     companion object {
         fun of(
-            event: UketEvent,
+            payment: Payment,
             roundResponses: List<EventRoundWithGroupResponse>,
         ): ReservationInfoResponse = ReservationInfoResponse(
             eventRounds = roundResponses,
-            ticketPrice = event.paymentInfo.ticketPrice.toInt(),
+            ticketPrice = payment.ticketPrice.toInt(),
             friend = ""
         )
     }

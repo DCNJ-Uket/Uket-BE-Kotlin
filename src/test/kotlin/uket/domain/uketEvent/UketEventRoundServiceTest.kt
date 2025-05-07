@@ -23,7 +23,7 @@ class UketEventRoundServiceTest :
                 it("오늘 날짜 이후로 조회") {
                     val (eventId, uketEventRounds) = setDB()
                     every {
-                        uketEventRoundRepository.findByUketEventIdAAndEventRoundDateAfter(
+                        uketEventRoundRepository.findByUketEventIdAndEventRoundDateAfter(
                             eventId,
                             LocalDateTime
                                 .now()
@@ -34,7 +34,7 @@ class UketEventRoundServiceTest :
                         )
                     } returns uketEventRounds
 
-                    val findRounds = uketEventRoundService.findByUketEventIdAndDateAfter(eventId, LocalDateTime.now())
+                    val findRounds = uketEventRoundService.getNowTicketingRounds(eventId, LocalDateTime.now())
                     findRounds.size shouldBe 2
                 }
             }

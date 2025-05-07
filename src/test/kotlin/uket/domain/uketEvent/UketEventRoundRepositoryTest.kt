@@ -26,7 +26,7 @@ class UketEventRoundRepositoryTest(
                 it("1개의 회차 조회") {
                     val now = LocalDateTime.now()
                     val uketEventId = setDB(entityManager, now)
-                    val uketEventRounds = uketEventRoundRepository.findByUketEventIdAAndEventRoundDateAfter(
+                    val uketEventRounds = uketEventRoundRepository.findByUketEventIdAndEventRoundDateAfter(
                         uketEventId,
                         now.truncatedTo(
                             ChronoUnit.DAYS

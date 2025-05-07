@@ -24,10 +24,10 @@ class EntryGroupServiceTest :
             context("입장 그룹 하나는 지금, 하나는 티켓 품절, 하나는 한 시간 뒤일 때") {
                 val now = LocalDateTime.now()
                 val (uketEvent, uketEventRound, entryGroups) = setDB(now)
-                every { entryGroupRepository.findByUketEventRoundIdAfter(uketEventRound.id, now) } returns entryGroups
+                every { entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(uketEventRound.id, now) } returns entryGroups
 
                 it("입장 그룹 1개만 출력") {
-                    val findEntryGroups = entryGroupService.findValidByUketEventRoundIdAfter(uketEventRound.id, now)
+                    val findEntryGroups = entryGroupService.findAllValidByRoundIdAndStarDateAfter(uketEventRound.id, now)
                     findEntryGroups.size shouldBe 1
                 }
             }

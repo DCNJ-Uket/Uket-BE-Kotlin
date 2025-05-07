@@ -10,19 +10,20 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Service
-@Transactional(readOnly = true)
 class EntryGroupService(
     private val entryGroupRepository: EntryGroupRepository,
 ) {
+    @Transactional(readOnly = true)
     fun getById(entryGroupId: Long): EntryGroup {
         val entryGroup = entryGroupRepository.findByIdOrNull(entryGroupId)
             ?: throw IllegalStateException("해당 입장 그룹을 찾을 수 없습니다.")
         return entryGroup
     }
 
-    fun findValidByUketEventRoundIdAfter(uketEventRoundId: Long, at: LocalDateTime): List<EntryGroup> {
-        val entryGroups = entryGroupRepository.findByUketEventRoundIdAfter(uketEventRoundId, at)
-        return entryGroups.mapNotNull { if (it.ticketCount >= it.totalTicketCount) null else it }
+    @Transactional(readOnly = true)
+    fun findAllValidByRoundIdAndStarDateAfter(uketEventRoundId: Long, date: LocalDateTime): List<EntryGroup> {
+        val entryGroups = entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(uketEventRoundId, date.truncatedTo(ChronoUnit.DAYS))
+        return entryGroups.filter { it.ticketCount < it.totalTicketCount }
     }
 
     @Transactional
@@ -47,10 +48,6 @@ class EntryGroupService(
     }
 
     @Transactional(readOnly = true)
-    fun findValidEntryGroup(eventId: Long, at: LocalDateTime): List<EntryGroup> =
-        entryGroupRepository.findByUketEventIdAndAfterWithUketEventRound(
-            eventId,
-            at.truncatedTo(ChronoUnit.DAYS),
-            at
-        )
+    fun findValidEntryGroup(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup> =
+        entryGroupRepository.findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds, at)
 }

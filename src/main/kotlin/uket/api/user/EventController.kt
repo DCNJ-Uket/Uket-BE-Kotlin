@@ -11,6 +11,7 @@ import uket.api.user.request.EventListQueryType
 import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EventDetailResponse
 import uket.common.response.ListResponse
+import uket.domain.payment.service.PaymentService
 import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
@@ -27,6 +28,7 @@ class EventController(
     private val entryGroupService: EntryGroupService,
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventFacade: UketEventFacade,
+    private val paymentService: PaymentService,
 ) {
     @Operation(summary = "활성화된 행사 목록 조회", description = "누구나 조회 가능한 행사 목록을 가져옵니다")
     @GetMapping("/uket-events")
@@ -52,11 +54,8 @@ class EventController(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<ListResponse<EventRoundListItemResponse>> {
         val now = LocalDateTime.now()
+        val eventRounds = uketEventRoundService.getNowTicketingRounds(eventId, now)
 
-        val event = uketEventService.getById(eventId)
-        event.validateNowTicketing(now)
-
-        val eventRounds = uketEventRoundService.findByUketEventIdAndDateAfter(eventId, now)
         val responses = eventRounds.map { EventRoundListItemResponse.of(it) }
         return ResponseEntity.ok(ListResponse(responses))
     }
@@ -67,12 +66,8 @@ class EventController(
         @PathVariable("id") eventRoundId: Long,
     ): ResponseEntity<ListResponse<EntryGroupListItemResponse>> {
         val now = LocalDateTime.now()
+        val entryGroups = uketEventFacade.findAllValidEntryGroup(eventRoundId, now)
 
-        val uketEventRound = uketEventRoundService.getByIdWithUketEvent(eventRoundId)
-        val uketEvent = uketEventRound.uketEvent!!
-        uketEvent.validateNowTicketing(now)
-
-        val entryGroups = entryGroupService.findValidByUketEventRoundIdAfter(eventRoundId, now)
         val responses = entryGroups.map { EntryGroupListItemResponse.of(it) }
         return ResponseEntity.ok(ListResponse(responses))
     }
@@ -83,11 +78,9 @@ class EventController(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<ReservationInfoResponse> {
         val now = LocalDateTime.now()
-
-        val event = uketEventService.getById(eventId)
-        event.validateNowTicketing(now)
-
+        val payment = paymentService.getByUketEventId(eventId)
         val entryGroupMap = uketEventFacade.findValidEntryGroupMap(eventId, now)
+
         val roundResponses = entryGroupMap.keys.map { round ->
             val groups = entryGroupMap.get(round)
             val groupResponses = groups!!.map {
@@ -95,8 +88,7 @@ class EventController(
             }
             ReservationInfoResponse.EventRoundWithGroupResponse.of(round, groupResponses)
         }
-
-        val response = ReservationInfoResponse.of(event, roundResponses)
+        val response = ReservationInfoResponse.of(payment, roundResponses)
         return ResponseEntity.ok(response)
     }
 }

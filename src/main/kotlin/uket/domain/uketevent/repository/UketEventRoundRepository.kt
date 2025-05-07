@@ -13,7 +13,7 @@ interface UketEventRoundRepository : JpaRepository<UketEventRound, Long> {
             WHERE uer.eventRoundDateTime >= :date
         """
     )
-    fun findByUketEventIdAAndEventRoundDateAfter(uketEventId: Long, date: LocalDateTime): List<UketEventRound>
+    fun findByUketEventIdAndEventRoundDateAfter(uketEventId: Long, date: LocalDateTime): List<UketEventRound>
 
     @Query(
         """
