@@ -32,7 +32,9 @@ class TicketRepositoryTest(
         beforeEach {
             val uketEventRound = UketEventRound(
                 uketEvent = null,
-                eventRoundDateTime = LocalDateTime.now()
+                eventRoundDateTime = LocalDateTime.now(),
+                ticketingStartDateTime = LocalDateTime.now(),
+                ticketingEndDateTime = LocalDateTime.now()
             )
 
             val uketEvent = UketEvent(
@@ -40,8 +42,6 @@ class TicketRepositoryTest(
                 eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
                 location = "00시00구",
-                ticketingStartDateTime = LocalDateTime.now(),
-                ticketingEndDateTime = LocalDateTime.now(),
                 totalTicketCount = 0,
                 details = UketEvent.EventDetails(
                     "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")
@@ -50,7 +50,6 @@ class TicketRepositoryTest(
                 thumbnailImageId = "",
                 _uketEventRounds = listOf(uketEventRound),
                 _banners = listOf(),
-                paymentInfo = UketEvent.PaymentInfo(1000, "", "", "", "")
             )
             entityManager.persist(uketEvent)
 

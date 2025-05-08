@@ -3,6 +3,7 @@ package uket.domain.uketEvent
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.FieldPredicates.named
+import uket.domain.payment.entity.Payment
 import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
@@ -13,16 +14,12 @@ import kotlin.random.Random
 class UketEventRandomUtil {
     companion object {
         fun createUketEvent(
-            ticketingStartDateTime: LocalDateTime,
-            ticketingEndDateTime: LocalDateTime,
             uketEventRounds: List<UketEventRound>,
             banners: List<Banner>,
         ): UketEvent {
             val easyRandom = EasyRandom(
                 EasyRandomParameters()
                     .randomize(named("id")) { 0L }
-                    .randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
-                    .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
                     .randomize(named("banners")) {
                         banners.map {
                             Banner(
@@ -37,7 +34,9 @@ class UketEventRandomUtil {
                             UketEventRound(
                                 id = it.id,
                                 uketEvent = null,
-                                eventRoundDateTime = it.eventRoundDateTime
+                                eventRoundDateTime = it.eventRoundDateTime,
+                                ticketingStartDateTime = it.ticketingStartDateTime,
+                                ticketingEndDateTime = it.ticketingEndDateTime
                             )
                         }
                     }.randomize(named("firstRoundDateTime")) {
@@ -55,6 +54,8 @@ class UketEventRandomUtil {
 
         fun createUketEventsRoundsWithDate(
             uketEventRoundDates: List<LocalDateTime>,
+            ticketingStartDateTime: LocalDateTime,
+            ticketingEndDateTime: LocalDateTime,
         ): List<UketEventRound> {
             val eventRounds = uketEventRoundDates.map {
                 val easyRandomEventRound = EasyRandom(
@@ -62,6 +63,8 @@ class UketEventRandomUtil {
                         .randomize(named("id")) { 0L }
                         .randomize(named("uketEvent")) { null }
                         .randomize(named("eventRoundDateTime")) { it }
+                        .randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
+                        .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
                 )
                 easyRandomEventRound.nextObject(UketEventRound::class.java)
             }
@@ -92,6 +95,7 @@ class UketEventRandomUtil {
 
         fun createDummyData() {
             val now = LocalDateTime.now()
+            val payments = mutableListOf<Payment>()
             val events = mutableListOf<UketEvent>()
             val rounds = mutableListOf<UketEventRound>()
             val groups = mutableListOf<EntryGroup>()
@@ -118,7 +122,13 @@ class UketEventRandomUtil {
                     uketEventRounds
                 )
 
+                val payment = createPaymentWithIdAndEventId(
+                    event.id,
+                    i.toLong() + 1
+                )
+
                 events.add(event)
+                payments.add(payment)
                 rounds.addAll(event.uketEventRounds)
             }
 
@@ -131,6 +141,11 @@ class UketEventRandomUtil {
             println("-- Insert Events")
             events.forEach {
                 println(toInsertSqlForUketEvent(it))
+            }
+
+            println("-- Insert Payments")
+            payments.forEach {
+                println(toInsertSqlForPayment(it))
             }
 
             println("-- Insert Event Rounds")
@@ -155,15 +170,15 @@ class UketEventRandomUtil {
                 EasyRandomParameters()
                     .randomize(named("id")) { id }
                     .randomize(named("eventName")) { eventName }
-                    .randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
-                    .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
                     .randomize(named("banners")) { listOf<Banner>() }
                     .randomize(named("uketEventRounds")) {
                         uketEventRounds.map {
                             UketEventRound(
                                 id = it.id,
                                 uketEvent = null,
-                                eventRoundDateTime = it.eventRoundDateTime
+                                eventRoundDateTime = it.eventRoundDateTime,
+                                ticketingStartDateTime = ticketingStartDateTime,
+                                ticketingEndDateTime = ticketingEndDateTime
                             )
                         }
                     }.randomize(named("firstRoundDateTime")) {
@@ -176,6 +191,18 @@ class UketEventRandomUtil {
             uketEvent.uketEventRounds.forEach { it.uketEvent = uketEvent }
 
             return uketEvent
+        }
+
+        private fun createPaymentWithIdAndEventId(id: Long, eventId: Long): Payment {
+            val easyRandom = EasyRandom(
+                EasyRandomParameters()
+                    .randomize(named("id")) { id }
+                    .randomize(named("uketEventId")) { eventId }
+                    .randomize(named("ticketPrice")) { Random.nextInt(1000, 3000) }
+            )
+            val payment = easyRandom.nextObject(Payment::class.java)
+
+            return payment
         }
 
         private fun createUketEventsRoundsWithDateAndId(
@@ -218,7 +245,7 @@ class UketEventRandomUtil {
                 )
 
                 values += listOf(
-                    uketEventRound!!.id,
+                    uketEventRound.id,
                     entryGroupName,
                     entryStartDateTime,
                     entryEndDateTime,
@@ -244,6 +271,8 @@ class UketEventRandomUtil {
                 columns += listOf(
                     "uket_event_id",
                     "event_round_datetime",
+                    "ticketing_start_datetime",
+                    "ticketing_end_datetime",
                     "created_at",
                     "updated_at"
                 )
@@ -251,6 +280,8 @@ class UketEventRandomUtil {
                 values += listOf(
                     uketEvent!!.id,
                     eventRoundDateTime,
+                    ticketingStartDateTime,
+                    ticketingEndDateTime,
                     createdAt,
                     updatedAt
                 ).map { toSqlValue(it) }
@@ -273,8 +304,6 @@ class UketEventRandomUtil {
                     "event_name",
                     "event_type",
                     "location",
-                    "ticketing_start_datetime",
-                    "ticketing_end_datetime",
                     "total_ticket_count",
                     "event_image_id",
                     "thumbnail_image_id",
@@ -289,8 +318,6 @@ class UketEventRandomUtil {
                     eventName,
                     eventType.name,
                     location,
-                    ticketingStartDateTime,
-                    ticketingEndDateTime,
                     totalTicketCount,
                     eventImageId,
                     thumbnailImageId,
@@ -307,6 +334,41 @@ class UketEventRandomUtil {
                     details.caution,
                     details.contact.type.name,
                     details.contact.content
+                ).map { toSqlValue(it) }
+            }
+
+            return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
+        }
+
+        private fun toInsertSqlForPayment(payment: Payment): String {
+            val tableName = "payment"
+
+            val columns = mutableListOf<String>()
+            val values = mutableListOf<String>()
+
+            // 직접 필드 접근 (중첩 필드도 분해해서 처리)
+            with(payment) {
+                // 일반 필드
+                columns += listOf(
+                    "uket_event_id",
+                    "ticket_price",
+                    "bank_code",
+                    "account_number",
+                    "depositor_name",
+                    "deposit_url",
+                    "created_at",
+                    "updated_at"
+                )
+
+                values += listOf(
+                    uketEventId,
+                    ticketPrice,
+                    bankCode,
+                    accountNumber,
+                    depositorName,
+                    depositUrl,
+                    createdAt,
+                    updatedAt
                 ).map { toSqlValue(it) }
             }
 

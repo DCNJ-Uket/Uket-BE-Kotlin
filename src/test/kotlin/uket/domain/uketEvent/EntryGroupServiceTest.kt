@@ -11,6 +11,7 @@ import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.repository.EntryGroupRepository
 import uket.domain.uketevent.service.EntryGroupService
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class EntryGroupServiceTest :
     DescribeSpec({
@@ -24,10 +25,16 @@ class EntryGroupServiceTest :
             context("입장 그룹 하나는 지금, 하나는 티켓 품절, 하나는 한 시간 뒤일 때") {
                 val now = LocalDateTime.now()
                 val (uketEvent, uketEventRound, entryGroups) = setDB(now)
-                every { entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(uketEventRound.id, now) } returns entryGroups
+                every {
+                    entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(
+                        uketEventRound.id,
+                        now.truncatedTo(ChronoUnit.DAYS)
+                    )
+                } returns entryGroups
 
                 it("입장 그룹 1개만 출력") {
-                    val findEntryGroups = entryGroupService.findAllValidByRoundIdAndStarDateAfter(uketEventRound.id, now)
+                    val findEntryGroups =
+                        entryGroupService.findAllValidByRoundIdAndStarDateAfter(uketEventRound.id, now)
                     findEntryGroups.size shouldBe 1
                 }
             }
@@ -36,16 +43,21 @@ class EntryGroupServiceTest :
     companion object {
         private fun setDB(now: LocalDateTime): Triple<UketEvent, UketEventRound, List<EntryGroup>> {
             val uketEventRounds =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(listOf(now.plusDays(7)))
+                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                    listOf(now.plusDays(7)),
+                    now.minusDays(2),
+                    now.plusDays(2),
+                )
 
             val uketEvent = UketEventRandomUtil.createUketEvent(
-                now.minusDays(2),
-                now.plusDays(2),
                 uketEventRounds,
                 listOf()
             )
 
-            val entryGroups = UketEventRandomUtil.createEntryGroupWithTime(uketEventRounds[0], listOf(now.minusHours(1), now, now.plusHours(1)))
+            val entryGroups = UketEventRandomUtil.createEntryGroupWithTime(
+                uketEventRounds[0],
+                listOf(now.minusHours(1), now, now.plusHours(1))
+            )
             entryGroups[1].totalTicketCount = 0
             entryGroups[1].ticketCount = 0
 

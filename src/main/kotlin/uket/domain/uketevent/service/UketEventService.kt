@@ -44,11 +44,14 @@ class UketEventService(
     }
 
     @Transactional(readOnly = true)
-    fun findAllNowActiveOrdered(at: LocalDateTime): List<UketEvent> = uketEventRepository.findAllByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+    fun findAllNowActiveOrdered(at: LocalDateTime): List<UketEvent> =
+        uketEventRepository.findAllByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
 
     @Transactional(readOnly = true)
-    fun findAllNowActiveOrderedFestival(at: LocalDateTime): List<UketEvent> = uketEventRepository.findAllFestivalByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+    fun findAllNowActiveOrderedFestival(at: LocalDateTime): List<UketEvent> =
+        uketEventRepository.findAllFestivalByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
 
     @Transactional(readOnly = true)
-    fun findAllNowActiveOrderedPerformance(at: LocalDateTime): List<UketEvent> = uketEventRepository.findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+    fun findAllNowActiveOrderedPerformance(at: LocalDateTime): List<UketEvent> =
+        uketEventRepository.findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
 }
