@@ -2,7 +2,6 @@ package uket.domain.uketevent.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import uket.common.enums.EventType
 import uket.domain.uketevent.entity.UketEvent
 import java.time.LocalDateTime
 
@@ -16,15 +15,6 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
         nativeQuery = true,
     )
     fun findOrganizationNameByUketEventId(uketEventId: Long): String?
-
-    @Query(
-        """
-            SELECT ue FROM UketEvent ue 
-            WHERE ue.lastRoundDateTime >= CURRENT_DATE AND
-            ue.eventType = :eventType
-        """
-    )
-    fun findAllByEventTypeAndEventEndDateAfterNowWithUketEventRound(eventType: EventType): List<UketEvent>
 
     @Query(
         """

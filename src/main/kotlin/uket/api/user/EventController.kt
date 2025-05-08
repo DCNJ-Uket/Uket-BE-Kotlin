@@ -12,7 +12,6 @@ import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EventDetailResponse
 import uket.common.response.ListResponse
 import uket.domain.payment.service.PaymentService
-import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.uket.api.user.response.EntryGroupListItemResponse
@@ -25,7 +24,6 @@ import java.time.LocalDateTime
 @RestController
 class EventController(
     private val uketEventService: UketEventService,
-    private val entryGroupService: EntryGroupService,
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventFacade: UketEventFacade,
     private val paymentService: PaymentService,
@@ -79,9 +77,7 @@ class EventController(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<ReservationInfoResponse> {
         val now = LocalDateTime.now()
-        val payment = paymentService.getByUketEventId(eventId)
         val entryGroupMap = uketEventFacade.findValidEntryGroupMap(eventId, now)
-
         val roundResponses = entryGroupMap.keys.map { round ->
             val groups = entryGroupMap.get(round)
             val groupResponses = groups!!.map {
@@ -89,6 +85,9 @@ class EventController(
             }
             ReservationInfoResponse.EventRoundWithGroupResponse.of(round, groupResponses)
         }
+
+        val payment = paymentService.getByUketEventId(eventId)
+
         val response = ReservationInfoResponse.of(payment, roundResponses)
         return ResponseEntity.ok(response)
     }

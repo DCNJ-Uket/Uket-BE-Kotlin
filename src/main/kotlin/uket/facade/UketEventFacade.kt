@@ -39,13 +39,13 @@ class UketEventFacade(
     @Transactional(readOnly = true)
     fun getNowActiveEventItemList(type: String, at: LocalDateTime): List<EventListItem> {
         val activeOrderedEvents = when (type) {
-            "ALL" -> uketEventService.findAllNowActiveOrdered(at)
             "FESTIVAL" -> uketEventService.findAllNowActiveOrderedFestival(at)
-            else -> uketEventService.findAllNowActiveOrderedPerformance(at)
+            "PERFORMANCE" -> uketEventService.findAllNowActiveOrderedPerformance(at)
+            else -> uketEventService.findAllNowActiveOrdered(at)
         }
 
         val activeEventIds = activeOrderedEvents.map { it.id }
-        val roundsMap = uketEventRoundService.getEventRoundsMapByActiveEventIds(activeEventIds)
+        val roundsMap = uketEventRoundService.getEventRoundsMapByEventIds(activeEventIds)
 
         val eventItemList = activeOrderedEvents.map {
             val rounds = roundsMap[it.id]!!

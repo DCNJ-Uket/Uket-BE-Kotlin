@@ -8,6 +8,7 @@ import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
+import java.io.File
 import java.time.LocalDateTime
 import kotlin.random.Random
 
@@ -93,7 +94,7 @@ class UketEventRandomUtil {
             return entryGroups
         }
 
-        fun createDummyData() {
+        fun createDummyData(count: Int) {
             val now = LocalDateTime.now()
             val payments = mutableListOf<Payment>()
             val events = mutableListOf<UketEvent>()
@@ -101,7 +102,12 @@ class UketEventRandomUtil {
             val groups = mutableListOf<EntryGroup>()
             var roundStartId = 0
 
-            repeat(10) { i ->
+            println("event 및 round 생성")
+            val doubleCount = count.toDouble()
+            repeat(count) { i ->
+                if (i % 100 == 0) {
+                    println("${String.format("%.2f", i / doubleCount * 100)}%")
+                }
                 val ticketingStart = now.plusDays(Random.nextLong(-10, 10))
                 val ticketingEnd = now.plusDays(Random.nextLong(0, 3))
 
@@ -132,30 +138,37 @@ class UketEventRandomUtil {
                 rounds.addAll(event.uketEventRounds)
             }
 
+            println("round에 대한 entryGroup 생성")
+            val size = rounds.size.toDouble()
             rounds.forEach {
+                if (it.id.toInt() % 100 == 0) {
+                    println("${String.format("%.2f", it.id / size * 100)}%")
+                }
                 val entryGroups =
                     createEntryGroupWithTime(it, listOf(it.eventRoundDateTime, it.eventRoundDateTime.plusHours(1)))
                 groups.addAll(entryGroups)
             }
 
+            val file = File("dummyDataSqlDump")
+
             println("-- Insert Events")
             events.forEach {
-                println(toInsertSqlForUketEvent(it))
+                file.appendText(toInsertSqlForUketEvent(it) + "\n")
             }
 
             println("-- Insert Payments")
             payments.forEach {
-                println(toInsertSqlForPayment(it))
+                file.appendText(toInsertSqlForPayment(it) + "\n")
             }
 
             println("-- Insert Event Rounds")
             rounds.forEach {
-                println(toInsertSqlForUketEventRound(it))
+                file.appendText(toInsertSqlForUketEventRound(it) + "\n")
             }
 
             println("-- Insert Entry Groups")
             groups.forEach {
-                println(toInsertSqlForEntryGroup(it))
+                file.appendText(toInsertSqlForEntryGroup(it) + "\n")
             }
         }
 

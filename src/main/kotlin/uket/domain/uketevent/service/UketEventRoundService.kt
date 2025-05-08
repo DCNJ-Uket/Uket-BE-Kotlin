@@ -58,8 +58,8 @@ class UketEventRoundService(
     }
 
     @Transactional(readOnly = true)
-    fun getEventRoundsMapByActiveEventIds(activeEventIds: List<Long>): Map<Long, List<UketEventRound>> {
-        val rounds = uketEventRoundRepository.findAllByUketEventIdInWithUketEvent(activeEventIds)
+    fun getEventRoundsMapByEventIds(eventIds: List<Long>): Map<Long, List<UketEventRound>> {
+        val rounds = uketEventRoundRepository.findAllByUketEventIdInWithUketEvent(eventIds)
         return rounds.groupBy { it.uketEvent!!.id }
     }
 }

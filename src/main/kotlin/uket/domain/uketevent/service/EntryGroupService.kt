@@ -22,7 +22,10 @@ class EntryGroupService(
 
     @Transactional(readOnly = true)
     fun findAllValidByRoundIdAndStarDateAfter(uketEventRoundId: Long, date: LocalDateTime): List<EntryGroup> {
-        val entryGroups = entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(uketEventRoundId, date.truncatedTo(ChronoUnit.DAYS))
+        val entryGroups = entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(
+            uketEventRoundId,
+            date.truncatedTo(ChronoUnit.DAYS)
+        )
         return entryGroups.filter { it.ticketCount < it.totalTicketCount }
     }
 
