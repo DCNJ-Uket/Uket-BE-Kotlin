@@ -53,11 +53,22 @@ class UketEventFacade(
             EventListItem.of(it, status, rounds)
         }
 
-        val orderedList = eventItemList.sortedWith(
-            compareBy<EventListItem> { it.ticketingStatus.order }
-                .thenBy { it.eventStartDate }
-        )
+        val orderedList = eventItemList
+            .sortedWith(
+                ticketingStatusComparator()
+            ).sortedBy {
+                it.eventStartDate
+            }
         return orderedList
+    }
+
+    private fun ticketingStatusComparator() = compareBy<EventListItem> {
+        when (it.ticketingStatus) {
+            TicketingStatus.티켓팅_진행중 -> 1
+            TicketingStatus.오픈_예정 -> 2
+            TicketingStatus.티켓팅_종료 -> 3
+            else -> 4
+        }
     }
 
     private fun getTicketingStatus(uketEventRounds: List<UketEventRound>, at: LocalDateTime): TicketingStatus = when {
