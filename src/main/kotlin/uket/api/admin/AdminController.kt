@@ -56,12 +56,7 @@ class AdminController(
     ): ResponseEntity<RegisterAdminResponse> {
         val authentication = SecurityContextHolder.getContext().authentication
         val token = authentication.credentials as String
-        val response: RegisterAdminResponse = adminAuthEmailFacade.registerAdminWithPassword(
-            token = token,
-            email = request.email,
-            password = request.password,
-            phoneNumber = request.phoneNumber
-        )
+        val response: RegisterAdminResponse = adminAuthEmailFacade.registerAdminWithPassword(token, request.email, request.password)
         return ResponseEntity.ok(response)
     }
 
