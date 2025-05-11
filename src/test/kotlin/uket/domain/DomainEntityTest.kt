@@ -72,7 +72,7 @@ class DomainEntityTest {
         )
 
         val organization = Organization(0L, "OrganiationA", null)
-        val admin = Admin(0L, organization, "nameA", "emailA", "password123", "01012345678", true)
+        val admin = Admin(0L, organization, "nameA", "emailA", "password123", true)
 
         val payment = Payment(0L, 0L, "123-12-123457", "linkA")
         val paymentHistory =

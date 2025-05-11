@@ -22,14 +22,9 @@ class Admin(
     val name: String,
     val email: String,
     var password: String?,
-    var phoneNumber: String?,
     val isSuperAdmin: Boolean,
 ) : BaseTimeEntity() {
-    fun updateAdminInfo(
-        password: String,
-        phoneNumber: String,
-    ) {
+    fun updatePassword(password: String) {
         this.password = password
-        this.phoneNumber = phoneNumber
     }
 }

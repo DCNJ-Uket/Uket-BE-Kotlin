@@ -56,7 +56,6 @@ class AdminService(
             email = registerAdminCommand.email,
             isSuperAdmin = false,
             password = registerAdminCommand.password,
-            phoneNumber = null
         )
 
         adminRepository.save(admin)
@@ -71,16 +70,14 @@ class AdminService(
             email = email,
             isSuperAdmin = isSuperAdmin,
             password = null,
-            phoneNumber = null
         )
 
         return adminRepository.save(admin)
     }
 
-    @Transactional
-    fun updateAdminInfo(email: String, password: String, phoneNumber: String): Admin {
+    fun updatePassword(email: String, password: String): Admin {
         val admin: Admin = getByEmail(email)
-        admin.updateAdminInfo(password, phoneNumber)
+        admin.updatePassword(password)
         return adminRepository.save(admin)
     }
 
