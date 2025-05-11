@@ -168,6 +168,8 @@ class EventRegistration(
         enum class ContactType {
             INSTAGRAM,
             KAKAO,
+            전화번호,
+            기타
         }
     }
 
