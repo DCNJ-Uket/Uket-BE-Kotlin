@@ -169,7 +169,7 @@ class EventRegistration(
             INSTAGRAM,
             KAKAO,
             전화번호,
-            기타
+            기타,
         }
     }
 
