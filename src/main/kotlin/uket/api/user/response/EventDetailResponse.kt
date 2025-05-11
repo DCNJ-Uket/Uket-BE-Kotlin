@@ -1,16 +1,21 @@
 package uket.api.user.response
 
+import uket.common.enums.EventType
+import uket.domain.admin.entity.Organization
 import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
 
 data class EventDetailResponse(
+    val eventId: Long,
     val eventName: String,
+    val eventType: EventType,
+    val location: String,
     val banners: List<EventDetailBannerDto>,
     val information: String,
+    val detailImagePath: String,
     val caution: String,
-    val location: String,
-    val contactType: UketEvent.EventContact.ContactType,
-    val contactContent: String,
+    val organizationName: String,
+    val contact: UketEvent.EventContact,
 ) {
     data class EventDetailBannerDto(
         val imageId: Long,
@@ -25,14 +30,17 @@ data class EventDetailResponse(
     }
 
     companion object {
-        fun from(uketEvent: UketEvent): EventDetailResponse = EventDetailResponse(
+        fun from(uketEvent: UketEvent, organization: Organization): EventDetailResponse = EventDetailResponse(
+            eventId = uketEvent.id,
             eventName = uketEvent.eventName,
+            eventType = uketEvent.eventType,
+            location = uketEvent.location,
             banners = uketEvent.banners.map { EventDetailBannerDto.from(it) },
             information = uketEvent.details.information,
+            detailImagePath = uketEvent.eventImageId,
             caution = uketEvent.details.caution,
-            location = uketEvent.location,
-            contactType = uketEvent.details.contact.type,
-            contactContent = uketEvent.details.contact.content
+            organizationName = organization.name,
+            contact = uketEvent.details.contact
         )
     }
 }

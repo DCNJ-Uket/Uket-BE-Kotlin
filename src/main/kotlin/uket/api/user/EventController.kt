@@ -11,6 +11,7 @@ import uket.api.user.request.EventListQueryType
 import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EventDetailResponse
 import uket.common.response.ListResponse
+import uket.domain.admin.service.OrganizationService
 import uket.domain.payment.service.PaymentService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
@@ -27,6 +28,7 @@ class EventController(
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventFacade: UketEventFacade,
     private val paymentService: PaymentService,
+    private val organizationService: OrganizationService,
 ) {
     @Operation(summary = "활성화된 행사 목록 조회", description = "누구나 조회 가능한 행사 목록을 가져옵니다")
     @GetMapping("/uket-events")
@@ -44,7 +46,8 @@ class EventController(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<EventDetailResponse> {
         val event = uketEventService.getDetailById(eventId)
-        return ResponseEntity.ok(EventDetailResponse.from(event))
+        val organization = organizationService.getById(event.organizationId)
+        return ResponseEntity.ok(EventDetailResponse.from(event, organization))
     }
 
     @Operation(summary = "행사 회차 목록 조회", description = "유저가 티켓팅 중인 행사의 현재 날짜와 이후 회차 목록을 가져옵니다")
