@@ -20,8 +20,8 @@ class EntryGroup(
     val id: Long = 0L,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uket_event_round_id", nullable = false)
-    val uketEventRound: UketEventRound,
+    @JoinColumn(name = "uket_event_round_id")
+    var uketEventRound: UketEventRound,
 
     @Column(name = "entry_group_name")
     val entryGroupName: String,

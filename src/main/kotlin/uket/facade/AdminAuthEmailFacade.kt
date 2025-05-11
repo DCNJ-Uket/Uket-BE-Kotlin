@@ -32,12 +32,17 @@ class AdminAuthEmailFacade(
         private const val EMAIL_TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60 * 24 // 24시간
     }
 
-    @Transactional
     fun sendAuthEmail(request: SendEmailRequest): SendEmailResponse {
         validateEmail(request.email)
         validateOrganization(request.organization)
         val organization: Organization = organizationService.getByName(request.organization)
-        val admin = adminService.registerAdminWithoutPassword(request.name, request.email, request.isSuperAdmin, organization)
+        val admin = adminService.registerAdminWithoutPassword(
+            name = request.name,
+            email = request.email,
+            phoneNumber = request.phoneNumber,
+            isSuperAdmin = request.isSuperAdmin,
+            organization = organization
+        )
 
         val token = jwtAuthTokenUtil.createEmailToken(
             admin.id,

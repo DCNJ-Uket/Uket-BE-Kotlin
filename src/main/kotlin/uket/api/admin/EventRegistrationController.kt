@@ -56,7 +56,7 @@ class EventRegistrationController(
     @Operation(summary = "어드민 행사 등록", description = "사진 등록 후 반환받은 imageId를 활용해 행사 등록을 진행합니다.")
     @PostMapping("/admin/uket-event-registrations/organizations/{organizationId}/event-type/{eventType}")
     fun registerUketEvent(
-        @RequestParam("organizationId") organizationId: Long,
+        @PathVariable("organizationId") organizationId: Long,
         @PathVariable("eventType") eventType: EventType,
         @RequestBody request: RegisterUketEventRequest,
     ): RegisterUketEventResponse {
