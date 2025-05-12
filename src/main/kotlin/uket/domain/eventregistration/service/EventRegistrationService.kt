@@ -43,6 +43,12 @@ class EventRegistrationService(
     }
 
     @Transactional
+    fun updateEventRegistration(originalEventRegistrationId: Long, updatedEventRegistration: EventRegistration): EventRegistration {
+        updatedEventRegistration.updateId(originalEventRegistrationId)
+        return eventRegistrationRepository.save(updatedEventRegistration)
+    }
+
+    @Transactional
     fun updateStatus(
         id: Long,
         nextStatus: EventRegistrationStatus,
