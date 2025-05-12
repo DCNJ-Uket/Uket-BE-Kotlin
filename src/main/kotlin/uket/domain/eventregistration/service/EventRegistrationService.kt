@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.common.PublicException
 import uket.domain.eventregistration.entity.EventRegistration
 import uket.domain.eventregistration.entity.EventRegistrationStatus
 
@@ -58,5 +59,16 @@ class EventRegistrationService(
         eventRegistration.updateStatus(nextStatus)
 
         return eventRegistrationRepository.save(eventRegistration)
+    }
+
+    @Transactional(readOnly = true)
+    fun validateUpdatableStatus(eventRegistration: EventRegistration) {
+        if (eventRegistration.status !in listOf(EventRegistrationStatus.검수_진행, EventRegistrationStatus.검수_완료)) {
+            throw PublicException(
+                publicMessage = "현재 행사 등록 상태가 수정 불가능한 상태입니다.",
+                systemMessage = "Not Updatable EventRegistrationStatus : TOKEN =${eventRegistration.status}",
+                title = "행사 수정 불가능 상태"
+            )
+        }
     }
 }

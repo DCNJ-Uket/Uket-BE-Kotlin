@@ -83,6 +83,7 @@ class EventRegistrationController(
     ): RegisterUketEventResponse {
         request.validateByEventType(eventType)
         val originalEventRegistration = eventRegistrationService.getById(uketEventRegistrationId)
+        eventRegistrationService.validateUpdatableStatus(originalEventRegistration)
 
         val updatedEventRegistration = eventRegistrationService.updateEventRegistration(
             originalEventRegistration.id, request.toEntity(originalEventRegistration.organizationId, eventType)
