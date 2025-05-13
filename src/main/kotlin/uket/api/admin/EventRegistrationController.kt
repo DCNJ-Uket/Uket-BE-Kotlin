@@ -75,7 +75,7 @@ class EventRegistrationController(
 
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 행사 수정 등록", description = "사진 등록 후 반환받은 imageId를 활용해 행사 수정 등록을 진행합니다.")
-    @PostMapping("/admin/update/uket-event-registrations/{uketEventRegistrationId}/event-type/{eventType}")
+    @PutMapping("/admin/uket-event-registrations/{uketEventRegistrationId}/event-type/{eventType}")
     fun updateUketEventRegistration(
         @PathVariable("uketEventRegistrationId") uketEventRegistrationId: Long,
         @PathVariable("eventType") eventType: EventType,
