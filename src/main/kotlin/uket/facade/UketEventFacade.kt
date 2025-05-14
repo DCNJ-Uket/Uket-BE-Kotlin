@@ -56,9 +56,11 @@ class UketEventFacade(
         val orderedList = eventItemList
             .sortedWith(
                 ticketingStatusComparator()
-            ).sortedBy {
-                it.eventStartDate
-            }
+                    .thenBy {
+                        it.eventStartDate
+                    }
+            )
+
         return orderedList
     }
 
