@@ -42,6 +42,7 @@ class TicketRepositoryTest(
                 eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
                 location = "00시00구",
+                ticketPrice = 1000,
                 totalTicketCount = 0,
                 details = UketEvent.EventDetails(
                     "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")

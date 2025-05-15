@@ -363,8 +363,7 @@ class UketEventRandomUtil {
             with(payment) {
                 // 일반 필드
                 columns += listOf(
-                    "uket_event_id",
-                    "ticket_price",
+                    "organization_id",
                     "bank_code",
                     "account_number",
                     "depositor_name",
@@ -374,12 +373,11 @@ class UketEventRandomUtil {
                 )
 
                 values += listOf(
-                    uketEventId,
-                    ticketPrice,
-                    bankCode,
-                    accountNumber,
-                    depositorName,
-                    depositUrl,
+                    organizationId,
+                    account.bankCode,
+                    account.accountNumber,
+                    account.depositorName,
+                    depositLink,
                     createdAt,
                     updatedAt
                 ).map { toSqlValue(it) }
