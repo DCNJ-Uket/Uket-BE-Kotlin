@@ -9,7 +9,7 @@ class UketEventFacadeTest :
         isolationMode = IsolationMode.InstancePerLeaf
 
 //        it("더미데이터 출력") {
-//            UketEventRandomUtil.createDummyData(10000)
+//            UketEventRandomUtil.createDummyData(100)
 //        }
     }) {
     companion object {

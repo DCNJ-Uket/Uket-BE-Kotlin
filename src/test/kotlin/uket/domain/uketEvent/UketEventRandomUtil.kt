@@ -128,13 +128,7 @@ class UketEventRandomUtil {
                     uketEventRounds
                 )
 
-                val payment = createPaymentWithIdAndEventId(
-                    event.id,
-                    i.toLong() + 1
-                )
-
                 events.add(event)
-                payments.add(payment)
                 rounds.addAll(event.uketEventRounds)
             }
 
@@ -156,11 +150,6 @@ class UketEventRandomUtil {
                 file.appendText(toInsertSqlForUketEvent(it) + "\n")
             }
 
-            println("-- Insert Payments")
-            payments.forEach {
-                file.appendText(toInsertSqlForPayment(it) + "\n")
-            }
-
             println("-- Insert Event Rounds")
             rounds.forEach {
                 file.appendText(toInsertSqlForUketEventRound(it) + "\n")
@@ -172,7 +161,7 @@ class UketEventRandomUtil {
             }
         }
 
-        private fun createUketEventWithNameAndId(
+        fun createUketEventWithNameAndId(
             ticketingStartDateTime: LocalDateTime,
             ticketingEndDateTime: LocalDateTime,
             eventName: String,
@@ -204,18 +193,6 @@ class UketEventRandomUtil {
             uketEvent.uketEventRounds.forEach { it.uketEvent = uketEvent }
 
             return uketEvent
-        }
-
-        private fun createPaymentWithIdAndEventId(id: Long, eventId: Long): Payment {
-            val easyRandom = EasyRandom(
-                EasyRandomParameters()
-                    .randomize(named("id")) { id }
-                    .randomize(named("uketEventId")) { eventId }
-                    .randomize(named("ticketPrice")) { Random.nextInt(1000, 3000) }
-            )
-            val payment = easyRandom.nextObject(Payment::class.java)
-
-            return payment
         }
 
         private fun createUketEventsRoundsWithDateAndId(
@@ -318,6 +295,7 @@ class UketEventRandomUtil {
                     "event_type",
                     "location",
                     "total_ticket_count",
+                    "ticket_price",
                     "event_image_id",
                     "thumbnail_image_id",
                     "first_round_datetime",
@@ -332,6 +310,7 @@ class UketEventRandomUtil {
                     eventType.name,
                     location,
                     totalTicketCount,
+                    ticketPrice,
                     eventImageId,
                     thumbnailImageId,
                     firstRoundDateTime,
@@ -347,39 +326,6 @@ class UketEventRandomUtil {
                     details.caution,
                     details.contact.type.name,
                     details.contact.content
-                ).map { toSqlValue(it) }
-            }
-
-            return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
-        }
-
-        private fun toInsertSqlForPayment(payment: Payment): String {
-            val tableName = "payment"
-
-            val columns = mutableListOf<String>()
-            val values = mutableListOf<String>()
-
-            // 직접 필드 접근 (중첩 필드도 분해해서 처리)
-            with(payment) {
-                // 일반 필드
-                columns += listOf(
-                    "organization_id",
-                    "bank_code",
-                    "account_number",
-                    "depositor_name",
-                    "deposit_url",
-                    "created_at",
-                    "updated_at"
-                )
-
-                values += listOf(
-                    organizationId,
-                    account.bankCode,
-                    account.accountNumber,
-                    account.depositorName,
-                    depositLink,
-                    createdAt,
-                    updatedAt
                 ).map { toSqlValue(it) }
             }
 
