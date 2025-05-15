@@ -14,6 +14,7 @@ data class EventData(
     val ticketingEndDateTime: LocalDateTime, // yyyy-MM-ddThh:mm:ss
     val entryGroup: List<EntryGroupDto>,
     val totalTicketCount: Int,
+    val ticketBuyLimit: Int,
     val details: EventDetailsDto,
     val contact: ContactInfoDto,
     val uketEventImageId: String,
@@ -74,6 +75,7 @@ data class EventData(
                     )
                 },
                 totalTicketCount = totalTicketCount,
+                ticketBuyLimit = ticketBuyLimit,
                 details = EventDetailsDto(
                     information = details.information, caution = details.caution
                 ),
