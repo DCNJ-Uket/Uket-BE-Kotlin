@@ -1,6 +1,7 @@
 package uket.domain.uketevent.dto
 
 import uket.domain.uketevent.entity.UketEvent
+import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
@@ -15,15 +16,15 @@ data class EventListItem(
     val ticketingStatus: TicketingStatus,
 ) {
     companion object {
-        fun of(event: UketEvent, status: TicketingStatus): EventListItem = EventListItem(
+        fun of(event: UketEvent, ticketingStatus: TicketingStatus, uketEventRounds: List<UketEventRound>): EventListItem = EventListItem(
             eventId = event.id,
             eventName = event.eventName,
             eventThumbnailImagePath = event.thumbnailImageId,
             eventStartDate = event.firstRoundDateTime,
             eventEndDate = event.lastRoundDateTime,
-            ticketingStartDate = event.ticketingStartDateTime,
-            ticketingEndDate = event.ticketingEndDateTime,
-            ticketingStatus = status
+            ticketingStartDate = uketEventRounds.minOf { it.ticketingStartDateTime },
+            ticketingEndDate = uketEventRounds.maxOf { it.ticketingEndDateTime },
+            ticketingStatus = ticketingStatus
         )
     }
 }

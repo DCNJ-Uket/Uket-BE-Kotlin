@@ -3,26 +3,24 @@ package uket.domain.uketEvent
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.FieldPredicates.named
+import uket.domain.payment.entity.Payment
 import uket.domain.uketevent.entity.Banner
+import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
+import java.io.File
 import java.time.LocalDateTime
 import kotlin.random.Random
 
 class UketEventRandomUtil {
     companion object {
-        fun createUketEventWithDatesAndEventRoundsAndBanners(
-            ticketingStartDateTime: LocalDateTime,
-            ticketingEndDateTime: LocalDateTime,
+        fun createUketEvent(
             uketEventRounds: List<UketEventRound>,
             banners: List<Banner>,
         ): UketEvent {
             val easyRandom = EasyRandom(
                 EasyRandomParameters()
-                    .randomize(named("id")) {
-                        0L
-                    }.randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
-                    .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
+                    .randomize(named("id")) { 0L }
                     .randomize(named("banners")) {
                         banners.map {
                             Banner(
@@ -37,7 +35,9 @@ class UketEventRandomUtil {
                             UketEventRound(
                                 id = it.id,
                                 uketEvent = null,
-                                eventRoundDateTime = it.eventRoundDateTime
+                                eventRoundDateTime = it.eventRoundDateTime,
+                                ticketingStartDateTime = it.ticketingStartDateTime,
+                                ticketingEndDateTime = it.ticketingEndDateTime
                             )
                         }
                     }.randomize(named("firstRoundDateTime")) {
@@ -53,7 +53,126 @@ class UketEventRandomUtil {
             return uketEvent
         }
 
-        fun createUketEventWithDatesAndNameAndIdAndEventRounds(
+        fun createUketEventsRoundsWithDate(
+            uketEventRoundDates: List<LocalDateTime>,
+            ticketingStartDateTime: LocalDateTime,
+            ticketingEndDateTime: LocalDateTime,
+        ): List<UketEventRound> {
+            val eventRounds = uketEventRoundDates.map {
+                val easyRandomEventRound = EasyRandom(
+                    EasyRandomParameters()
+                        .randomize(named("id")) { 0L }
+                        .randomize(named("uketEvent")) { null }
+                        .randomize(named("eventRoundDateTime")) { it }
+                        .randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
+                        .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
+                )
+                easyRandomEventRound.nextObject(UketEventRound::class.java)
+            }
+
+            return eventRounds
+        }
+
+        fun createEntryGroupWithTime(
+            uketEventRound: UketEventRound,
+            entryGroupStartTimes: List<LocalDateTime>,
+        ): List<EntryGroup> {
+            val entryGroups = entryGroupStartTimes.map {
+                val easyRandomEntryGroup = EasyRandom(
+                    EasyRandomParameters()
+                        .randomize(named("id")) { 0L }
+                        .randomize(named("entryStartDateTime")) { it }
+                        .randomize(named("entryEndDateTime")) { it.plusMinutes(10) }
+                        .randomize(named("ticketCount")) { 0 }
+                        .randomize(named("totalTicketCount")) { 10 }
+                )
+                easyRandomEntryGroup.nextObject(EntryGroup::class.java)
+            }
+
+            entryGroups.forEach { it.uketEventRound = uketEventRound }
+
+            return entryGroups
+        }
+
+        fun createDummyData(count: Int) {
+            val now = LocalDateTime.now()
+            val payments = mutableListOf<Payment>()
+            val events = mutableListOf<UketEvent>()
+            val rounds = mutableListOf<UketEventRound>()
+            val groups = mutableListOf<EntryGroup>()
+            var roundStartId = 0
+
+            println("event 및 round 생성")
+            val doubleCount = count.toDouble()
+            repeat(count) { i ->
+                if (i % 100 == 0) {
+                    println("${String.format("%.2f", i / doubleCount * 100)}%")
+                }
+                val ticketingStart = now.plusDays(Random.nextLong(-10, 10))
+                val ticketingEnd = now.plusDays(Random.nextLong(0, 3))
+
+                val roundDate = ticketingEnd.plusDays(Random.nextLong(1, 30))
+                val roundSize = Random.nextInt(1, 3)
+                val roundDateTimeList = mutableListOf<LocalDateTime>()
+                repeat(roundSize) { s ->
+                    roundDateTimeList.add(roundDate.plusDays(s.toLong()))
+                }
+                val uketEventRounds = createUketEventsRoundsWithDateAndId(roundDateTimeList, roundStartId.toLong())
+                roundStartId += uketEventRounds.size
+
+                val event = createUketEventWithNameAndId(
+                    ticketingStart,
+                    ticketingEnd,
+                    "행사$i",
+                    i.toLong() + 1,
+                    uketEventRounds
+                )
+
+                val payment = createPaymentWithIdAndEventId(
+                    event.id,
+                    i.toLong() + 1
+                )
+
+                events.add(event)
+                payments.add(payment)
+                rounds.addAll(event.uketEventRounds)
+            }
+
+            println("round에 대한 entryGroup 생성")
+            val size = rounds.size.toDouble()
+            rounds.forEach {
+                if (it.id.toInt() % 100 == 0) {
+                    println("${String.format("%.2f", it.id / size * 100)}%")
+                }
+                val entryGroups =
+                    createEntryGroupWithTime(it, listOf(it.eventRoundDateTime, it.eventRoundDateTime.plusHours(1)))
+                groups.addAll(entryGroups)
+            }
+
+            val file = File("dummyDataSqlDump")
+
+            println("-- Insert Events")
+            events.forEach {
+                file.appendText(toInsertSqlForUketEvent(it) + "\n")
+            }
+
+            println("-- Insert Payments")
+            payments.forEach {
+                file.appendText(toInsertSqlForPayment(it) + "\n")
+            }
+
+            println("-- Insert Event Rounds")
+            rounds.forEach {
+                file.appendText(toInsertSqlForUketEventRound(it) + "\n")
+            }
+
+            println("-- Insert Entry Groups")
+            groups.forEach {
+                file.appendText(toInsertSqlForEntryGroup(it) + "\n")
+            }
+        }
+
+        private fun createUketEventWithNameAndId(
             ticketingStartDateTime: LocalDateTime,
             ticketingEndDateTime: LocalDateTime,
             eventName: String,
@@ -62,20 +181,17 @@ class UketEventRandomUtil {
         ): UketEvent {
             val easyRandom = EasyRandom(
                 EasyRandomParameters()
-                    .randomize(named("id")) {
-                        id
-                    }.randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
-                    .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }
-                    .randomize(named("eventName")) {
-                        eventName
-                    }.randomize(named("banners")) {
-                        listOf<Banner>()
-                    }.randomize(named("uketEventRounds")) {
+                    .randomize(named("id")) { id }
+                    .randomize(named("eventName")) { eventName }
+                    .randomize(named("banners")) { listOf<Banner>() }
+                    .randomize(named("uketEventRounds")) {
                         uketEventRounds.map {
                             UketEventRound(
                                 id = it.id,
                                 uketEvent = null,
-                                eventRoundDateTime = it.eventRoundDateTime
+                                eventRoundDateTime = it.eventRoundDateTime,
+                                ticketingStartDateTime = ticketingStartDateTime,
+                                ticketingEndDateTime = ticketingEndDateTime
                             )
                         }
                     }.randomize(named("firstRoundDateTime")) {
@@ -90,13 +206,28 @@ class UketEventRandomUtil {
             return uketEvent
         }
 
-        fun createUketEventsRoundWithDate(
+        private fun createPaymentWithIdAndEventId(id: Long, eventId: Long): Payment {
+            val easyRandom = EasyRandom(
+                EasyRandomParameters()
+                    .randomize(named("id")) { id }
+                    .randomize(named("uketEventId")) { eventId }
+                    .randomize(named("ticketPrice")) { Random.nextInt(1000, 3000) }
+            )
+            val payment = easyRandom.nextObject(Payment::class.java)
+
+            return payment
+        }
+
+        private fun createUketEventsRoundsWithDateAndId(
             uketEventRoundDates: List<LocalDateTime>,
+            startId: Long = 0L,
         ): List<UketEventRound> {
+            var id = startId
             val eventRounds = uketEventRoundDates.map {
+                id += 1
                 val easyRandomEventRound = EasyRandom(
                     EasyRandomParameters()
-                        .randomize(named("id")) { 0L }
+                        .randomize(named("id")) { id }
                         .randomize(named("uketEvent")) { null }
                         .randomize(named("eventRoundDateTime")) { it }
                 )
@@ -106,47 +237,42 @@ class UketEventRandomUtil {
             return eventRounds
         }
 
-        fun createDummyData() {
-            val now = LocalDateTime.now()
-            val events = mutableListOf<UketEvent>()
-            val rounds = mutableListOf<UketEventRound>()
+        private fun toInsertSqlForEntryGroup(entryGroup: EntryGroup): String {
+            val tableName = "entry_group"
 
-            repeat(100) { i ->
-                val ticketingStart = now.plusDays(Random.nextLong(-10, 10))
-                val ticketingEnd = now.plusDays(Random.nextLong(0, 3))
+            val columns = mutableListOf<String>()
+            val values = mutableListOf<String>()
 
-                val roundDate = ticketingEnd.plusDays(Random.nextLong(1, 30))
-                val roundSize = Random.nextInt(1, 3)
-                val roundDateTimeList = mutableListOf<LocalDateTime>()
-                repeat(roundSize) { s ->
-                    roundDateTimeList.add(roundDate.plusDays(s.toLong()))
-                }
-                val uketEventRounds = createUketEventsRoundWithDate(roundDateTimeList)
-
-                val event = createUketEventWithDatesAndNameAndIdAndEventRounds(
-                    ticketingStart,
-                    ticketingEnd,
-                    "행사$i",
-                    i.toLong() + 1,
-                    uketEventRounds
+            // 직접 필드 접근 (중첩 필드도 분해해서 처리)
+            with(entryGroup) {
+                // 일반 필드
+                columns += listOf(
+                    "uket_event_round_id",
+                    "entry_group_name",
+                    "entry_start_datetime",
+                    "entry_end_datetime",
+                    "ticket_count",
+                    "total_ticket_count",
+                    "created_at",
+                    "updated_at"
                 )
 
-                events.add(event)
-                rounds.addAll(event.uketEventRounds)
+                values += listOf(
+                    uketEventRound.id,
+                    entryGroupName,
+                    entryStartDateTime,
+                    entryEndDateTime,
+                    ticketCount,
+                    totalTicketCount,
+                    createdAt,
+                    updatedAt
+                ).map { toSqlValue(it) }
             }
 
-            println("-- Insert Events")
-            events.forEach {
-                println(toInsertSqlForUketEvent(it))
-            }
-
-            println("-- Insert Event Rounds")
-            rounds.forEach {
-                println(toInsertSqlForUketEventRound(it))
-            }
+            return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
         }
 
-        fun toInsertSqlForUketEventRound(uketEventRound: UketEventRound): String {
+        private fun toInsertSqlForUketEventRound(uketEventRound: UketEventRound): String {
             val tableName = "uket_event_round"
 
             val columns = mutableListOf<String>()
@@ -158,6 +284,8 @@ class UketEventRandomUtil {
                 columns += listOf(
                     "uket_event_id",
                     "event_round_datetime",
+                    "ticketing_start_datetime",
+                    "ticketing_end_datetime",
                     "created_at",
                     "updated_at"
                 )
@@ -165,6 +293,8 @@ class UketEventRandomUtil {
                 values += listOf(
                     uketEvent!!.id,
                     eventRoundDateTime,
+                    ticketingStartDateTime,
+                    ticketingEndDateTime,
                     createdAt,
                     updatedAt
                 ).map { toSqlValue(it) }
@@ -173,7 +303,7 @@ class UketEventRandomUtil {
             return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
         }
 
-        fun toInsertSqlForUketEvent(event: UketEvent): String {
+        private fun toInsertSqlForUketEvent(event: UketEvent): String {
             val tableName = "uket_event"
 
             val columns = mutableListOf<String>()
@@ -187,9 +317,6 @@ class UketEventRandomUtil {
                     "event_name",
                     "event_type",
                     "location",
-                    "ticketing_start_datetime",
-                    "ticketing_end_datetime",
-                    "ticket_price",
                     "total_ticket_count",
                     "event_image_id",
                     "thumbnail_image_id",
@@ -204,9 +331,6 @@ class UketEventRandomUtil {
                     eventName,
                     eventType.name,
                     location,
-                    ticketingStartDateTime,
-                    ticketingEndDateTime,
-                    ticketPrice,
                     totalTicketCount,
                     eventImageId,
                     thumbnailImageId,
@@ -229,7 +353,42 @@ class UketEventRandomUtil {
             return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
         }
 
-        fun toSqlValue(value: Any?): String = when (value) {
+        private fun toInsertSqlForPayment(payment: Payment): String {
+            val tableName = "payment"
+
+            val columns = mutableListOf<String>()
+            val values = mutableListOf<String>()
+
+            // 직접 필드 접근 (중첩 필드도 분해해서 처리)
+            with(payment) {
+                // 일반 필드
+                columns += listOf(
+                    "uket_event_id",
+                    "ticket_price",
+                    "bank_code",
+                    "account_number",
+                    "depositor_name",
+                    "deposit_url",
+                    "created_at",
+                    "updated_at"
+                )
+
+                values += listOf(
+                    uketEventId,
+                    ticketPrice,
+                    bankCode,
+                    accountNumber,
+                    depositorName,
+                    depositUrl,
+                    createdAt,
+                    updatedAt
+                ).map { toSqlValue(it) }
+            }
+
+            return "INSERT INTO $tableName (${columns.joinToString(", ")}) VALUES (${values.joinToString(", ")});"
+        }
+
+        private fun toSqlValue(value: Any?): String = when (value) {
             null -> "NULL"
             is String -> "'${value.replace("'", "''")}'"
             is Enum<*> -> "'${value.name}'"

@@ -73,7 +73,7 @@ class DomainEntityTest {
         )
 
         val organization = Organization(0L, "OrganiationA", null)
-        val admin = Admin(0L, organization, "nameA", "emailA", "password123", true)
+        val admin = Admin(0L, organization, "nameA", "emailA", "01012345678", "password123", true)
 
         val payment = Payment(
             id = 0L,
@@ -94,24 +94,21 @@ class DomainEntityTest {
         val terms = Terms(0L, "nameA", TermsType.MANDATORY, 0L, true)
         val termSign = TermSign(0L, terms, document, 0L, true, LocalDateTime.now())
 
-        val uketEventRound = UketEventRound(0L, null, LocalDateTime.now())
+        val uketEventRound = UketEventRound(0L, null, LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
         val uketEvent = UketEvent(
             id = 0L,
             organizationId = 0L,
             eventName = "nameA",
             eventType = EventType.FESTIVAL,
             location = "00시00구",
-            ticketingStartDateTime = LocalDateTime.now(),
-            ticketingEndDateTime = LocalDateTime.now(),
-            ticketPrice = 0,
             totalTicketCount = 0,
             details = UketEvent.EventDetails(
-                "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "")
+                "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "@as", "")
             ),
             eventImageId = "",
             thumbnailImageId = "",
             _uketEventRounds = listOf(uketEventRound),
-            _banners = listOf()
+            _banners = listOf(),
         )
         val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 

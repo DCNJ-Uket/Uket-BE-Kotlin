@@ -36,15 +36,6 @@ class UketEvent(
     @Column(name = "location")
     val location: String,
 
-    @Column(name = "ticketing_start_datetime")
-    val ticketingStartDateTime: LocalDateTime,
-
-    @Column(name = "ticketing_end_datetime")
-    val ticketingEndDateTime: LocalDateTime,
-
-    @Column(name = "ticket_price")
-    val ticketPrice: Int,
-
     @Column(name = "total_ticket_count")
     val totalTicketCount: Int,
 
@@ -70,7 +61,9 @@ class UketEvent(
         UketEventRound(
             id = it.id,
             uketEvent = this,
-            eventRoundDateTime = it.eventRoundDateTime
+            eventRoundDateTime = it.eventRoundDateTime,
+            ticketingStartDateTime = it.ticketingStartDateTime,
+            ticketingEndDateTime = it.ticketingEndDateTime
         )
     }
 
@@ -112,6 +105,8 @@ class UketEvent(
         val type: ContactType,
         @Column(name = "contact_content")
         val content: String,
+        @Column(name = "contact_link")
+        val link: String?,
     ) {
         enum class ContactType {
             INSTAGRAM,

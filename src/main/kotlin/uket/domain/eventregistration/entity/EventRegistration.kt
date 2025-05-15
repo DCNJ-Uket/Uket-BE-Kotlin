@@ -26,7 +26,7 @@ import java.time.LocalDateTime
 class EventRegistration(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    var id: Long = 0,
 
     @Column(name = "organization_id")
     val organizationId: Long,
@@ -170,11 +170,17 @@ class EventRegistration(
         enum class ContactType {
             INSTAGRAM,
             KAKAO,
+            전화번호,
+            기타,
         }
     }
 
     fun updateStatus(registrationStatus: EventRegistrationStatus) {
         this.status = registrationStatus
+    }
+
+    fun updateId(registrationId: Long) {
+        this.id = registrationId
     }
 
     companion object {
