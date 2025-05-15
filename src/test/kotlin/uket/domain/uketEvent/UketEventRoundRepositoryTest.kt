@@ -8,6 +8,7 @@ import io.kotest.matchers.date.after
 import io.kotest.matchers.shouldBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import uket.domain.uketEvent.util.UketEventRandomUtil
 import uket.domain.uketevent.repository.UketEventRoundRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -46,7 +47,7 @@ class UketEventRoundRepositoryTest(
     companion object {
         private fun setDB(entityManager: EntityManager, now: LocalDateTime): Long {
             val uketEventRounds =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                UketEventRandomUtil.createUketEventRounds(
                     listOf(now.minusDays(1), now),
                     now.minusDays(3),
                     now.minusDays(2)
@@ -54,8 +55,7 @@ class UketEventRoundRepositoryTest(
 
             val uketEvent =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds,
-                    listOf()
+                    uketEventRounds
                 )
 
             entityManager.persist(uketEvent)

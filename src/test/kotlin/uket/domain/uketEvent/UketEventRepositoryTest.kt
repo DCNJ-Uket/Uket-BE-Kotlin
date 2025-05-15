@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
+import uket.domain.uketEvent.util.UketEventRandomUtil
 import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
@@ -99,7 +100,7 @@ class UketEventRepositoryTest(
         private fun setDB5(entityManager: EntityManager): UketEvent {
             val now = LocalDateTime.now()
 
-            val uketEventRounds = UketEventRandomUtil.createUketEventsRoundsWithDate(
+            val uketEventRounds = UketEventRandomUtil.createUketEventRounds(
                 listOf(now.plusDays(3)),
                 now.minusDays(2),
                 now.plusDays(2)
@@ -123,15 +124,14 @@ class UketEventRepositoryTest(
         private fun setDB4(entityManager: EntityManager): UketEvent {
             val now = LocalDateTime.now()
 
-            val uketEventRounds = UketEventRandomUtil.createUketEventsRoundsWithDate(
+            val uketEventRounds = UketEventRandomUtil.createUketEventRounds(
                 listOf(now.plusDays(3)),
                 now.minusDays(2),
                 now.plusDays(2)
             )
             val uketEvent =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds,
-                    listOf()
+                    uketEventRounds
                 )
 
             entityManager.persist(uketEvent)
@@ -143,39 +143,36 @@ class UketEventRepositoryTest(
             val now = LocalDateTime.now()
 
             val uketEventRounds1 =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                UketEventRandomUtil.createUketEventRounds(
                     listOf(now.plusDays(6), now.plusDays(7)),
                     now.minusDays(2),
                     now.plusDays(2)
                 )
             val uketEvent1 =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds1,
-                    listOf()
+                    uketEventRounds1
                 )
             entityManager.persist(uketEvent1)
 
             val uketEventRounds2 =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                UketEventRandomUtil.createUketEventRounds(
                     listOf(now.plusDays(8)),
                     now.minusDays(3),
                     now.plusDays(3)
                 )
             val uketEvent2 =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds2,
-                    listOf()
+                    uketEventRounds2
                 )
             entityManager.persist(uketEvent2)
 
-            val uketEventRounds3 = UketEventRandomUtil.createUketEventsRoundsWithDate(
+            val uketEventRounds3 = UketEventRandomUtil.createUketEventRounds(
                 listOf(now.minusDays(2), now.minusDays(1)),
                 now.minusDays(4),
                 now.minusDays(3)
             )
             val closedEvent = UketEventRandomUtil.createUketEvent(
-                uketEventRounds3,
-                listOf()
+                uketEventRounds3
             )
             entityManager.persist(closedEvent)
 
@@ -186,41 +183,38 @@ class UketEventRepositoryTest(
             val now = LocalDateTime.now()
 
             val uketEventRounds1 =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                UketEventRandomUtil.createUketEventRounds(
                     listOf(now.plusDays(3), now.plusDays(4)),
                     now.minusDays(2),
                     now.plusDays(2)
                 )
             val uketEvent1 =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds1,
-                    listOf()
+                    uketEventRounds1
                 )
             entityManager.persist(uketEvent1)
 
             val uketEventRounds2 =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                UketEventRandomUtil.createUketEventRounds(
                     listOf(now.plusDays(7), now.plusDays(8)),
                     now.minusDays(3),
                     now.plusDays(3)
                 )
             val uketEvent2 =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds2,
-                    listOf()
+                    uketEventRounds2
                 )
             entityManager.persist(uketEvent2)
 
             val uketEventRounds3 =
-                UketEventRandomUtil.createUketEventsRoundsWithDate(
+                UketEventRandomUtil.createUketEventRounds(
                     listOf(now.plusDays(5)),
                     now.minusDays(4),
                     now.plusDays(4)
                 )
             val uketEvent3 =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds3,
-                    listOf()
+                    uketEventRounds3
                 )
             entityManager.persist(uketEvent3)
 
