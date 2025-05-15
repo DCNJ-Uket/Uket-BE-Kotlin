@@ -21,7 +21,7 @@ class EntryGroupServiceTest :
         val entryGroupRepository: EntryGroupRepository = mockk<EntryGroupRepository>()
         val entryGroupService: EntryGroupService = EntryGroupService(entryGroupRepository)
 
-        describe("입장 그룹 목록 조회") {
+        describe("findAllValidByRoundIdAndStarDateAfter") {
             context("입장 그룹 하나는 지금, 하나는 티켓 품절, 하나는 한 시간 뒤일 때") {
                 val now = LocalDateTime.now()
                 val (uketEvent, uketEventRound, entryGroups) = setDB(now)
