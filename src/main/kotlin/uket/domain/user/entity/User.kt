@@ -7,11 +7,15 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import uket.domain.BaseTimeEntity
 import uket.domain.user.enums.Platform
 
 @Entity
-@Table(name = "users")
+@Table(
+    name = "users",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["platform", "platform_id"])]
+)
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
