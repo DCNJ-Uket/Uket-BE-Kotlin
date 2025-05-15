@@ -27,4 +27,11 @@ class PaymentService(
             )
         return payment
     }
+
+    @Transactional(readOnly = true)
+    fun getByUketEventId(uketEventId: Long): Payment {
+        val payment = paymentRepository.findByUketEventId(uketEventId)
+            ?: throw IllegalStateException("해당 결제 정보를 찾을 수 없습니다")
+        return payment
+    }
 }

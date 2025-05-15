@@ -8,6 +8,7 @@ data class AdminWithOrganizationDto(
     val organizationName: String,
     val name: String,
     val email: String,
+    val phoneNumber: String,
     var password: String?,
     val isSuperAdmin: Boolean,
 ) {
@@ -18,6 +19,7 @@ data class AdminWithOrganizationDto(
             organizationName = admin.organization.name,
             name = admin.name,
             email = admin.email,
+            phoneNumber = admin.phoneNumber,
             password = admin.password,
             isSuperAdmin = admin.isSuperAdmin,
         )

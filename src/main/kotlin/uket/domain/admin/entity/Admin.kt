@@ -21,6 +21,7 @@ class Admin(
     val organization: Organization,
     val name: String,
     val email: String,
+    val phoneNumber: String,
     var password: String?,
     val isSuperAdmin: Boolean,
 ) : BaseTimeEntity() {

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.common.PublicException
 import uket.domain.admin.dto.AdminWithOrganizationDto
-import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.repository.AdminRepository
@@ -47,27 +46,20 @@ class AdminService(
     }
 
     @Transactional
-    fun registerAdmin(registerAdminCommand: RegisterAdminCommand) {
-        check(adminRepository.existsByEmail(registerAdminCommand.email).not()) { "이미 가입된 어드민입니다." }
-
-        val admin = Admin(
-            organization = registerAdminCommand.organization,
-            name = registerAdminCommand.name,
-            email = registerAdminCommand.email,
-            isSuperAdmin = false,
-            password = registerAdminCommand.password,
-        )
-
-        adminRepository.save(admin)
-    }
-
-    fun registerAdminWithoutPassword(name: String, email: String, isSuperAdmin: Boolean, organization: Organization): Admin {
+    fun registerAdminWithoutPassword(
+        name: String,
+        email: String,
+        phoneNumber: String,
+        isSuperAdmin: Boolean,
+        organization: Organization,
+    ): Admin {
         check(adminRepository.existsByEmail(email).not()) { "이미 가입된 어드민입니다." }
 
         val admin = Admin(
             organization = organization,
             name = name,
             email = email,
+            phoneNumber = phoneNumber,
             isSuperAdmin = isSuperAdmin,
             password = null,
         )
