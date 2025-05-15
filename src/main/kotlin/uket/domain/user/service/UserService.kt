@@ -35,6 +35,7 @@ class UserService(
 
         if (existUser != null) {
             updateProfileOfExistUser(createUserCommand, existUser)
+            return existUser
         }
 
         val newUser: User = User(
@@ -77,6 +78,9 @@ class UserService(
 
     private fun updateProfileOfExistUser(createUserCommand: CreateUserCommand, existUser: User) {
         existUser.updateProfile(createUserCommand.email, createUserCommand.name, createUserCommand.profileImage)
+        println(existUser.id)
+        println(existUser.email)
+        println(existUser.name)
         userRepository.save(existUser)
     }
 }
