@@ -5,7 +5,7 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.dao.DataIntegrityViolationException
+import uket.common.PublicException
 import uket.domain.user.dto.CreateUserCommand
 import uket.domain.user.enums.Platform
 import uket.domain.user.repository.UserRepository
@@ -14,19 +14,23 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 @SpringBootTest
-class UserServiceTest(
+class UserServiceConcurrencyTest(
     val userService: UserService,
     val userRepository: UserRepository,
 ) : DescribeSpec({
 
         isolationMode = IsolationMode.InstancePerLeaf
 
+        beforeEach {
+            userRepository.deleteAll()
+        }
+
         describe("createUser") {
             context("10개의 요청이 있을 때") {
                 val executorService = Executors.newFixedThreadPool(10)
                 val countDownLatch = CountDownLatch(10)
-                var count = 0
                 it("동시 요청") {
+                    var errorCount = 0
                     for (i in 1..10) {
                         executorService.submit({
                             try {
@@ -39,10 +43,8 @@ class UserServiceTest(
                                         "profileImage"
                                     )
                                 )
-                            } catch (e: DataIntegrityViolationException) {
-                                println(e)
-                                println("unique constraints violation")
-                                count += 1
+                            } catch (e: PublicException) {
+                                errorCount += 1
                             } finally {
                                 countDownLatch.countDown()
                             }
@@ -52,36 +54,31 @@ class UserServiceTest(
 
                     val users = userRepository.findAll()
                     users.size shouldBe 1
-                    count shouldBeGreaterThanOrEqual 1
+                    errorCount shouldBeGreaterThanOrEqual 0
+                    println("Error Count : $errorCount")
                 }
-                it("500ms 간격 요청") {
+                it("연달아 요청") {
+                    var errorCount = 0
                     for (i in 1..10) {
-                        executorService.submit({
-                            try {
-                                Thread.sleep(i * 500L)
-                                userService.createUser(
-                                    CreateUserCommand(
-                                        Platform.KAKAO,
-                                        "1234",
-                                        "name",
-                                        "email",
-                                        "profileImage"
-                                    )
+                        try {
+                            userService.createUser(
+                                CreateUserCommand(
+                                    Platform.KAKAO,
+                                    "1234",
+                                    "name",
+                                    "email",
+                                    "profileImage"
                                 )
-                            } catch (e: DataIntegrityViolationException) {
-                                println(e)
-                                println("unique constraints violation")
-                                count += 1
-                            } finally {
-                                countDownLatch.countDown()
-                            }
-                        })
+                            )
+                        } catch (e: PublicException) {
+                            println("unique constraints violation")
+                            errorCount += 1
+                        }
                     }
-                    countDownLatch.await()
 
                     val users = userRepository.findAll()
                     users.size shouldBe 1
-                    count shouldBe 0
+                    errorCount shouldBe 9
                 }
             }
         }

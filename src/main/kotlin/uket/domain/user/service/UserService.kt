@@ -1,9 +1,12 @@
 package uket.domain.user.service
 
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import uket.common.ErrorLevel
+import uket.common.PublicException
 import uket.domain.user.dto.CreateUserCommand
 import uket.domain.user.dto.RegisterUserCommand
 import uket.domain.user.entity.User
@@ -46,7 +49,16 @@ class UserService(
             profileImage = createUserCommand.profileImage,
         )
 
-        return userRepository.save(newUser)
+        try {
+            return userRepository.save(newUser)
+        } catch (e: DataIntegrityViolationException) {
+            throw PublicException(
+                publicMessage = "로그인 중 오류가 발생했습니다 재 시도 해주세요",
+                systemMessage = "[UserService] 유저 동시 생성 | platform : ${newUser.platform}, platformId : ${newUser.platformId}",
+                title = "유저 동시 생성 시도",
+                errorLevel = ErrorLevel.ERROR
+            )
+        }
     }
 
     /*
@@ -78,9 +90,6 @@ class UserService(
 
     private fun updateProfileOfExistUser(createUserCommand: CreateUserCommand, existUser: User) {
         existUser.updateProfile(createUserCommand.email, createUserCommand.name, createUserCommand.profileImage)
-        println(existUser.id)
-        println(existUser.email)
-        println(existUser.name)
         userRepository.save(existUser)
     }
 }
