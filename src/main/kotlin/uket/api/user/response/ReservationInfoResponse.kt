@@ -1,4 +1,4 @@
-package uket.uket.api.user.response
+package uket.api.user.response
 
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound

@@ -1,4 +1,4 @@
-package uket.uket.domain.terms.repository
+package uket.domain.terms.repository
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate

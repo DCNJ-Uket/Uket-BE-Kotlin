@@ -8,19 +8,19 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import uket.common.PublicException
+import uket.domain.terms.dto.TermsAgreeAnswer
 import uket.domain.terms.entity.Document
 import uket.domain.terms.entity.TermSign
 import uket.domain.terms.entity.Terms
 import uket.domain.terms.enums.TermsType
 import uket.domain.terms.repository.DocumentRepository
+import uket.domain.terms.repository.TermSignJdbcRepository
 import uket.domain.terms.repository.TermSignRepository
 import uket.domain.terms.repository.TermsRepository
 import uket.domain.terms.service.DocumentService
 import uket.domain.terms.service.TermSignService
 import uket.domain.terms.service.TermsService
-import uket.uket.domain.terms.dto.TermsAgreeAnswer
-import uket.uket.domain.terms.repository.TermSignJdbcRepository
-import uket.uket.facade.TermsDocumentFacade
+import uket.facade.TermsDocumentFacade
 import java.time.LocalDateTime
 
 class TermsDocumentFacadeTest :

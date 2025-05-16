@@ -1,4 +1,4 @@
-package uket.uket.facade
+package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

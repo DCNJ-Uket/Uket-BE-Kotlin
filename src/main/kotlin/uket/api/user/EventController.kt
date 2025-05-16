@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uket.api.user.request.EventListQueryType
 import uket.api.user.response.ActiveEventsResponse
+import uket.api.user.response.EntryGroupListItemResponse
 import uket.api.user.response.EventDetailResponse
+import uket.api.user.response.EventRoundListItemResponse
+import uket.api.user.response.ReservationInfoResponse
 import uket.common.response.ListResponse
 import uket.domain.admin.service.OrganizationService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
-import uket.uket.api.user.response.EntryGroupListItemResponse
-import uket.uket.api.user.response.EventRoundListItemResponse
-import uket.uket.api.user.response.ReservationInfoResponse
-import uket.uket.facade.UketEventFacade
+import uket.facade.UketEventFacade
 import java.time.LocalDateTime
 
 @Tag(name = "행사 관련 API", description = "행사 관련 API 입니다")
