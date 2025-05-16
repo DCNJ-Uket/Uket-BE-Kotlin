@@ -10,7 +10,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
-import uket.domain.admin.dto.RegisterAdminCommand
 import uket.domain.admin.dto.RegisterAdminWithoutPasswordCommand
 import uket.domain.admin.entity.Admin
 import uket.domain.admin.entity.Organization
@@ -38,6 +37,7 @@ class AdminServiceTest :
             organization = organization1,
             name = "adminA",
             email = "emailA",
+            phoneNumber = "01012345678",
             password = "passwordA",
             isSuperAdmin = false,
         )
@@ -46,6 +46,7 @@ class AdminServiceTest :
             organization = organization2,
             name = "adminB",
             email = "emailB",
+            phoneNumber = "01012345678",
             password = "passwordB",
             isSuperAdmin = false,
         )
@@ -135,36 +136,12 @@ class AdminServiceTest :
             }
         }
 
-        describe("Admin 생성 요청") {
-            val registerAdminCommand: RegisterAdminCommand = RegisterAdminCommand(
-                organization = organization1,
-                name = "newAdmin",
-                email = "newEmail",
-                password = "newPassword",
-            )
-            context("Admin이 이미 존재하지 않으면") {
-                every { adminRepository.existsByEmail(registerAdminCommand.email) } returns false
-                every { adminRepository.save(any()) } returns null
-                it("Admin을 생성한다") {
-                    adminService.registerAdmin(registerAdminCommand)
-                    verify(exactly = 1) { adminRepository.save(any()) }
-                }
-            }
-            context("Admin이 이미 존재하면") {
-                every { adminRepository.existsByEmail(registerAdminCommand.email) } returns true
-                it("예외를 던진다") {
-                    val exception =
-                        shouldThrow<IllegalStateException> { adminService.registerAdmin(registerAdminCommand) }
-                    exception.message shouldBe "이미 가입된 어드민입니다."
-                }
-            }
-        }
-
         describe("비밀번호가 없는 Admin 생성 요청") {
             val registerAdminWithoutPasswordCommand: RegisterAdminWithoutPasswordCommand = RegisterAdminWithoutPasswordCommand(
                 organization = "organizationA",
                 name = "adminB",
                 email = "emailB",
+                phoneNumber = "01012345678",
                 isSuperAdmin = false,
             )
             context("Admin이 이미 존재하지 않으면") {
@@ -174,6 +151,7 @@ class AdminServiceTest :
                     adminService.registerAdminWithoutPassword(
                         registerAdminWithoutPasswordCommand.name,
                         registerAdminWithoutPasswordCommand.email,
+                        registerAdminWithoutPasswordCommand.phoneNumber,
                         registerAdminWithoutPasswordCommand.isSuperAdmin,
                         organization1
                     )
@@ -188,6 +166,7 @@ class AdminServiceTest :
                             adminService.registerAdminWithoutPassword(
                                 registerAdminWithoutPasswordCommand.name,
                                 registerAdminWithoutPasswordCommand.email,
+                                registerAdminWithoutPasswordCommand.phoneNumber,
                                 registerAdminWithoutPasswordCommand.isSuperAdmin,
                                 organization1
                             )

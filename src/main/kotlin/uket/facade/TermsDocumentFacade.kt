@@ -1,13 +1,14 @@
-package uket.uket.facade
+package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.domain.terms.dto.CheckRequiredTerms
+import uket.domain.terms.dto.TermsAgreeAnswer
 import uket.domain.terms.entity.TermSign
+import uket.domain.terms.enums.TermsType
 import uket.domain.terms.service.DocumentService
 import uket.domain.terms.service.TermSignService
 import uket.domain.terms.service.TermsService
-import uket.uket.domain.terms.dto.CheckRequiredTerms
-import uket.uket.domain.terms.dto.TermsAgreeAnswer
 
 @Service
 class TermsDocumentFacade(
@@ -22,17 +23,25 @@ class TermsDocumentFacade(
         val documentsMap = documentService.getDocumentMapByDocumentNo(activeTerms)
         val termSignMap = termSignService.getLatestTermSignMap(activeTerms, userId)
 
-        return activeTerms.mapNotNull {
-            val latestDocument = documentsMap[it.documentNo] ?: throw IllegalStateException("해당 documentNo에 대한 document가 존재하지 않습니다.")
-
-            // 약관에 대한 동의 여부가 없는 경우
-            val termSign = termSignMap[it.id] ?: return@mapNotNull CheckRequiredTerms.of(it, latestDocument)
-
-            // 최신 약관문에 대한 동의 여부가 없는 경우
-            if (termSign.document.version < latestDocument.version) {
-                return@mapNotNull CheckRequiredTerms.of(it, latestDocument)
+        val checkRequiredTerms = activeTerms
+            .filter {
+                val latestDocument = documentsMap[it.documentNo]
+                    ?: throw IllegalStateException("해당 documentNo에 대한 document가 존재하지 않습니다.")
+                val termSign = termSignMap[it.id]
+                // 약관에 대한 동의 여부가 없거나 최신 약관문에 대한 동의 여부가 없는 경우
+                termSign == null || termSign.document.version < latestDocument.version
+            }.map {
+                val latestDocument = documentsMap[it.documentNo]!!
+                CheckRequiredTerms.of(it, latestDocument)
             }
-            return@mapNotNull null
+
+        return checkRequiredTerms.sortedWith(mandatoryFirstComparator())
+    }
+
+    private fun mandatoryFirstComparator(): Comparator<CheckRequiredTerms> = compareBy {
+        when (it.termsType) {
+            TermsType.MANDATORY -> 1
+            else -> 2
         }
     }
 
