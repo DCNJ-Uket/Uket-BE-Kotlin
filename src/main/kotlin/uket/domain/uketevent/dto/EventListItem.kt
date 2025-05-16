@@ -1,5 +1,6 @@
 package uket.domain.uketevent.dto
 
+import uket.common.aop.imageUrl.ImagePath
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.enums.TicketingStatus
@@ -8,7 +9,7 @@ import java.time.LocalDateTime
 data class EventListItem(
     val eventId: Long,
     val eventName: String,
-    val eventThumbnailImagePath: String,
+    @ImagePath val eventThumbnailImagePath: String,
     val eventStartDate: LocalDateTime,
     val eventEndDate: LocalDateTime,
     val ticketingStartDate: LocalDateTime,

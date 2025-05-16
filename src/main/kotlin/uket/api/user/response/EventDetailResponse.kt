@@ -1,5 +1,6 @@
 package uket.api.user.response
 
+import uket.common.aop.imageUrl.ImagePath
 import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
 import uket.domain.uketevent.entity.Banner
@@ -13,7 +14,7 @@ data class EventDetailResponse(
     val firstRoundStartDateTime: LocalDateTime,
     val lastRoundStartDateTime: LocalDateTime,
     val information: String,
-    val detailImagePath: String,
+    @ImagePath val detailImagePath: String,
     val banners: List<EventDetailBannerDto>,
     val caution: String,
     val organizationName: String,
@@ -21,12 +22,12 @@ data class EventDetailResponse(
     val location: String,
 ) {
     data class EventDetailBannerDto(
-        val imageId: Long,
+        @ImagePath val imagePath: Long,
         val link: String,
     ) {
         companion object {
             fun from(banner: Banner): EventDetailBannerDto = EventDetailBannerDto(
-                imageId = banner.imageId,
+                imagePath = banner.imageId,
                 link = banner.link
             )
         }

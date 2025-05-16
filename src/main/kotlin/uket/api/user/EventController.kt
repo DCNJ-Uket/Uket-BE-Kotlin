@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uket.api.user.request.EventListQueryType
-import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EntryGroupListItemResponse
 import uket.api.user.response.EventDetailResponse
 import uket.api.user.response.EventRoundListItemResponse
@@ -16,6 +15,7 @@ import uket.api.user.response.ReservationInfoResponse
 import uket.common.response.ListResponse
 import uket.domain.admin.service.OrganizationService
 import uket.domain.payment.service.PaymentService
+import uket.domain.uketevent.dto.EventListItem
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.UketEventFacade
@@ -34,10 +34,10 @@ class EventController(
     @GetMapping("/uket-events")
     fun getEvents(
         @RequestParam("type") type: EventListQueryType,
-    ): ResponseEntity<ActiveEventsResponse> {
+    ): ResponseEntity<ListResponse<EventListItem>> {
         val now = LocalDateTime.now()
         val itemList = uketEventFacade.getNowActiveEventItemList(type.name, now)
-        return ResponseEntity.ok(ActiveEventsResponse(itemList))
+        return ResponseEntity.ok(ListResponse(itemList))
     }
 
     @Operation(summary = "행사 상세 정보 조회", description = "누구나 조회 가능한 행사의 상세 정보를 가져옵니다")
