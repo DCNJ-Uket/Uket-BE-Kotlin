@@ -1,4 +1,4 @@
-package uket.uket.domain.terms.dto
+package uket.domain.terms.dto
 
 import uket.domain.terms.entity.Document
 import uket.domain.terms.entity.Terms

@@ -1,7 +1,7 @@
 package uket.api.user.response
 
+import uket.domain.terms.dto.CheckRequiredTerms
 import uket.domain.terms.enums.TermsType
-import uket.uket.domain.terms.dto.CheckRequiredTerms
 
 data class TermsResponse(
     val termsId: Long,

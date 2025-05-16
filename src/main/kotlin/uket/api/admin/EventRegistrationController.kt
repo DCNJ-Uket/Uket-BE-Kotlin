@@ -29,8 +29,8 @@ import uket.common.toEnum
 import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
 import uket.domain.eventregistration.service.EventRegistrationService
+import uket.domain.eventregistration.service.EventRegistrationStatusStateResolver
 import uket.facade.S3ImageFacade
-import uket.uket.domain.eventregistration.service.EventRegistrationStatusStateResolver
 
 @Tag(name = "어드민 행사 관련 API", description = "어드민 행사 관련 API 입니다.")
 @RestController

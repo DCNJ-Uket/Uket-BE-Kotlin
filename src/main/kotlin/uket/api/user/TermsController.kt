@@ -13,9 +13,9 @@ import uket.api.user.response.TermsAgreeResponse
 import uket.api.user.response.TermsResponse
 import uket.auth.config.userId.LoginUserId
 import uket.common.response.ListResponse
+import uket.domain.terms.dto.TermsAgreeAnswer
 import uket.domain.terms.entity.TermSign
-import uket.uket.domain.terms.dto.TermsAgreeAnswer
-import uket.uket.facade.TermsDocumentFacade
+import uket.facade.TermsDocumentFacade
 
 @Tag(name = "약관 관련 API", description = "약관 관련 API 입니다")
 @RestController
