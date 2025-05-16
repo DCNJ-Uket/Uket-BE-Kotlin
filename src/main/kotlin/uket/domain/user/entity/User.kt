@@ -6,12 +6,16 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import uket.domain.BaseTimeEntity
 import uket.domain.user.enums.Platform
 
 @Entity
-@Table(name = "users")
+@Table(
+    name = "users",
+    indexes = [Index(name = "idx_user_platform_id_platform", columnList = "platform_id, platform", unique = true)]
+)
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
