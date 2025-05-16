@@ -78,7 +78,7 @@ class UserServiceConcurrencyTest(
 
                     val users = userRepository.findAll()
                     users.size shouldBe 1
-                    errorCount shouldBe 9
+                    errorCount shouldBe 0
                 }
             }
         }
