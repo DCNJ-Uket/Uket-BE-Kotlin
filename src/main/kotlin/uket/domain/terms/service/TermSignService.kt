@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.terms.entity.TermSign
 import uket.domain.terms.entity.Terms
+import uket.domain.terms.repository.TermSignJdbcRepository
 import uket.domain.terms.repository.TermSignRepository
-import uket.uket.domain.terms.repository.TermSignJdbcRepository
 
 @Service
 @Transactional(readOnly = true)

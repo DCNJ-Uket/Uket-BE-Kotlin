@@ -1,4 +1,4 @@
-package uket.uket.domain.terms.dto
+package uket.domain.terms.dto
 
 data class TermsAgreeAnswer(
     val termsId: Long,

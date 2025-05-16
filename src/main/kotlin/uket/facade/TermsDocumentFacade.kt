@@ -1,14 +1,14 @@
-package uket.uket.facade
+package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.domain.terms.dto.CheckRequiredTerms
+import uket.domain.terms.dto.TermsAgreeAnswer
 import uket.domain.terms.entity.TermSign
 import uket.domain.terms.enums.TermsType
 import uket.domain.terms.service.DocumentService
 import uket.domain.terms.service.TermSignService
 import uket.domain.terms.service.TermsService
-import uket.uket.domain.terms.dto.CheckRequiredTerms
-import uket.uket.domain.terms.dto.TermsAgreeAnswer
 
 @Service
 class TermsDocumentFacade(
