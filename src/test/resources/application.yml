@@ -62,6 +62,8 @@ app:
     width: 300
     height: 300
     type: png
+  s3:
+    deploy-url: "test.url"
 
 logging:
   level:

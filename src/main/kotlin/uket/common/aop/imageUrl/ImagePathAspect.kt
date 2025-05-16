@@ -11,11 +11,8 @@ import uket.common.response.ListResponse
 @Aspect
 @Component
 class ImagePathAspect {
-    @Value("\${spring.cloud.aws.s3.bucket}")
-    lateinit var bucketName: String
-
-    @Value("\${spring.cloud.aws.s3.region}")
-    lateinit var region: String
+    @Value("\${app.s3.deploy-url}")
+    lateinit var deployPath: String
 
     @Around("execution(* uket.api..*Controller.*(..))")
     fun imageUrlReturnValue(joinPoint: ProceedingJoinPoint): Any? {
@@ -40,7 +37,7 @@ class ImagePathAspect {
             if (prop.isAnnotationPresent(ImagePath::class.java)) {
                 prop.isAccessible = true
                 val value = prop.get(body)
-                prop.set(body, "https://$bucketName.s3.$region/images/$value")
+                prop.set(body, "$deployPath$value")
             }
         }
     }
