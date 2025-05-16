@@ -230,7 +230,7 @@ class UketEventRepositoryTest(
         private fun setDB(entityManager: EntityManager): Long {
             val organization = Organization(
                 name = "organizationA",
-                organizationImagePath = null,
+                organizationImageId = null,
             )
             entityManager.persist(organization)
 

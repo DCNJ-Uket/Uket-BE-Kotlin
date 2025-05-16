@@ -25,12 +25,12 @@ class AdminServiceTest :
         val organization1: Organization = Organization(
             id = 1L,
             name = "organizationA",
-            organizationImagePath = "imagePathA",
+            organizationImageId = "imagePathA",
         )
         val organization2: Organization = Organization(
             id = 2L,
             name = "organizationB",
-            organizationImagePath = "imagePathB",
+            organizationImageId = "imagePathB",
         )
         val admin1: Admin = Admin(
             id = 1L,

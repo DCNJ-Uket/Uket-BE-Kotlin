@@ -13,7 +13,7 @@ data class EventDetailResponse(
     val firstRoundStartDateTime: LocalDateTime,
     val lastRoundStartDateTime: LocalDateTime,
     val information: String,
-    val detailImagePath: String,
+    val detailImageId: String,
     val banners: List<EventDetailBannerDto>,
     val caution: String,
     val organizationName: String,
@@ -42,7 +42,7 @@ data class EventDetailResponse(
             location = uketEvent.location,
             banners = uketEvent.banners.map { EventDetailBannerDto.from(it) },
             information = uketEvent.details.information,
-            detailImagePath = uketEvent.eventImageId,
+            detailImageId = uketEvent.eventImageId,
             caution = uketEvent.details.caution,
             organizationName = organization.name,
             contact = uketEvent.details.contact

@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class EventListItem(
     val eventId: Long,
     val eventName: String,
-    val eventThumbnailImagePath: String,
+    val eventThumbnailImageId: String,
     val eventStartDate: LocalDateTime,
     val eventEndDate: LocalDateTime,
     val ticketingStartDate: LocalDateTime,
@@ -19,7 +19,7 @@ data class EventListItem(
         fun of(event: UketEvent, ticketingStatus: TicketingStatus, uketEventRounds: List<UketEventRound>): EventListItem = EventListItem(
             eventId = event.id,
             eventName = event.eventName,
-            eventThumbnailImagePath = event.thumbnailImageId,
+            eventThumbnailImageId = event.thumbnailImageId,
             eventStartDate = event.firstRoundDateTime,
             eventEndDate = event.lastRoundDateTime,
             ticketingStartDate = uketEventRounds.minOf { it.ticketingStartDateTime },
