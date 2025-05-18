@@ -242,6 +242,7 @@ class UketEventRepositoryTest(
                 location = "locationA",
                 ticketPrice = 1000,
                 totalTicketCount = 0,
+                buyTicketLimit = 4,
                 details = UketEvent.EventDetails(
                     "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")
                 ),
