@@ -38,13 +38,12 @@ class EntryGroup(
     @Column(name = "total_ticket_count")
     var totalTicketCount: Int,
 ) : BaseTimeEntity() {
-    fun increaseReservedCount(count: Int): Boolean {
+    fun increaseReservedCount(count: Int) {
         if (this.ticketCount + count > this.totalTicketCount) {
-            return false
+            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 부족합니다.")
         }
 
         this.ticketCount += count
-        return true
     }
 
     fun decreaseReservedCount(): Boolean {

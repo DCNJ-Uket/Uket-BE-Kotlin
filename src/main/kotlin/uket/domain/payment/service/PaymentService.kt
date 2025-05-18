@@ -29,8 +29,8 @@ class PaymentService(
     }
 
     @Transactional(readOnly = true)
-    fun getByEntryGroupId(entryGroupId: Long): Payment {
-        val payment = paymentRepository.findByEntryGroupId(entryGroupId)
+    fun getByEventId(eventId: Long): Payment {
+        val payment = paymentRepository.findByEventId(eventId)
             ?: throw IllegalStateException("해당 결제 정보를 찾을 수 없습니다")
         return payment
     }
