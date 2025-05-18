@@ -42,6 +42,9 @@ class UketEvent(
     @Column(name = "ticket_price")
     val ticketPrice: Int,
 
+    @Column(name = "buy_ticket_limit")
+    val buyTicketLimit: Int,
+
     @Embedded
     val details: EventDetails,
 

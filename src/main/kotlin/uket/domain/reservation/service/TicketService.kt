@@ -44,7 +44,7 @@ class TicketService(
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
         val tickets = mutableListOf<Ticket>()
         for (i in 1..count) {
-            val ticket: Ticket = Ticket(
+            val ticket = Ticket(
                 userId = createTicketCommand.userId,
                 entryGroupId = createTicketCommand.entryGroupId,
                 status = createTicketCommand.ticketStatus,

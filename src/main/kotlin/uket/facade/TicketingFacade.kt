@@ -20,37 +20,36 @@ class TicketingFacade(
     private val ticketService: TicketService,
     private val entryGroupService: EntryGroupService,
 ) {
-    private final val MAX_TICKETING_COUNT_PER_USER = 4
-
     @DistributedLock(key = "#entryGroupId")
-    fun ticketing(userId: Long, entryGroupId: Long, ticketCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
-        validateTicketCount(ticketCount)
+    fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
+        validateTicketCount(buyCount)
 
         val entryGroup = entryGroupService.getByIdWithUketEventRoundAndUketEvent(entryGroupId)
         val eventRound = entryGroup.uketEventRound
         validateTicketingDateTime(eventRound, entryGroup, at)
 
         val user = userService.getById(userId)
-        validateTicketingCount(user.id, eventRound.id, ticketCount)
+        val event = eventRound.uketEvent!!
+        validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
 
-        entryGroupService.increaseReservedCount(entryGroup.id, ticketCount)
-        return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, friend), ticketCount)
+        entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
+        return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, friend), buyCount)
     }
 
-    private fun validateTicketCount(ticketCount: Int) {
-        check(ticketCount > 0) {
+    private fun validateTicketCount(buyCount: Int) {
+        check(buyCount > 0) {
             throw IllegalStateException("예매 티켓 개수는 1개 이상이어야 합니다.")
         }
     }
 
-    private fun validateTicketingCount(userId: Long, eventRoundId: Long, ticketCount: Int) {
-        val tickets = ticketService.findAllActiveByUserAndEventRound(userId, eventRoundId)
-        if (tickets.size + ticketCount > MAX_TICKETING_COUNT_PER_USER) {
+    private fun validateTicketingCount(userId: Long, eventRoundId: Long, buyCount: Int, buyTicketLimit: Int) {
+        val activeTickets = ticketService.findAllActiveByUserAndEventRound(userId, eventRoundId)
+        if (activeTickets.size + buyCount > buyTicketLimit) {
             throw PublicException(
                 publicMessage = "최대 예매 가능한 티켓 개수를 초과했습니다.",
-                systemMessage = "[TicketingFacade] 최대 예매 가능 개수(${MAX_TICKETING_COUNT_PER_USER}) 초과 예매 시도",
-                title = "최대 예매 가능 개수(${MAX_TICKETING_COUNT_PER_USER}) 초과 예매 시도",
-                errorLevel = ErrorLevel.ERROR
+                systemMessage = "[TicketingFacade] 최대 예매 가능 개수($buyTicketLimit) 초과 예매 시도",
+                title = "최대 예매 가능 개수($buyTicketLimit) 초과 예매 시도",
+                errorLevel = ErrorLevel.WARN
             )
         }
     }
