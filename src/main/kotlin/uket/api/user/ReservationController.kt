@@ -32,9 +32,9 @@ class ReservationController(
         request: TicketingRequest,
     ): ResponseEntity<TicketingResponse> {
         val now = LocalDateTime.now()
-        val tickets = ticketingFacade.ticketing(userId, request.entryGroupId, request.ticketCount, request.friend, now)
-        val payment = paymentService.getByEntryGroupId(request.entryGroupId)
+        val tickets = ticketingFacade.ticketing(userId, request.entryGroupId, request.buyCount, request.friend, now)
         val event = uketEventService.getEventByEntryGroupId(request.entryGroupId)
+        val payment = paymentService.getByEventId(event.id)
 
         return ResponseEntity.ok(
             TicketingResponse(

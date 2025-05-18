@@ -35,11 +35,7 @@ class EntryGroupService(
     @Transactional
     fun increaseReservedCount(entryGroupId: Long, count: Int) {
         val entryGroup = this.getById(entryGroupId)
-        val isSuccess = entryGroup.increaseReservedCount(count)
-
-        check(isSuccess) {
-            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
-        }
+        entryGroup.increaseReservedCount(count)
         entryGroupRepository.save(entryGroup)
     }
 
