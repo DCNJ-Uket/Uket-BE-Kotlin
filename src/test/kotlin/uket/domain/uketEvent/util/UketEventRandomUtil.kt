@@ -19,6 +19,7 @@ class UketEventRandomUtil {
         ): UketEvent {
             val easyRandom = EasyRandom(
                 EasyRandomParameters()
+                    .randomize(named("organizationId")) { 1L }
                     .randomize(named("id")) { id }
                     .randomize(named("eventName")) { eventName }
                     .randomize(named("banners")) {
@@ -44,6 +45,10 @@ class UketEventRandomUtil {
                         uketEventRounds.minOf { it.eventRoundDateTime }
                     }.randomize(named("lastRoundDateTime")) {
                         uketEventRounds.maxOf { it.eventRoundDateTime }
+                    }.randomize(named("buyTicketLimit")) {
+                        4
+                    }.randomize(named("ticketPrice")) {
+                        1000
                     }
             )
             val uketEvent = easyRandom.nextObject(UketEvent::class.java)
