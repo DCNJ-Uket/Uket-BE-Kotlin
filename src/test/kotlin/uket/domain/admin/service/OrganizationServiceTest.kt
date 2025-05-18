@@ -20,11 +20,11 @@ class OrganizationServiceTest :
 
         val organization1: Organization = Organization(
             name = "organizationA",
-            organizationImagePath = "imagePathA",
+            organizationImageId = "imagePathA",
         )
         val organization2: Organization = Organization(
             name = "organizationB",
-            organizationImagePath = "imagePathB",
+            organizationImageId = "imagePathB",
         )
 
         describe("Organization을 ID로 조회") {

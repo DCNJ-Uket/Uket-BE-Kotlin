@@ -14,5 +14,5 @@ class Organization(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
     val name: String,
-    val organizationImagePath: String?,
+    val organizationImageId: String?,
 ) : BaseTimeEntity()
