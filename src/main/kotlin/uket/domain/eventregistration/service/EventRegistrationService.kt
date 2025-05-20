@@ -34,6 +34,7 @@ class EventRegistrationService(
 
         Hibernate.initialize(eventRegistration.eventRound)
         Hibernate.initialize(eventRegistration.entryGroup)
+        Hibernate.initialize(eventRegistration.banners)
 
         return eventRegistration
     }
