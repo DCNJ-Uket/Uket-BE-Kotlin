@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,6 +13,7 @@ import uket.api.user.request.LoginRequest
 import uket.api.user.request.TokenReissueRequest
 import uket.api.user.request.UserRegisterRequest
 import uket.api.user.response.AuthResponse
+import uket.api.user.response.UserInfoResponse
 import uket.api.user.response.UserTokenResponse
 import uket.auth.config.userId.LoginUserId
 import uket.auth.dto.UserAuthToken
@@ -74,5 +76,16 @@ class UserController(
         val response = AuthResponse.of(user, authToken)
 
         return ResponseEntity.ok(response)
+    }
+
+    @Operation(summary = "유저 정보 조회", description = "유저 정보를 조회합니다")
+    @GetMapping("/users/info")
+    fun getUserInfo(
+        @Parameter(hidden = true)
+        @LoginUserId
+        userId: Long,
+    ): ResponseEntity<UserInfoResponse> {
+        val user = userService.getById(userId)
+        return ResponseEntity.ok(UserInfoResponse.from(user))
     }
 }
