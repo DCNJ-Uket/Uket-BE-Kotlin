@@ -16,6 +16,7 @@ import uket.api.user.request.UserRegisterRequest
 import uket.api.user.response.AuthResponse
 import uket.api.user.response.UserDeleteResponse
 import uket.api.user.response.UserInfoResponse
+import uket.api.user.response.UserTicketResponse
 import uket.api.user.response.UserTokenResponse
 import uket.auth.config.userId.LoginUserId
 import uket.auth.dto.UserAuthToken

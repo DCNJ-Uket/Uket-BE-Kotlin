@@ -1,4 +1,4 @@
-package uket.api.user
+package uket.api.user.response
 
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
