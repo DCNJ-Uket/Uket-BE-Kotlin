@@ -79,3 +79,8 @@ app:
     width: 300
     height: 300
     type: png
+  message:
+    nhn:
+      app-key: ${MESSAGE_SERVICE_APP_KEY}
+      secret-key: ${MESSAGE_SERVICE_SECRET_KEY}
+      sender-key: ${MESSAGE_SERVICE_SENDER_KEY}

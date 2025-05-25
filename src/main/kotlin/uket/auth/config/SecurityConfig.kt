@@ -87,6 +87,8 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers("/api/v1/dev/token/registered")
                     .permitAll()
+                    .requestMatchers("/api/v1/dev/index")
+                    .permitAll()
             }.authorizeHttpRequests { registry ->
                 registry
                     .requestMatchers("/admin/users/login")
