@@ -27,7 +27,7 @@ class UketEventFacade(
     }
 
     @Transactional(readOnly = true)
-    fun findValidEntryGroupMap(eventId: Long, at: LocalDateTime): Map<UketEventRound, List<EntryGroup>> {
+    fun getValidEntryGroupMap(eventId: Long, at: LocalDateTime): Map<UketEventRound, List<EntryGroup>> {
         val uketEventRounds = uketEventRoundService.getNowTicketingRounds(eventId, at)
         val uketEventRoundIds = uketEventRounds.map { it.id }
 

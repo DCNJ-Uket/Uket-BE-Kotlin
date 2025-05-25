@@ -21,7 +21,6 @@ interface EntryGroupRepository : JpaRepository<EntryGroup, Long> {
             JOIN FETCH eg.uketEventRound uer
             WHERE uer.id IN :uketEventRoundIds
             AND eg.entryStartDateTime >= :at
-            AND eg.ticketCount < eg.totalTicketCount
         """
     )
     fun findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup>
