@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,6 +14,7 @@ import uket.api.user.request.LoginRequest
 import uket.api.user.request.TokenReissueRequest
 import uket.api.user.request.UserRegisterRequest
 import uket.api.user.response.AuthResponse
+import uket.api.user.response.UserDeleteResponse
 import uket.api.user.response.UserInfoResponse
 import uket.api.user.response.UserTokenResponse
 import uket.auth.config.userId.LoginUserId
@@ -87,5 +89,16 @@ class UserController(
     ): ResponseEntity<UserInfoResponse> {
         val user = userService.getById(userId)
         return ResponseEntity.ok(UserInfoResponse.from(user))
+    }
+
+    @Operation(summary = "유저 회원 탈퇴", description = "유저가 회원 탈퇴를 진행합니다")
+    @DeleteMapping("/users")
+    fun deleteUser(
+        @Parameter(hidden = true)
+        @LoginUserId
+        userId: Long,
+    ): ResponseEntity<UserDeleteResponse> {
+        userService.deleteUser(userId)
+        return ResponseEntity.ok(UserDeleteResponse(true, userId))
     }
 }
