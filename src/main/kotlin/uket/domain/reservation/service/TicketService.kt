@@ -34,13 +34,9 @@ class TicketService(
         return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
     }
 
-    fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> {
-        return ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
-    }
+    fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> = ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
 
-    fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> {
-        return ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
-    }
+    fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> = ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
 
     @Transactional
     fun publishTicket(createTicketCommand: CreateTicketCommand): Ticket {
@@ -102,6 +98,18 @@ class TicketService(
 
     fun findUserTickets(userId: Long): List<Ticket> {
         val tickets = ticketRepository.findAllByUserId(userId)
-        return tickets
+        val sortedTickets = tickets.sortedWith(ticketSortComparator())
+        return sortedTickets
+    }
+
+    private fun ticketSortComparator() = compareBy<Ticket> {
+        when (it.status) {
+            TicketStatus.BEFORE_ENTER -> 1
+            TicketStatus.BEFORE_PAYMENT -> 2
+            TicketStatus.FINISH_ENTER -> 3
+            TicketStatus.RESERVATION_CANCEL -> 4
+            TicketStatus.EXPIRED -> 5
+            else -> 6
+        }
     }
 }
