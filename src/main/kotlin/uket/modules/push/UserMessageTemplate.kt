@@ -11,6 +11,36 @@ sealed class UserMessageTemplate(
 
     abstract fun makeContext(command: Command): Map<String, String>
 
+    data object 예매완료알림톡 : UserMessageTemplate(
+        code = "uket_ticket_paid",
+        referrer = REFERRER_TICLET_PAID
+    ) {
+        private const val 예매내역목록_LINK_PATH = "ticket-list"
+
+        override fun makeContext(command: Command): Map<String, String> {
+            return with(command as 관람일당일안내Command) {
+                mapOf(
+                    "이름" to userName,
+                    "행사명" to eventName,
+                    "행사타입" to eventType,
+                    "행사일시" to 행사일시,
+                    "행사장소" to 행사장소,
+                    "예매번호" to ticketNo,
+                    LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
+                )
+            }
+        }
+
+        data class 관람일당일안내Command(
+            val userName: String,
+            val eventName: String,
+            val eventType: String,
+            val ticketNo: String,
+            val 행사일시: String,
+            val 행사장소: String,
+        ) : Command
+    }
+
     data object 관람일당일안내알림톡 : UserMessageTemplate(
         code = "uket_event_today",
         referrer = REFERRER_EVENT_TODAY
@@ -98,5 +128,6 @@ sealed class UserMessageTemplate(
         private const val REFERRER_TICKET_CANCEL = "NK3MiV1n"
         private const val REFERRER_EVENT_REMIND = "WjsTGIUz"
         private const val REFERRER_EVENT_TODAY = "3x0jJanU"
+        private const val REFERRER_TICLET_PAID = "RqqcPBKL"
     }
 }
