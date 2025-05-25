@@ -80,7 +80,7 @@ class EventController(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<ReservationInfoResponse> {
         val now = LocalDateTime.now()
-        val entryGroupMap = uketEventFacade.findValidEntryGroupMap(eventId, now)
+        val entryGroupMap = uketEventFacade.getValidEntryGroupMap(eventId, now)
         val roundResponses = entryGroupMap.keys.map { round ->
             val groups = entryGroupMap.get(round)
             val groupResponses = groups!!.map {
