@@ -16,10 +16,13 @@ import uket.api.user.request.UserRegisterRequest
 import uket.api.user.response.AuthResponse
 import uket.api.user.response.UserDeleteResponse
 import uket.api.user.response.UserInfoResponse
+import uket.api.user.response.UserTicketResponse
 import uket.api.user.response.UserTokenResponse
 import uket.auth.config.userId.LoginUserId
 import uket.auth.dto.UserAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
+import uket.common.response.ListResponse
+import uket.domain.reservation.service.TicketService
 import uket.domain.user.dto.RegisterUserCommand
 import uket.domain.user.enums.Platform
 import uket.domain.user.service.UserService
@@ -31,6 +34,7 @@ class UserController(
     private val userAuthFacade: UserAuthFacade,
     private val jwtAuthTokenUtil: JwtAuthTokenUtil,
     private val userService: UserService,
+    private val ticketService: TicketService,
 ) {
     @Operation(summary = "소셜 로그인", description = "소셜 로그인을 진행합니다.")
     @PostMapping("auth/login/{provider}")
@@ -89,6 +93,18 @@ class UserController(
     ): ResponseEntity<UserInfoResponse> {
         val user = userService.getById(userId)
         return ResponseEntity.ok(UserInfoResponse.from(user))
+    }
+
+    @Operation(summary = "유저 티켓 목록 조회", description = "유저의 보유 티켓 목록을 조회합니다")
+    @GetMapping("/users/tickets")
+    fun getUserTickets(
+        @Parameter(hidden = true)
+        @LoginUserId
+        userId: Long,
+    ): ResponseEntity<ListResponse<UserTicketResponse>> {
+        val tickets = ticketService.findUserTickets(userId)
+        val responses = tickets.map { UserTicketResponse.of(it) }
+        return ResponseEntity.ok(ListResponse<UserTicketResponse>(responses))
     }
 
     @Operation(summary = "유저 회원 탈퇴", description = "유저가 회원 탈퇴를 진행합니다")
