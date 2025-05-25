@@ -99,4 +99,9 @@ class TicketService(
             throw IllegalStateException("해당 사용자는 해당 티켓을 소유하고 있지 않습니다.")
         }
     }
+
+    fun findUserTickets(userId: Long): List<Ticket> {
+        val tickets = ticketRepository.findAllByUserId(userId)
+        return tickets
+    }
 }
