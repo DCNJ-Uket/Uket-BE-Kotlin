@@ -11,7 +11,6 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
-import java.lang.Boolean
 import java.util.UUID
 
 @Service
@@ -95,7 +94,9 @@ class TicketService(
     }
 
     fun checkTicketOwner(userId: Long, ticketId: Long) {
-        check(Boolean.FALSE != ticketRepository.existsByUserIdAndId(userId, ticketId)) { "해당 사용자는 해당 티켓을 소유하고 있지 않습니다." }
+        require(ticketRepository.existsByUserIdAndId(userId, ticketId)) {
+            "해당 사용자는 해당 티켓을 소유하고 있지 않습니다."
+        }
     }
 
     fun findUserTickets(userId: Long): List<Ticket> {
