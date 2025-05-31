@@ -32,7 +32,8 @@ class TicketService(
     ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
 
     fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
+        val excludedStatuses: List<TicketStatus> =
+            listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED, TicketStatus.REFUND_REQUESTED)
         return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
     }
 
@@ -76,7 +77,12 @@ class TicketService(
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
 
-        ticket.cancel()
+        if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
+            ticket.cancelBeforePayment()
+        } else if (ticket.status == TicketStatus.BEFORE_ENTER) {
+            ticket.cancelAfterPayment()
+        }
+
         ticket.updateDeletedAt()
         ticketRepository.save(ticket)
     }
@@ -88,19 +94,16 @@ class TicketService(
 
     fun validateTicketStatus(ticketId: Long) {
         val ticket = this.getById(ticketId)
-
         val ticketStatus: TicketStatus = ticket.status
 
-        if (ticketStatus === TicketStatus.FINISH_ENTER) {
-            throw IllegalStateException("입장이 이미 완료된 티켓입니다. 재입장은 담당자에게 문의 부탁드립니다.")
-        } else if (ticketStatus === TicketStatus.EXPIRED) {
-            throw IllegalStateException("이미 기간이 지난 티켓입니다. 날짜를 확인해주세요.")
-        }
+        check(ticketStatus != TicketStatus.FINISH_ENTER) { "입장이 이미 완료된 티켓입니다. 재입장은 담당자에게 문의 부탁드립니다." }
+        check(ticketStatus != TicketStatus.EXPIRED) { TicketStatus.EXPIRED.msg }
+        check(ticketStatus != TicketStatus.REFUND_REQUESTED) { TicketStatus.REFUND_REQUESTED.msg }
     }
 
     fun checkTicketOwner(userId: Long, ticketId: Long) {
-        if (java.lang.Boolean.FALSE == ticketRepository.existsByUserIdAndId(userId, ticketId)) {
-            throw IllegalStateException("해당 사용자는 해당 티켓을 소유하고 있지 않습니다.")
+        require(ticketRepository.existsByUserIdAndId(userId, ticketId)) {
+            "해당 사용자는 해당 티켓을 소유하고 있지 않습니다."
         }
     }
 
@@ -117,7 +120,8 @@ class TicketService(
             TicketStatus.FINISH_ENTER -> 3
             TicketStatus.RESERVATION_CANCEL -> 4
             TicketStatus.EXPIRED -> 5
-            else -> 6
+            TicketStatus.REFUND_REQUESTED -> 6
+            else -> 7
         }
     }
 
