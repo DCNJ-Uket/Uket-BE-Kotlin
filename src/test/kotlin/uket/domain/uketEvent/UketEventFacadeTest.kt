@@ -18,9 +18,9 @@ class UketEventFacadeTest :
 
         isolationMode = IsolationMode.InstancePerLeaf
 
-        it("더미데이터 출력") {
-            createDummyData(100)
-        }
+//        it("더미데이터 출력") {
+//            createDummyData(100)
+//        }
     }) {
     companion object {
         fun createDummyData(count: Int) {

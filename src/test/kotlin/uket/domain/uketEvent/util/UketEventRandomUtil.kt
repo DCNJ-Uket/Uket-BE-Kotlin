@@ -8,6 +8,7 @@ import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import java.time.LocalDateTime
+import kotlin.random.Random
 
 class UketEventRandomUtil {
     companion object {
@@ -93,7 +94,7 @@ class UketEventRandomUtil {
                         .randomize(named("entryStartDateTime")) { it }
                         .randomize(named("entryEndDateTime")) { it.plusMinutes(10) }
                         .randomize(named("ticketCount")) { 0 }
-                        .randomize(named("totalTicketCount")) { 10 }
+                        .randomize(named("totalTicketCount")) { Random.nextInt(3, 6) }
                 )
                 easyRandomEntryGroup.nextObject(EntryGroup::class.java)
             }
