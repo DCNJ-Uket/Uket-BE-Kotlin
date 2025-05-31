@@ -3,6 +3,7 @@ package uket.domain.payment.service
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.common.PublicNotFoundException
 import uket.domain.payment.entity.Payment
 import uket.domain.payment.repository.PaymentRepository
 
@@ -18,9 +19,12 @@ class PaymentService(
     }
 
     @Transactional(readOnly = true)
-    fun getByUketEventId(uketEventId: Long): Payment {
-        val payment = paymentRepository.findByUketEventId(uketEventId)
-            ?: throw IllegalStateException("해당 결제 정보를 찾을 수 없습니다")
+    fun getByOrganizationId(organizationId: Long): Payment {
+        val payment = paymentRepository.findByOrganizationId(organizationId)
+            ?: throw PublicNotFoundException(
+                publicMessage = "결제 정보를 찾을 수 없습니다",
+                systemMessage = "[PaymentService] Organization 의 결제정보를 찾을 수 없습니다. | organizationId: $organizationId"
+            )
         return payment
     }
 }
