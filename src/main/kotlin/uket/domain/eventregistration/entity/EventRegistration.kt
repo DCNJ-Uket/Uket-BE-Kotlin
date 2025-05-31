@@ -15,6 +15,7 @@ import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.BatchSize
 import uket.common.LoggerDelegate
+import uket.common.enums.BankCode
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
 import java.time.LocalDate
@@ -146,7 +147,8 @@ class EventRegistration(
         @Column(name = "ticket_price")
         val ticketPrice: Long,
         @Column(name = "bank_code")
-        val bankCode: String,
+        @Enumerated(EnumType.STRING)
+        val bankCode: BankCode,
         @Column(name = "account_number")
         val accountNumber: String,
         @Column(name = "depositor_name")
