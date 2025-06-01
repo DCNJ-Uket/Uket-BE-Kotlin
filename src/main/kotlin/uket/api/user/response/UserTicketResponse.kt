@@ -8,7 +8,7 @@ data class UserTicketResponse(
     val ticketId: Long,
     val userId: Long,
     val entryGroupId: Long,
-    var status: TicketStatus,
+    var ticketStatus: TicketStatus,
     val ticketNo: String,
     var enterAt: LocalDateTime?,
 ) {
