@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import uket.domain.payment.entity.Payment
 
 interface PaymentRepository : JpaRepository<Payment, Long> {
-    fun findByOrganizationId(uketEventId: Long): Payment?
+    fun findByOrganizationId(organizationId: Long): Payment?
 
     @Query(
         """
