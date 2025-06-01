@@ -1,5 +1,6 @@
 package uket.domain.eventregistration
 
+import uket.common.enums.BankCode
 import uket.domain.eventregistration.entity.EventRegistration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -43,7 +44,7 @@ data class EventData(
 
     data class PaymentInfoDto(
         val ticketPrice: Long,
-        val bankCode: String,
+        val bankCode: BankCode,
         val accountNumber: String,
         val depositorName: String,
         val depositUrl: String,

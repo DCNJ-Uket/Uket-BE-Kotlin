@@ -15,7 +15,6 @@ import uket.api.user.response.EventRoundListItemResponse
 import uket.api.user.response.ReservationInfoResponse
 import uket.common.response.ListResponse
 import uket.domain.admin.service.OrganizationService
-import uket.domain.payment.service.PaymentService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.UketEventFacade
@@ -27,7 +26,6 @@ class EventController(
     private val uketEventService: UketEventService,
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventFacade: UketEventFacade,
-    private val paymentService: PaymentService,
     private val organizationService: OrganizationService,
 ) {
     @Operation(summary = "활성화된 행사 목록 조회", description = "누구나 조회 가능한 행사 목록을 가져옵니다")
@@ -89,9 +87,9 @@ class EventController(
             ReservationInfoResponse.EventRoundWithGroupResponse.of(round, groupResponses)
         }
 
-        val payment = paymentService.getByUketEventId(eventId)
+        val uketEvent = uketEventService.getById(eventId)
 
-        val response = ReservationInfoResponse.of(payment, roundResponses)
+        val response = ReservationInfoResponse.of(uketEvent, roundResponses)
         return ResponseEntity.ok(response)
     }
 }
