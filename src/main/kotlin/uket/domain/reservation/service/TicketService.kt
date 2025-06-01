@@ -31,12 +31,6 @@ class TicketService(
         ticketStatus: TicketStatus,
     ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
 
-    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-        val excludedStatuses: List<TicketStatus> =
-            listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED, TicketStatus.REFUND_REQUESTED)
-        return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
-    }
-
     fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> = ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
 
     fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> = ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
@@ -126,4 +120,11 @@ class TicketService(
     }
 
     fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, listOf(TicketStatus.RESERVATION_CANCEL))
+
+    fun validateTicketOwner(userId: Long, ticketId: Long) {
+        val ticket = this.getById(ticketId)
+        if (ticket.userId != userId) {
+            throw IllegalArgumentException("유저가 소유한 티켓이 아닙니다.")
+        }
+    }
 }
