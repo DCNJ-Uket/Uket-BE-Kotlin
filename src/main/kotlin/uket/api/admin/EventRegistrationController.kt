@@ -101,10 +101,12 @@ class EventRegistrationController(
     fun getUketEventRegistrations(
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
+        @LoginAdminId adminId: Long,
     ): CustomPageResponse<UketEventRegistrationSummaryResponse> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
+        val admin = adminService.getByIdWithOrganization(adminId)
 
-        val uketEventRegistrationSummaryResponse = eventRegistrationService.findAll(pageRequest).map {
+        val uketEventRegistrationSummaryResponse = eventRegistrationService.findAllByOrganizationId(pageRequest, admin.organization.id).map {
             UketEventRegistrationSummaryResponse.from(it)
         }
         return CustomPageResponse(uketEventRegistrationSummaryResponse)

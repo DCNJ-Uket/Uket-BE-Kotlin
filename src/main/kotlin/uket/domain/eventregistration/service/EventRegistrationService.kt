@@ -24,8 +24,8 @@ class EventRegistrationService(
         ?: throw IllegalArgumentException("[EventRegistrationService] EventRegistration을 조회할 수 없습니다. | eventRegistrationId: $id")
 
     @Transactional(readOnly = true)
-    fun findAll(pageable: Pageable): Page<EventRegistration> {
-        return eventRegistrationRepository.findAll(pageable)
+    fun findAllByOrganizationId(pageable: Pageable, organizationId: Long): Page<EventRegistration> {
+        return eventRegistrationRepository.findAllByOrganizationId(pageable, organizationId)
     }
 
     @Transactional(readOnly = true)
