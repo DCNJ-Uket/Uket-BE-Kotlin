@@ -23,7 +23,7 @@ class TicketController(
     private val uketEventService: UketEventService,
 ) {
     @Operation(summary = "티켓 예매", description = "유저가 예매 가능한 그룹에 대한 티켓을 예매할 수 있습니다.")
-    @PostMapping("/ticket")
+    @PostMapping("/tickets")
     fun ticketing(
         @Parameter(hidden = true)
         @LoginUserId
