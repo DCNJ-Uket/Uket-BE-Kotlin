@@ -1,9 +1,11 @@
 package uket.modules.s3.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import software.amazon.awssdk.core.sync.RequestBody
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import software.amazon.awssdk.services.s3.model.GetUrlRequest
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
@@ -22,8 +24,19 @@ class S3Service(
         private const val IMAGE_FOLDER = "images"
     }
 
-    fun getImage(filename: String): String? =
-        getPreSignedUrl(IMAGE_FOLDER, filename)
+    @Transactional(readOnly = true)
+    fun getImage(imageId: Long): Pair<ByteArray, String> {
+        val getObjectRequest = GetObjectRequest.builder()
+            .bucket(s3Properties.bucket)
+            .key("images/$imageId")
+            .build()
+
+        s3Client.getObject(getObjectRequest).use { response ->
+            val contentType = response.response().contentType()
+            val bytes = response.readAllBytes()
+            return bytes to contentType
+        }
+    }
 
     fun putImage(file: MultipartFile, filename: String): String? {
         val objectRequest = putObjectRequest(file, IMAGE_FOLDER, filename)
