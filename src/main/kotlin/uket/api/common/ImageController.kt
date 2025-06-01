@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +20,7 @@ class ImageController(
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "이미지 조회", description = "이미지 id를 이용해 해당 image를 서버로부터 넘겨받습니다.")
-    @GetMapping("/image/get/{imageId}")
+    @GetMapping("/image/{imageId}")
     fun getImage(
         @PathVariable("imageId") imageId: Long,
     ): ResponseEntity<ByteArray> {
@@ -31,6 +30,8 @@ class ImageController(
             this.contentType = MediaType.parseMediaType(contentType)
         }
 
-        return ResponseEntity(imageBytes, headers, HttpStatus.OK)
+        return ResponseEntity.ok()
+            .headers(headers)
+            .body(imageBytes)
     }
 }
