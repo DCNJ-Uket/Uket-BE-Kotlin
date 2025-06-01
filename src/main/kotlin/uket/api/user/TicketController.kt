@@ -15,15 +15,15 @@ import uket.domain.uketevent.service.UketEventService
 import uket.facade.TicketingFacade
 import java.time.LocalDateTime
 
-@Tag(name = "예매 관련 API", description = "예매 관련 API 입니다")
+@Tag(name = "티켓 관련 API", description = "티켓 관련 API 입니다")
 @RestController
-class ReservationController(
+class TicketController(
     private val ticketingFacade: TicketingFacade,
     private val paymentService: PaymentService,
     private val uketEventService: UketEventService,
 ) {
     @Operation(summary = "티켓 예매", description = "유저가 예매 가능한 그룹에 대한 티켓을 예매할 수 있습니다.")
-    @PostMapping("/reservation")
+    @PostMapping("/ticket")
     fun ticketing(
         @Parameter(hidden = true)
         @LoginUserId
