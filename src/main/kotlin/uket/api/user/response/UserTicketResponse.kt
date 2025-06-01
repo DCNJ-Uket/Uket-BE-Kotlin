@@ -17,7 +17,7 @@ data class UserTicketResponse(
             ticketId = ticket.id,
             userId = ticket.userId,
             entryGroupId = ticket.entryGroupId,
-            status = ticket.status,
+            ticketStatus = ticket.status,
             ticketNo = ticket.ticketNo,
             enterAt = ticket.enterAt
         )
