@@ -16,9 +16,9 @@ class QRService(
     fun generateTicketQRCode(ticketId: Long): ByteArray {
         val ticketToken = jwtTicketUtil.createTicketToken(ticketId)
         try {
-            qrCodeProvider.generateQRCodeByString(ticketToken).use { out ->
-                validateQRCode(out)
-                return out!!.toByteArray()
+            qrCodeProvider.generateQRCodeByString(ticketToken).use { outputStream ->
+                validateQRCode(outputStream)
+                return outputStream!!.toByteArray()
             }
         } catch (e: IOException) {
             throw PublicException(
@@ -30,11 +30,11 @@ class QRService(
         }
     }
 
-    private fun validateQRCode(out: ByteArrayOutputStream?) {
-        if (out == null) {
+    private fun validateQRCode(outputStream: ByteArrayOutputStream?) {
+        if (outputStream == null) {
             throw PublicException(
                 publicMessage = "QR 코드 생성에 실패했습니다. 잠시 후 다시 시도해주세요.",
-                systemMessage = "티켓 QR 코드 생성 오류 | out=$out",
+                systemMessage = "티켓 QR 코드 생성 오류 | outputStream=$outputStream",
                 title = "티켓 QR 코드 생성 실패",
                 errorLevel = ErrorLevel.ERROR
             )

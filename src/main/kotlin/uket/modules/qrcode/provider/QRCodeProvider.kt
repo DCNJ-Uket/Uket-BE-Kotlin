@@ -14,23 +14,21 @@ import java.io.IOException
 class QRCodeProvider(
     private val qrCodeProperties: QRCodeProperties,
 ) {
-    fun generateQRCodeByString(payload: String): ByteArrayOutputStream? {
-        return try {
-            ByteArrayOutputStream().use { out ->
-                val matrix: BitMatrix = MultiFormatWriter().encode(
-                    payload,
-                    BarcodeFormat.QR_CODE,
-                    qrCodeProperties.width,
-                    qrCodeProperties.height
-                )
+    fun generateQRCodeByString(payload: String): ByteArrayOutputStream? = try {
+        ByteArrayOutputStream().use { outputStream ->
+            val matrix: BitMatrix = MultiFormatWriter().encode(
+                payload,
+                BarcodeFormat.QR_CODE,
+                qrCodeProperties.width,
+                qrCodeProperties.height
+            )
 
-                MatrixToImageWriter.writeToStream(matrix, qrCodeProperties.type, out)
-                out
-            }
-        } catch (e: WriterException) {
-            null
-        } catch (e: IOException) {
-            null
+            MatrixToImageWriter.writeToStream(matrix, qrCodeProperties.type, outputStream)
+            outputStream
         }
+    } catch (e: WriterException) {
+        null
+    } catch (e: IOException) {
+        null
     }
 }
