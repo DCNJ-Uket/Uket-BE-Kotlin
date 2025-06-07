@@ -75,12 +75,7 @@ class TicketService(
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
 
-        if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
-            ticket.cancelBeforePayment()
-        } else if (ticket.status == TicketStatus.BEFORE_ENTER) {
-            ticket.cancelAfterPayment()
-        }
-
+        ticket.cancel()
         ticket.updateDeletedAt()
         ticketRepository.save(ticket)
     }
@@ -124,4 +119,11 @@ class TicketService(
     }
 
     fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, TicketStatus.notActiveStatuses)
+
+    fun validateTicketOwner(userId: Long, ticketId: Long) {
+        val ticket = this.getById(ticketId)
+        if (ticket.userId != userId) {
+            throw IllegalArgumentException("유저가 소유한 티켓이 아닙니다.")
+        }
+    }
 }
