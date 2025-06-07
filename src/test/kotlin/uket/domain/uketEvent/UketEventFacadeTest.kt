@@ -77,7 +77,8 @@ class UketEventFacadeTest :
                 val entryGroups = List(2) { index ->
                     createEntryGroup(
                         round,
-                        round.eventRoundDateTime.plusHours(index.toLong())
+                        round.eventRoundDateTime.plusHours(index.toLong()),
+                        eventId = round.uketEvent.id
                     )
                 }
                 groups.addAll(entryGroups)

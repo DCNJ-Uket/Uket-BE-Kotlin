@@ -65,7 +65,8 @@ class TicketRepositoryTest(
                 entryStartDateTime = LocalDateTime.now(),
                 entryEndDateTime = LocalDateTime.now(),
                 ticketCount = 0,
-                totalTicketCount = 10
+                totalTicketCount = 10,
+                uketEventId = uketEvent.id
             )
             entityManager.persist(entryGroup)
 

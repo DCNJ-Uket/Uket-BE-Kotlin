@@ -56,7 +56,8 @@ class EntryGroupServiceTest :
             val entryGroups = List(3) { index ->
                 UketEventRandomUtil.createEntryGroup(
                     uketEventRound,
-                    now.plusHours((index - 1).toLong())
+                    now.plusHours((index - 1).toLong()),
+                    eventId = uketEvent.id
                 )
             }
 

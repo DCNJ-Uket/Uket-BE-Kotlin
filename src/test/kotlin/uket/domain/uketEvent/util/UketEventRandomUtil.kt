@@ -67,11 +67,13 @@ class UketEventRandomUtil {
             entryGroupEndTime: LocalDateTime = entryGroupStartTime.plusMinutes(10),
             totalTicketCount: Int = Random.nextInt(3, 6),
             id: Long = 0L,
+            eventId: Long = 0L,
         ): EntryGroup {
             val easyRandomEntryGroup = EasyRandom(
                 EasyRandomParameters()
                     .randomize(named("id")) { id }
                     .randomize(named("uketEventRound")) { uketEventRound }
+                    .randomize(named("uketEventId")) { eventId }
                     .randomize(named("entryStartDateTime")) { entryGroupStartTime }
                     .randomize(named("entryEndDateTime")) { entryGroupEndTime }
                     .randomize(named("ticketCount")) { 0 }
