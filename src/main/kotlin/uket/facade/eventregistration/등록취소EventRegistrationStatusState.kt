@@ -18,7 +18,7 @@ class 등록취소EventRegistrationStatusState(
         EventRegistrationStatus.행사_완료,
     )
 
-    override fun execute(id: Long) {
+    override fun execute(id: Long, currentStatus: EventRegistrationStatus) {
         return
     }
 

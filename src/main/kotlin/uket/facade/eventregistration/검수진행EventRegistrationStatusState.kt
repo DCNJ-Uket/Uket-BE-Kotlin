@@ -13,7 +13,7 @@ class 검수진행EventRegistrationStatusState(
     override val status: EventRegistrationStatus = EventRegistrationStatus.검수_진행
     override val allowedPrevStatus: Set<EventRegistrationStatus> = setOf()
 
-    override fun execute(id: Long) {
+    override fun execute(id: Long, currentStatus: EventRegistrationStatus) {
         return
     }
 

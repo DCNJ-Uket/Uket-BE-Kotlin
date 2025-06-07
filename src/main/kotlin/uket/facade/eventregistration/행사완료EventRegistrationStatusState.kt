@@ -13,7 +13,7 @@ class 행사완료EventRegistrationStatusState(
     override val status: EventRegistrationStatus = EventRegistrationStatus.행사_완료
     override val allowedPrevStatus: Set<EventRegistrationStatus> = setOf(EventRegistrationStatus.등록_완료)
 
-    override fun execute(id: Long) {
+    override fun execute(id: Long, currentStatus: EventRegistrationStatus) {
         return
     }
 
