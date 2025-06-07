@@ -1,15 +1,14 @@
-name: Uket-App CD
+name: Uket-App-main CD
 
 on:
   push:
     branches:
       - main
-      - dev
 
 env:
   DOCKER_REGISTRY_URL: ${{ secrets.DOCKER_REGISTRY_URL }}
-  DOCKER_IMAGE_NAME: uket
-  DOCKER_CONTAINER_NAME: uket
+  DOCKER_IMAGE_NAME: main-uket
+  DOCKER_CONTAINER_NAME: main-uket
 
 jobs:
   build-and-push-docker-image:
@@ -81,7 +80,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ env.DOCKER_REGISTRY_URL }}
-            docker-compose down
+            docker-compose -f docker-compose-main.yml down
             docker pull ${{ env.DOCKER_REGISTRY_URL }}/${{ env.DOCKER_IMAGE_NAME }}
-            docker-compose up -d
+            docker-compose -f docker-compose-main.yml up -d
             docker image prune -f

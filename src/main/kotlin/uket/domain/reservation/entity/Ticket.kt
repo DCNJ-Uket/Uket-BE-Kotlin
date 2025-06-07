@@ -24,8 +24,12 @@ class Ticket(
     val ticketNo: String,
     var enterAt: LocalDateTime?,
 ) : DeletableEntity() {
-    fun cancel() {
+    fun cancelBeforePayment() {
         this.status = TicketStatus.RESERVATION_CANCEL
+    }
+
+    fun cancelAfterPayment() {
+        this.status = TicketStatus.REFUND_REQUESTED
     }
 
     fun enter() {
