@@ -80,6 +80,9 @@ class EventRegistration(
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
 
+    @Column(name = "buy_ticket_limit")
+    val buyTicketLimit: Int,
+
     _banners: List<BannerRegistration>,
     _eventRound: List<EventRoundRegistration>,
     _entryGroup: List<EntryGroupRegistration>,
@@ -209,6 +212,7 @@ class EventRegistration(
             thumbnailImageId = thumbnailImageId,
             firstRoundDateTime = eventRound.minOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
             lastRoundDateTime = eventRound.maxOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
+            buyTicketLimit = buyTicketLimit
         )
     }
 

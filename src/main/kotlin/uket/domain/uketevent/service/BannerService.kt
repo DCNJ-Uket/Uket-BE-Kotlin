@@ -14,6 +14,11 @@ class BannerService(
         return bannerRepository.saveAll(banners)
     }
 
+    @Transactional(readOnly = true)
+    fun findAllByUketEventId(uketEventId: Long): List<Banner> {
+        return bannerRepository.findAllByUketEventId(uketEventId)
+    }
+
     @Transactional
     fun deleteAllByEventId(uketEventId: Long) {
         TODO("Not yet implemented")

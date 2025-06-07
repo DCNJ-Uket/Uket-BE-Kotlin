@@ -33,14 +33,18 @@ data class EventDetailResponse(
     }
 
     companion object {
-        fun from(uketEvent: UketEvent, organization: Organization): EventDetailResponse = EventDetailResponse(
+        fun of(
+            uketEvent: UketEvent,
+            organization: Organization,
+            banners: List<Banner>
+        ): EventDetailResponse = EventDetailResponse(
             eventId = uketEvent.id,
             eventName = uketEvent.eventName,
             eventType = uketEvent.eventType,
             firstRoundStartDateTime = uketEvent.firstRoundDateTime,
             lastRoundStartDateTime = uketEvent.firstRoundDateTime,
             location = uketEvent.location,
-            banners = uketEvent.banners.map { EventDetailBannerDto.from(it) },
+            banners = banners.map { EventDetailBannerDto.from(it) },
             information = uketEvent.details.information,
             detailImageId = uketEvent.eventImageId,
             caution = uketEvent.details.caution,

@@ -75,7 +75,8 @@ data class RegisterUketEventRequest(
                     accountNumber = paymentInfo.accountNumber,
                     depositorName = paymentInfo.depositorName,
                     depositUrl = paymentInfo.depositUrl
-                )
+                ),
+                buyTicketLimit = buyTicketLimit
             )
         }
     }

@@ -10,6 +10,8 @@ import uket.domain.reservation.service.TicketService
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.service.EntryGroupService
+import uket.domain.uketevent.service.UketEventRoundService
+import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.service.UserService
 import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
@@ -19,17 +21,19 @@ class TicketingFacade(
     private val userService: UserService,
     private val ticketService: TicketService,
     private val entryGroupService: EntryGroupService,
+    private val uketEventRoundService: UketEventRoundService,
+    private val uketEventService: UketEventService
 ) {
     @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
         val entryGroup = entryGroupService.getByIdWithUketEventRoundAndUketEvent(entryGroupId)
-        val eventRound = entryGroup.uketEventRound
+        val eventRound = uketEventRoundService.getById(entryGroup.uketEventRoundId)
         validateTicketingDateTime(eventRound, entryGroup, at)
 
         val user = userService.getById(userId)
-        val event = eventRound.uketEvent!!
+        val event = uketEventService.getById(eventRound.uketEventId)
         validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
 
         entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
