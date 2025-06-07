@@ -119,5 +119,5 @@ class TicketService(
         }
     }
 
-    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, listOf(TicketStatus.RESERVATION_CANCEL))
+    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, TicketStatus.notActiveStatuses)
 }
