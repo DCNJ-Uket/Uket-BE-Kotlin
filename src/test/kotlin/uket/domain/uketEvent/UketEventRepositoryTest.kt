@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
 import uket.domain.uketEvent.util.UketEventRandomUtil
@@ -60,38 +61,8 @@ class UketEventRepositoryTest(
                 }
             }
         }
-
-        describe("findByIdWithBanners") {
-            context("이벤트가 1개 있고, 배너가 없는 경우") {
-                it("해당 이벤트를 찾는 경우") {
-                    val event = setDB4(entityManager)
-
-                    println("event.id = ${event.id}")
-                    val findEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(event.id)
-                    findEvent shouldNotBe null
-                    findEvent!!.banners.size shouldBe 0
-                }
-                it("해당 이벤트가 아닌 이벤트를 찾는 경우") {
-                    val event = setDB4(entityManager)
-
-                    val findEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(999L)
-                    findEvent shouldBe null
-                }
-            }
-
-            context("이벤트가 1개 있고, 배너가 1개 있는 경우") {
-                it("해당 이벤트를 찾는 경우") {
-                    val event = setDB5(entityManager)
-
-                    println("event.id = ${event.id}")
-                    val findEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(event.id)
-                    findEvent shouldNotBe null
-                    findEvent!!.banners.size shouldBe 3
-                }
-            }
-        }
     }
-    ) {
+) {
     override fun extensions(): List<Extension> {
         return super.extensions() + listOf(SpringExtension) // SpringExtension 활성화
     }
@@ -100,13 +71,7 @@ class UketEventRepositoryTest(
         private fun setDB5(entityManager: EntityManager): UketEvent {
             val now = LocalDateTime.now()
 
-            val banners = listOf(
-                Banner(id = 0L, uketEvent = null, imageId = 1, link = "link1"),
-                Banner(id = 0L, uketEvent = null, imageId = 2, link = "link2"),
-                Banner(id = 0L, uketEvent = null, imageId = 3, link = "link3")
-            )
-            val uketEvent =
-                UketEventRandomUtil.createUketEvent(banners)
+            val uketEvent = UketEventRandomUtil.createUketEvent()
 
             val uketEventRound = UketEventRandomUtil.createUketEventRound(
                 uketEvent,
@@ -114,7 +79,6 @@ class UketEventRepositoryTest(
                 now.minusDays(2),
                 now.plusDays(2)
             )
-            uketEvent.addEventRound(uketEventRound)
 
             entityManager.persist(uketEvent)
             entityManager.persist(uketEventRound)
@@ -134,7 +98,6 @@ class UketEventRepositoryTest(
                 now.minusDays(2),
                 now.plusDays(2)
             )
-            uketEvent.addEventRound(uketEventRound)
 
             entityManager.persist(uketEvent)
             entityManager.persist(uketEventRound)
@@ -155,7 +118,6 @@ class UketEventRepositoryTest(
                     now.plusDays(2)
                 )
             }
-            uketEventRounds1.forEach { uketEvent1.addEventRound(it) }
             entityManager.persist(uketEvent1)
             uketEventRounds1.forEach { entityManager.persist(it) }
 
@@ -168,7 +130,6 @@ class UketEventRepositoryTest(
                     now.minusDays(3),
                     now.plusDays(3)
                 )
-            uketEvent2.addEventRound(uketEventRound2)
             entityManager.persist(uketEvent2)
             entityManager.persist(uketEventRound2)
 
@@ -181,7 +142,6 @@ class UketEventRepositoryTest(
                     now.minusDays(3)
                 )
             }
-            uketEventRounds3.forEach { closedEvent.addEventRound(it) }
             entityManager.persist(closedEvent)
             uketEventRounds3.forEach { entityManager.persist(it) }
 
@@ -201,7 +161,6 @@ class UketEventRepositoryTest(
                     now.plusDays(2)
                 )
             }
-            uketEventRounds1.forEach { uketEvent1.addEventRound(it) }
             entityManager.persist(uketEvent1)
             uketEventRounds1.forEach { entityManager.persist(it) }
 
@@ -215,7 +174,6 @@ class UketEventRepositoryTest(
                     now.plusDays(3)
                 )
             }
-            uketEventRounds2.forEach { uketEvent2.addEventRound(it) }
             entityManager.persist(uketEvent2)
             uketEventRounds2.forEach { entityManager.persist(it) }
 
@@ -228,7 +186,6 @@ class UketEventRepositoryTest(
                     now.minusDays(4),
                     now.plusDays(4)
                 )
-            uketEvent3.addEventRound(uketEventRounds3)
             entityManager.persist(uketEvent3)
             entityManager.persist(uketEventRounds3)
 
@@ -251,20 +208,20 @@ class UketEventRepositoryTest(
                 totalTicketCount = 0,
                 buyTicketLimit = 4,
                 details = UketEvent.EventDetails(
-                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")
+                    "", "", UketEvent.EventContact(EventContactType.INSTAGRAM, "", "")
                 ),
                 eventImageId = "",
                 thumbnailImageId = "",
-                _banners = listOf(),
+                firstRoundDateTime = LocalDateTime.now(),
+                lastRoundDateTime = LocalDateTime.now()
             )
 
             val uketEventRound = UketEventRound(
-                uketEvent = uketEvent,
+                uketEventId = uketEvent.id,
                 eventRoundDateTime = LocalDateTime.now(),
                 ticketingStartDateTime = LocalDateTime.now(),
                 ticketingEndDateTime = LocalDateTime.now()
             )
-            uketEvent.addEventRound(uketEventRound)
 
             entityManager.persist(uketEvent)
             entityManager.flush()

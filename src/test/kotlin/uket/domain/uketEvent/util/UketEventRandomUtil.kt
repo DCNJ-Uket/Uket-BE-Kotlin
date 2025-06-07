@@ -13,7 +13,6 @@ import kotlin.random.Random
 class UketEventRandomUtil {
     companion object {
         fun createUketEvent(
-            banners: List<Banner> = listOf(),
             eventName: String = "name",
             id: Long = 0L,
         ): UketEvent {
@@ -22,23 +21,13 @@ class UketEventRandomUtil {
                     .randomize(named("organizationId")) { 1L }
                     .randomize(named("id")) { id }
                     .randomize(named("eventName")) { eventName }
-                    .randomize(named("banners")) {
-                        banners.map {
-                            Banner(
-                                id = it.id,
-                                uketEvent = null,
-                                imageId = it.imageId,
-                                link = it.link
-                            )
-                        }
-                    }.randomize(named("buyTicketLimit")) {
+                    .randomize(named("buyTicketLimit")) {
                         4
                     }.randomize(named("ticketPrice")) {
                         1000
                     }
             )
             val uketEvent = easyRandom.nextObject(UketEvent::class.java)
-            uketEvent.banners.forEach { it.uketEvent = uketEvent }
 
             return uketEvent
         }

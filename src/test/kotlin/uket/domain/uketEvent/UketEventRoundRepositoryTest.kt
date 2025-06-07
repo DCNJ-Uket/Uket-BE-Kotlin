@@ -57,7 +57,6 @@ class UketEventRoundRepositoryTest(
                     now.minusDays(2)
                 )
             }
-            uketEventRounds.forEach { uketEvent.addEventRound(it) }
             entityManager.persist(uketEvent)
             uketEventRounds.forEach { entityManager.persist(it) }
             entityManager.flush()

@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldNotBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.transaction.annotation.Transactional
+import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
@@ -39,31 +40,29 @@ class TicketRepositoryTest(
                 buyTicketLimit = 4,
                 totalTicketCount = 0,
                 details = UketEvent.EventDetails(
-                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")
+                    "", "", UketEvent.EventContact(EventContactType.INSTAGRAM, "", "")
                 ),
                 eventImageId = "",
                 thumbnailImageId = "",
-                _banners = listOf(),
+                firstRoundDateTime = LocalDateTime.now(),
+                lastRoundDateTime = LocalDateTime.now()
             )
 
             val uketEventRound = UketEventRound(
-                uketEvent = uketEvent,
+                uketEventId = uketEvent.id,
                 eventRoundDateTime = LocalDateTime.now(),
                 ticketingStartDateTime = LocalDateTime.now(),
                 ticketingEndDateTime = LocalDateTime.now()
             )
 
-            uketEvent.addEventRound(uketEventRound)
 
             entityManager.persist(uketEvent)
             entityManager.persist(uketEventRound)
 
             // 엔트리 그룹 저장
             val entryGroup = EntryGroup(
-                uketEventRound = uketEventRound,
-                entryGroupName = "nameA",
+                uketEventRoundId = uketEventRound.id,
                 entryStartDateTime = LocalDateTime.now(),
-                entryEndDateTime = LocalDateTime.now(),
                 ticketCount = 0,
                 totalTicketCount = 10,
                 uketEventId = uketEvent.id
