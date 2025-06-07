@@ -11,6 +11,7 @@ import uket.api.user.request.TicketingRequest
 import uket.api.user.response.TicketingResponse
 import uket.auth.config.userId.LoginUserId
 import uket.domain.payment.service.PaymentService
+import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.TicketingFacade
 import java.time.LocalDateTime
@@ -21,6 +22,7 @@ class TicketController(
     private val ticketingFacade: TicketingFacade,
     private val paymentService: PaymentService,
     private val uketEventService: UketEventService,
+    private val entryGroupService: EntryGroupService,
 ) {
     @Operation(summary = "티켓 예매", description = "유저가 예매 가능한 그룹에 대한 티켓을 예매할 수 있습니다.")
     @PostMapping("/tickets")
@@ -33,7 +35,8 @@ class TicketController(
     ): ResponseEntity<TicketingResponse> {
         val now = LocalDateTime.now()
         val tickets = ticketingFacade.ticketing(userId, request.entryGroupId, request.buyCount, request.friend, now)
-        val event = uketEventService.getEventByEntryGroupId(request.entryGroupId)
+        val entryGroup = entryGroupService.getById(request.entryGroupId)
+        val event = uketEventService.getById(entryGroup.uketEventId)
         val payment = paymentService.getByOrganizationId(event.organizationId)
 
         return ResponseEntity.ok(

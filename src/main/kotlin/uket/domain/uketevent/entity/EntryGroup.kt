@@ -25,6 +25,8 @@ class EntryGroup(
     @JoinColumn(name = "uket_event_round_id")
     var uketEventRound: UketEventRound,
 
+    val uketEventId: Long,
+
     @Column(name = "entry_group_name")
     val entryGroupName: String,
 
