@@ -14,9 +14,9 @@ import uket.api.user.request.TicketingRequest
 import uket.api.user.response.TicketingResponse
 import uket.auth.config.userId.LoginUserId
 import uket.domain.payment.service.PaymentService
-import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.reservation.service.QRService
 import uket.domain.reservation.service.TicketService
+import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.TicketingFacade
 import java.time.LocalDateTime
@@ -65,10 +65,10 @@ class TicketController(
         ticketId: Long,
     ): ResponseEntity<ByteArray> {
         ticketService.validateTicketOwner(userId, ticketId)
-        val byteA = qRService.generateTicketQRCode(ticketId)
+        val qrCodeByte = qRService.generateTicketQRCode(ticketId)
         return ResponseEntity
             .ok()
             .contentType(MediaType.IMAGE_PNG)
-            .body(byteA)
+            .body(qrCodeByte)
     }
 }
