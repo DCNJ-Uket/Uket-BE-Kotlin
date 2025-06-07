@@ -42,7 +42,7 @@ class UketEventRandomUtil {
             val easyRandomEventRound = EasyRandom(
                 EasyRandomParameters()
                     .randomize(named("id")) { id }
-                    .randomize(named("uketEvent")) { uketEvent }
+                    .randomize(named("uketEventId")) { uketEvent.id }
                     .randomize(named("eventRoundDateTime")) { uketEventRoundDate }
                     .randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
                     .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }

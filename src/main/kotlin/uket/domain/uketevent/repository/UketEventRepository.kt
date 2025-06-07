@@ -18,14 +18,6 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
 
     @Query(
         """
-            SELECT ue FROM UketEvent ue 
-            WHERE ue.lastRoundDateTime >= CURRENT_DATE
-        """
-    )
-    fun findAllByEventEndDateAfterNowWithUketEventRound(): List<UketEvent>
-
-    @Query(
-        """
             SELECT ue from UketEvent ue 
             WHERE ue.id = :uketEventId AND 
             ue.lastRoundDateTime >= CURRENT_DATE

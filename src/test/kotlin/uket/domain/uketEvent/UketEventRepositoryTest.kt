@@ -41,26 +41,6 @@ class UketEventRepositoryTest(
                 }
             }
         }
-
-        describe("findAllByEventEndDateBeforeNowWithUketEventRound") {
-            context("티켓팅 중인 이벤트 3개가 있는 경우") {
-                it("3개의 이벤트 조회") {
-                    setDB2(entityManager)
-
-                    val eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
-                    eventList.size shouldBe 3
-                }
-            }
-
-            context("티켓팅 중인 이벤트 2개, 행사가 종료된 이벤트 1개가 있는 경우") {
-                it("조건에 맞는 단체가 없는 경우") {
-                    setDB3(entityManager)
-
-                    val eventList = uketEventRepository.findAllByEventEndDateAfterNowWithUketEventRound()
-                    eventList.size shouldBe 2
-                }
-            }
-        }
     }
 ) {
     override fun extensions(): List<Extension> {

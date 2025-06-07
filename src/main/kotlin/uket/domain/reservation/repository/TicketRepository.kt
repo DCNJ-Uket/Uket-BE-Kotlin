@@ -25,9 +25,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur on ur.uketEventId = :uketEventId
+    JOIN UketEvent e on e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -54,9 +53,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -84,9 +82,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -116,9 +113,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -145,9 +141,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -162,34 +157,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         pageable: Pageable,
     ): Page<TicketSearchDto>
 
-    @Query(
-        """
-        SELECT t FROM Ticket t
-        WHERE t.userId = :userId
-        AND t.status NOT IN :status
-        AND t.entryGroupId IN (
-            SELECT eg.id FROM EntryGroup eg 
-            WHERE eg.uketEventRound.uketEvent.lastRoundDateTime >= CURRENT_DATE
-        )
-    """,
-    )
-    fun findValidTicketsByUserIdAndStatusNotIn(userId: Long, excludedStatuses: List<TicketStatus>): List<Ticket>
-
     fun findAllByUserId(userId: Long): List<Ticket>
-
-    fun findAllByUserIdAndStatusNot(userId: Long, status: TicketStatus): List<Ticket>
-
-    @Query(
-        """
-            SELECT t.* 
-            FROM ticket t 
-            JOIN entry_group eg ON t.entry_group_id = eg.id 
-            WHERE t.user_id = :userId 
-              AND t.status <> :status
-        """,
-        nativeQuery = true,
-    )
-    fun findAllByUserIdAndStatusNotWithEntryGroup(userId: Long, status: TicketStatus): List<Ticket>
 
     @Query(
         """
@@ -201,9 +169,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         t.status
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
     AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -230,9 +197,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
     AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -257,9 +223,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         ''
     )
     FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
+    JOIN UketEvent e ON e.id = :uketEventId
     JOIN User u ON u.id = t.userId
     WHERE e.organizationId = :organizationId
       AND (:uketEventId IS NULL OR e.id = :uketEventId)
@@ -286,7 +251,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
             SELECT t FROM Ticket t
             JOIN EntryGroup eg ON eg.id = t.entryGroupId
             WHERE t.userId = :userId
-            AND eg.uketEventRound.id = :eventRoundId
+            AND eg.uketEventRoundId = :eventRoundId
             AND t.status NOT IN :status
         """
     )

@@ -88,25 +88,6 @@ class TicketRepositoryTest(
             entityManager.clear()
         }
 
-        describe("findAllByUserIdAndStatusNotWithEntryGroup") {
-            it("정상적으로 티켓을 조회한다") {
-                val tickets = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(
-                    userId = savedTicket.userId,
-                    status = TicketStatus.RESERVATION_CANCEL,
-                )
-                tickets.size shouldBe 1
-                tickets[0].ticketNo shouldBe "ticketA"
-            }
-
-            it("조건에 맞는 티켓이 없으면 빈 리스트를 반환한다") {
-                val tickets = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(
-                    userId = 999L,
-                    status = TicketStatus.RESERVATION_CANCEL,
-                )
-                tickets shouldBe emptyList()
-            }
-        }
-
         describe("findByUserIdAndId") {
             it("정상적인 티켓 조회 시") {
                 val ticket = ticketRepository.findByUserIdAndId(
