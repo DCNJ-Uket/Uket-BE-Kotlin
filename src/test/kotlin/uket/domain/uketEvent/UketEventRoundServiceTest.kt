@@ -58,20 +58,17 @@ class UketEventRoundServiceTest :
         private fun setDB(): Pair<Long, List<UketEventRound>> {
             val now = LocalDateTime.now()
 
-            val uketEventRounds =
-                UketEventRandomUtil.createUketEventRounds(
-                    listOf(
-                        now.plusDays(10),
-                        now.plusDays(8)
-                    ),
+            val uketEvent =
+                UketEventRandomUtil.createUketEvent()
+            val dates = listOf(10L, 8L)
+            val uketEventRounds = List(2) {
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent,
+                    now.plusDays(dates[it]),
                     now.minusDays(3),
                     now.plusDays(2)
                 )
-
-            val uketEvent =
-                UketEventRandomUtil.createUketEvent(
-                    uketEventRounds
-                )
+            }
 
             return Pair(uketEvent.id, listOf(uketEventRounds[0], uketEventRounds[1]))
         }
@@ -79,47 +76,40 @@ class UketEventRoundServiceTest :
         fun setDB2(): Pair<List<UketEvent>, List<UketEventRound>> {
             val now = LocalDateTime.now()
 
-            val uketEventRounds =
-                UketEventRandomUtil.createUketEventRounds(
-                    listOf(
-                        now.plusDays(10),
-                        now.plusDays(8)
-                    ),
-                    now.minusDays(3),
-                    now.plusDays(2)
-                )
-
             val uketEvent =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds,
                     listOf(),
                     "eventA",
                     1L,
                 )
-
-            val uketEventRounds2 =
-                UketEventRandomUtil.createUketEventRounds(
-                    listOf(
-                        now.plusDays(10),
-                        now.plusDays(8)
-                    ),
+            val dates = listOf(10L, 8L)
+            val uketEventRounds = List(2) {
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent,
+                    now.plusDays(dates[it]),
                     now.minusDays(3),
                     now.plusDays(2)
                 )
+            }
 
             val uketEvent2 =
                 UketEventRandomUtil.createUketEvent(
-                    uketEventRounds,
                     listOf(),
                     "eventB",
                     2L
                 )
+            val uketEventRounds2 = List(2) {
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent2,
+                    now.plusDays(dates[it]),
+                    now.minusDays(3),
+                    now.plusDays(2)
+                )
+            }
 
             val rounds = mutableListOf<UketEventRound>()
-            rounds.addAll(uketEvent.uketEventRounds)
-            rounds.addAll(uketEvent2.uketEventRounds)
-
-            println(rounds.map { it.uketEvent!!.id })
+            rounds.addAll(uketEventRounds)
+            rounds.addAll(uketEventRounds2)
 
             return Pair(listOf(uketEvent, uketEvent2), rounds)
         }

@@ -46,19 +46,20 @@ class UketEventRoundRepositoryTest(
 
     companion object {
         private fun setDB(entityManager: EntityManager, now: LocalDateTime): Long {
-            val uketEventRounds =
-                UketEventRandomUtil.createUketEventRounds(
-                    listOf(now.minusDays(1), now),
+            val uketEvent =
+                UketEventRandomUtil.createUketEvent()
+
+            val uketEventRounds = List(2) { index ->
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent,
+                    now.minusDays(index.toLong()),
                     now.minusDays(3),
                     now.minusDays(2)
                 )
-
-            val uketEvent =
-                UketEventRandomUtil.createUketEvent(
-                    uketEventRounds
-                )
-
+            }
+            uketEventRounds.forEach { uketEvent.addEventRound(it) }
             entityManager.persist(uketEvent)
+            uketEventRounds.forEach { entityManager.persist(it) }
             entityManager.flush()
 
             return uketEvent.id

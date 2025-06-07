@@ -10,4 +10,9 @@ enum class TicketStatus(
     RESERVATION_CANCEL("예매 취소", "예매가 취소되었습니다. 해당 티켓으로 입장하실 수 없습니다."),
     EXPIRED("기간 만료", "이미 기간이 지난 티켓입니다. 날짜를 확인해주세요."),
     REFUND_REQUESTED("환불 요청", "환불이 요청된 티켓입니다. 해당 티켓으로 입장하실 수 없습니다."),
+    ;
+
+    companion object {
+        val notActiveStatuses: List<TicketStatus> = mutableListOf(RESERVATION_CANCEL)
+    }
 }

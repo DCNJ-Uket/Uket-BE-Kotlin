@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import uket.common.ErrorLevel
+import uket.common.PublicException
 import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
@@ -31,13 +33,17 @@ class EntryGroup(
     @Column(name = "total_ticket_count")
     var totalTicketCount: Int,
 ) : BaseTimeEntity() {
-    fun increaseReservedCount(): Boolean {
-        if (this.ticketCount + 1 > this.totalTicketCount) {
-            return false
+    fun increaseReservedCount(count: Int) {
+        if (this.ticketCount + count > this.totalTicketCount) {
+            throw PublicException(
+                publicMessage = "해당 입장 그룹의 예매 가능 인원이 부족합니다.",
+                systemMessage = "예매 가능 인원이 부족한 입장 그룹에 대한 예매 시도 | entryGroup=${this.id}",
+                title = "예매 가능 인원이 부족한 입장 그룹에 대한 예매 시도",
+                errorLevel = ErrorLevel.WARN
+            )
         }
 
-        this.ticketCount += 1
-        return true
+        this.ticketCount += count
     }
 
     fun decreaseReservedCount(): Boolean {

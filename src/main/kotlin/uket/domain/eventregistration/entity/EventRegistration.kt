@@ -65,6 +65,9 @@ class EventRegistration(
     @Column(name = "total_ticket_count")
     val totalTicketCount: Int,
 
+    @Column(name = "ticket_buy_limit")
+    val ticketBuyLimit: Int,
+
     @Embedded
     val details: EventDetails,
 

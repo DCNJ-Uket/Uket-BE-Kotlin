@@ -40,23 +40,30 @@ class UketEventServiceTest :
     }) {
     companion object {
         fun setDB(now: LocalDateTime): List<UketEvent> {
-            val uketEventRounds1 = UketEventRandomUtil.createUketEventRounds(
-                listOf(now, now.plusDays(1), now.plusDays(2), now.plusDays(3), now.plusDays(4)),
-                now.minusDays(4), now.minusDays(3)
-            )
-            val uketEvent1 = UketEventRandomUtil.createUketEvent(uketEventRounds1)
+            val uketEvent1 = UketEventRandomUtil.createUketEvent()
+            val uketEventRounds1 = List(4) { index ->
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent1,
+                    now.plusDays(index.toLong()),
+                    now.minusDays(4), now.minusDays(3)
+                )
+            }
 
-            val uketEventRounds2 = UketEventRandomUtil.createUketEventRounds(
-                listOf(now.plusDays(1), now.plusDays(2), now.plusDays(3), now.plusDays(4)),
-                now.minusDays(4), now.minusDays(3)
-            )
-            val uketEvent2 = UketEventRandomUtil.createUketEvent(uketEventRounds2)
+            val uketEvent2 = UketEventRandomUtil.createUketEvent()
+            val uketEventRounds2 = List(4) { index ->
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent1,
+                    now.plusDays(index.toLong()),
+                    now.minusDays(4), now.minusDays(3)
+                )
+            }
 
-            val uketEventRounds3 = UketEventRandomUtil.createUketEventRounds(
-                listOf(now.minusDays(1)),
+            val uketEvent3 = UketEventRandomUtil.createUketEvent()
+            val uketEventRounds3 = UketEventRandomUtil.createUketEventRound(
+                uketEvent3,
+                now.minusDays(1),
                 now.minusDays(4), now.minusDays(3)
             )
-            val uketEvent3 = UketEventRandomUtil.createUketEvent(uketEventRounds3)
 
             return listOf(uketEvent1, uketEvent2, uketEvent3)
         }
