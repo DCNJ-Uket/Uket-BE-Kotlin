@@ -12,14 +12,14 @@ import uket.auth.jwt.JwtAuthTokenUtil
 import uket.domain.user.dto.CreateUserCommand
 import uket.domain.user.entity.User
 import uket.domain.user.enums.Platform
+import uket.domain.user.enums.UserRole
 import uket.domain.user.service.UserService
 import uket.modules.redis.service.RotateTokenService
-import uket.uket.domain.user.enums.UserRole
 
 @SpringBootTest
 @Transactional
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class RotateTokenServiceTest {
+class RotateTokenServiceTest() {
     @Autowired
     lateinit var rotateTokenService: RotateTokenService
 
@@ -46,7 +46,11 @@ class RotateTokenServiceTest {
         testUser = userService.createUser(user)
 
         accessToken = jwtAuthTokenUtil.createAccessToken(
-            testUser.id, testUser.name, UserRole.USERS.toString(), testUser.isRegistered, 3000L,
+            testUser.id,
+            testUser.name,
+            UserRole.USERS.toString(),
+            testUser.isRegistered,
+            3000L,
         )
         refreshToken = jwtAuthTokenUtil.createRefreshToken(6000L)
 

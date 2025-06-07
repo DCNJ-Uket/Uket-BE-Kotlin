@@ -30,33 +30,38 @@ class TicketRepositoryTest(
         lateinit var savedTicket: Ticket
 
         beforeEach {
+            val uketEventRound = UketEventRound(
+                uketEvent = null,
+                eventRoundDateTime = LocalDateTime.now(),
+                ticketingStartDateTime = LocalDateTime.now(),
+                ticketingEndDateTime = LocalDateTime.now()
+            )
+
             val uketEvent = UketEvent(
                 organizationId = 1L,
-                name = "uketEventA",
+                eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
-                location = "locationA",
-                eventImagePath = null,
-                displayEndDate = LocalDateTime.now(),
+                location = "00시00구",
                 ticketPrice = 1000,
+                totalTicketCount = 0,
+                details = UketEvent.EventDetails(
+                    "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "", "")
+                ),
+                eventImageId = "",
+                thumbnailImageId = "",
+                _uketEventRounds = listOf(uketEventRound),
+                _banners = listOf(),
             )
             entityManager.persist(uketEvent)
 
-            val uketEventRound = UketEventRound(
-                uketEvent = uketEvent,
-                name = "uketEventRoundA",
-                eventDate = LocalDateTime.now(),
-                ticketingDateTime = LocalDateTime.now(),
-            )
-            entityManager.persist(uketEventRound)
-
             // 엔트리 그룹 저장
             val entryGroup = EntryGroup(
-                uketEventRound = uketEventRound,
-                name = "entryGroupA",
-                entryStartTime = LocalDateTime.now(),
-                entryEndTime = LocalDateTime.now(),
-                reservationCount = 0,
-                totalCount = 10,
+                uketEventRound = uketEvent.uketEventRounds[0],
+                entryGroupName = "nameA",
+                entryStartDateTime = LocalDateTime.now(),
+                entryEndDateTime = LocalDateTime.now(),
+                ticketCount = 0,
+                totalTicketCount = 10
             )
             entityManager.persist(entryGroup)
 

@@ -9,6 +9,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6" // 스프링 의존성 관리
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0" // 린트
 }
+val springCloudVersion by extra("2024.0.1")
 
 group = "uket"
 version = "0.0.1-SNAPSHOT"
@@ -21,6 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -68,6 +70,26 @@ dependencies {
     implementation("org.slf4j:slf4j-api:2.0.9")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.11")
+
+    // s3
+    implementation("io.awspring.cloud:spring-cloud-aws-starter:3.1.1")
+    implementation(platform("software.amazon.awssdk:bom:2.25.46"))
+    implementation("software.amazon.awssdk:s3")
+
+    // slack
+    implementation("com.slack.api:slack-api-client:1.39.0")
+
+    // qrcode
+    implementation("com.google.zxing:core:3.4.1")
+    implementation("com.google.zxing:javase:3.4.1")
+
+    // ratelimit
+    implementation("com.bucket4j:bucket4j-core:8.3.0")
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
 }
 
 tasks.test {
