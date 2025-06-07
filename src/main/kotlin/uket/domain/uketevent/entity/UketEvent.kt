@@ -42,6 +42,9 @@ class UketEvent(
     @Column(name = "ticket_price")
     val ticketPrice: Int,
 
+    @Column(name = "buy_ticket_limit")
+    val buyTicketLimit: Int,
+
     @Embedded
     val details: EventDetails,
 
@@ -51,30 +54,18 @@ class UketEvent(
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
 
-    _uketEventRounds: List<UketEventRound>,
     _banners: List<Banner>,
 ) : BaseTimeEntity() {
-    @OneToMany(
-        mappedBy = "uketEvent",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    val uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
-        UketEventRound(
-            id = it.id,
-            uketEvent = this,
-            eventRoundDateTime = it.eventRoundDateTime,
-            ticketingStartDateTime = it.ticketingStartDateTime,
-            ticketingEndDateTime = it.ticketingEndDateTime
-        )
+    fun addEventRound(uketEventRound: UketEventRound) {
+        firstRoundDateTime = minOf(firstRoundDateTime, uketEventRound.eventRoundDateTime)
+        lastRoundDateTime = maxOf(lastRoundDateTime, uketEventRound.eventRoundDateTime)
     }
 
     @Column(name = "first_round_datetime")
-    val firstRoundDateTime: LocalDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
+    var firstRoundDateTime: LocalDateTime = LocalDateTime.MAX
 
     @Column(name = "last_round_datetime")
-    val lastRoundDateTime: LocalDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
+    var lastRoundDateTime: LocalDateTime = LocalDateTime.MIN
 
     @OneToMany(
         mappedBy = "uketEvent",

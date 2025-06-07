@@ -94,7 +94,6 @@ class DomainEntityTest {
         val terms = Terms(0L, "nameA", TermsType.MANDATORY, 0L, true)
         val termSign = TermSign(0L, terms, document, 0L, true, LocalDateTime.now())
 
-        val uketEventRound = UketEventRound(0L, null, LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
         val uketEvent = UketEvent(
             id = 0L,
             organizationId = 0L,
@@ -102,16 +101,19 @@ class DomainEntityTest {
             eventType = EventType.FESTIVAL,
             location = "00시00구",
             ticketPrice = 1000,
+            buyTicketLimit = 4,
             totalTicketCount = 0,
             details = UketEvent.EventDetails(
                 "", "", UketEvent.EventContact(UketEvent.EventContact.ContactType.INSTAGRAM, "@as", "")
             ),
             eventImageId = "",
             thumbnailImageId = "",
-            _uketEventRounds = listOf(uketEventRound),
             _banners = listOf(),
         )
-        val entryGroup = EntryGroup(0L, uketEventRound, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
+        val uketEventRound = UketEventRound(0L, uketEvent, LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+        uketEvent.addEventRound(uketEventRound)
+
+        val entryGroup = EntryGroup(0L, uketEventRound, uketEvent.id, "nameA", LocalDateTime.now(), LocalDateTime.now(), 0, 10)
 
         // when
         em.persist(user)

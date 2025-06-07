@@ -62,4 +62,14 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
         """
     )
     fun findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
+
+    @Query(
+        """
+            SELECT ue FROM EntryGroup eg
+            JOIN eg.uketEventRound uer
+            JOIN uer.uketEvent ue
+            WHERE eg.id = :entryGroupId
+        """
+    )
+    fun findByEntryGroupId(entryGroupId: Long): UketEvent?
 }
