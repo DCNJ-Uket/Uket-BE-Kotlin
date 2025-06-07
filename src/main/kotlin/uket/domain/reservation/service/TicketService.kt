@@ -75,12 +75,7 @@ class TicketService(
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
 
-        if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
-            ticket.cancelBeforePayment()
-        } else if (ticket.status == TicketStatus.BEFORE_ENTER) {
-            ticket.cancelAfterPayment()
-        }
-
+        ticket.cancel()
         ticket.updateDeletedAt()
         ticketRepository.save(ticket)
     }
