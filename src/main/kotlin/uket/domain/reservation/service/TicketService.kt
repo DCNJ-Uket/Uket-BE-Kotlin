@@ -42,16 +42,14 @@ class TicketService(
 
     @Transactional
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
-        val tickets = mutableListOf<Ticket>()
-        for (i in 1..count) {
-            val ticket = Ticket(
+        val tickets = List(count) {
+            Ticket(
                 userId = createTicketCommand.userId,
                 entryGroupId = createTicketCommand.entryGroupId,
                 status = createTicketCommand.ticketStatus,
                 ticketNo = UUID.randomUUID().toString(),
                 enterAt = null,
             )
-            tickets.add(ticket)
         }
         ticketJdbcRepository.saveAllBatch(tickets)
 
