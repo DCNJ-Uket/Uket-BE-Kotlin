@@ -67,4 +67,9 @@ class UketEventRoundService(
     fun saveAll(uketEventRounds: List<UketEventRound>): List<UketEventRound> {
         return uketEventRoundRepository.saveAll(uketEventRounds)
     }
+
+    @Transactional
+    fun deleteAllByEventId(uketEventId: Long) {
+        TODO("Not yet implemented")
+    }
 }

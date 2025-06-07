@@ -20,8 +20,8 @@ class CreateUketEventFacade(
     @Transactional
     fun invoke(eventRegistrationId: Long) {
         val eventRegistration = eventRegistrationService.getByIdWithEventRoundAndEntryGroup(eventRegistrationId)
-        check(eventRegistration.status == EventRegistrationStatus.검수_완료) {
-            "[CreateUketEventFacade] 검수완료 상태가 아닌데 UketEvent를 생성할 수 없습니다. | eventRegistrationId: ${eventRegistration.id}"
+        check(eventRegistration.status == EventRegistrationStatus.검수_진행) {
+            "[CreateUketEventFacade] 검수 진행 상태가 아닌데 UketEvent를 생성할 수 없습니다. | eventRegistrationId: ${eventRegistration.id}"
         }
 
         val savedUketEvent = uketEventService.save(eventRegistration.toUketEvent())

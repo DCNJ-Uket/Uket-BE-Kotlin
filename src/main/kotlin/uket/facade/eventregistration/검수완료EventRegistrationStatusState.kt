@@ -7,11 +7,14 @@ import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.domain.eventregistration.service.EventRegistrationStatusState
 import uket.domain.uketevent.service.UketEventService
+import uket.facade.CreateUketEventFacade
+import uket.facade.DeleteUketEventFacade
 
 @Component
 class 검수완료EventRegistrationStatusState(
     val eventRegistrationService: EventRegistrationService,
-    val uketEventService: UketEventService,
+    val deleteUketEventFacade: DeleteUketEventFacade,
+    val createUketEventFacade: CreateUketEventFacade
 ) : EventRegistrationStatusState {
     override val status: EventRegistrationStatus = EventRegistrationStatus.검수_완료
     override val allowedPrevStatus: Set<EventRegistrationStatus> = setOf(
@@ -21,7 +24,7 @@ class 검수완료EventRegistrationStatusState(
 
     override fun execute(id: Long, currentStatus: EventRegistrationStatus) {
         when (currentStatus) {
-            EventRegistrationStatus.검수_진행 -> 검수진행To검수완료()
+            EventRegistrationStatus.검수_진행 -> 검수진행To검수완료(id)
             EventRegistrationStatus.등록_완료 -> 등록완료To검수완료(id)
             else -> throw PublicException(
                 publicMessage = "변경할 수 없는 상태입니다.",
@@ -30,8 +33,8 @@ class 검수완료EventRegistrationStatusState(
         }
     }
 
-    private fun 검수진행To검수완료() {
-        doNothing
+    private fun 검수진행To검수완료(id: Long) {
+        createUketEventFacade.invoke(id)
     }
 
     private fun 등록완료To검수완료(id: Long) {
@@ -39,7 +42,7 @@ class 검수완료EventRegistrationStatusState(
         val uketEventId = eventRegistration?.uketEventId
 
         if (uketEventId != null) {
-            uketEventService.deleteById(uketEventId)
+            deleteUketEventFacade.invoke(uketEventId)
         }
     }
 

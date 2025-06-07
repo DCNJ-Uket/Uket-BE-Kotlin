@@ -54,4 +54,22 @@ class UketEventService(
     fun save(uketEvent: UketEvent): UketEvent {
         return uketEventRepository.save(uketEvent)
     }
+
+    @Transactional
+    fun open(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.open()
+
+        return uketEventRepository.save(uketEvent)
+    }
+
+    @Transactional
+    fun finish(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.finish()
+
+        return uketEventRepository.save(uketEvent)
+    }
 }

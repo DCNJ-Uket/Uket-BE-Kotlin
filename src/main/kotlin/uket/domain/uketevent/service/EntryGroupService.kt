@@ -58,4 +58,9 @@ class EntryGroupService(
     fun saveAll(entryGroups: List<EntryGroup>): List<EntryGroup> {
         return entryGroupRepository.saveAll(entryGroups)
     }
+
+    @Transactional
+    fun deleteAllByEventId(uketEventId: Long) {
+        TODO("Not yet implemented")
+    }
 }

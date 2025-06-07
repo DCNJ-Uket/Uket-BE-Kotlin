@@ -55,6 +55,19 @@ class UketEvent(
     @Column(name = "last_round_datetime")
     val lastRoundDateTime: LocalDateTime,
 ) : BaseTimeEntity() {
+
+    @Column(name = "is_visible")
+    var isVisible: Boolean = false
+        protected set
+
+    @Column(name = "event_open_date_time")
+    var eventOpenDateTime: LocalDateTime? = null
+        protected set
+
+    @Column(name = "event_finish_date_time")
+    var eventFinishDateTime: LocalDateTime? = null
+        protected set
+
     @Embeddable
     data class EventDetails(
         @Column(name = "information")
@@ -75,4 +88,14 @@ class UketEvent(
         @Column(name = "contact_link")
         val link: String?,
     )
+
+    fun open(now: LocalDateTime = LocalDateTime.now()) {
+        this.isVisible = true
+        this.eventOpenDateTime = now
+    }
+
+    fun finish(now: LocalDateTime = LocalDateTime.now()) {
+        this.isVisible = false
+        this.eventFinishDateTime = now
+    }
 }

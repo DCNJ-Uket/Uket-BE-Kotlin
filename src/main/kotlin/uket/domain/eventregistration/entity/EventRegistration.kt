@@ -253,6 +253,10 @@ class EventRegistration(
         this.uketEventId = uketEventId
     }
 
+    fun clearUketEvent() {
+        this.uketEventId = null
+    }
+
     companion object {
         private val log by LoggerDelegate()
     }
