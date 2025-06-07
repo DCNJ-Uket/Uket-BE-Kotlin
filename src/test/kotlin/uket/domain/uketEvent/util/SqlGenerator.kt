@@ -18,6 +18,7 @@ class SqlGenerator {
                 // 일반 필드
                 columns += listOf(
                     "uket_event_round_id",
+                    "uket_event_id",
                     "entry_group_name",
                     "entry_start_datetime",
                     "entry_end_datetime",
@@ -29,6 +30,7 @@ class SqlGenerator {
 
                 values += listOf(
                     uketEventRound.id,
+                    uketEventId,
                     entryGroupName,
                     entryStartDateTime,
                     entryEndDateTime,

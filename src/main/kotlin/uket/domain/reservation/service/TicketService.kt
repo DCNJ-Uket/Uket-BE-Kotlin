@@ -31,22 +31,26 @@ class TicketService(
         ticketStatus: TicketStatus,
     ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
 
+    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
+        val excludedStatuses: List<TicketStatus> =
+            listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED, TicketStatus.REFUND_REQUESTED)
+        return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
+    }
+
     fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> = ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
 
     fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> = ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
 
     @Transactional
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
-        val tickets = mutableListOf<Ticket>()
-        for (i in 1..count) {
-            val ticket = Ticket(
+        val tickets = List(count) {
+            Ticket(
                 userId = createTicketCommand.userId,
                 entryGroupId = createTicketCommand.entryGroupId,
                 status = createTicketCommand.ticketStatus,
                 ticketNo = UUID.randomUUID().toString(),
                 enterAt = null,
             )
-            tickets.add(ticket)
         }
         ticketJdbcRepository.saveAllBatch(tickets)
 

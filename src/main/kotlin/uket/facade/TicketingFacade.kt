@@ -20,7 +20,7 @@ class TicketingFacade(
     private val ticketService: TicketService,
     private val entryGroupService: EntryGroupService,
 ) {
-    @DistributedLock(key = "#entryGroupId")
+    @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
