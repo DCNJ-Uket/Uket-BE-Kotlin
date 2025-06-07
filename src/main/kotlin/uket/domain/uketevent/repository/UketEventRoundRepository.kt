@@ -22,4 +22,6 @@ interface UketEventRoundRepository : JpaRepository<UketEventRound, Long> {
         """
     )
     fun findAllByUketEventIdInWithUketEvent(eventIds: List<Long>): List<UketEventRound>
+
+    fun findAllByUketEventId(uketEventId: Long): List<UketEventRound>
 }

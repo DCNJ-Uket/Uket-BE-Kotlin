@@ -36,7 +36,7 @@ data class EventDetailResponse(
         fun of(
             uketEvent: UketEvent,
             organization: Organization,
-            banners: List<Banner>
+            banners: List<Banner>,
         ): EventDetailResponse = EventDetailResponse(
             eventId = uketEvent.id,
             eventName = uketEvent.eventName,

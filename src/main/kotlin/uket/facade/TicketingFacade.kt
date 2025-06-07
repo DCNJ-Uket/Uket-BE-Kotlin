@@ -22,13 +22,13 @@ class TicketingFacade(
     private val ticketService: TicketService,
     private val entryGroupService: EntryGroupService,
     private val uketEventRoundService: UketEventRoundService,
-    private val uketEventService: UketEventService
+    private val uketEventService: UketEventService,
 ) {
     @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
-        val entryGroup = entryGroupService.getByIdWithUketEventRoundAndUketEvent(entryGroupId)
+        val entryGroup = entryGroupService.getById(entryGroupId)
         val eventRound = uketEventRoundService.getById(entryGroup.uketEventRoundId)
         validateTicketingDateTime(eventRound, entryGroup, at)
 

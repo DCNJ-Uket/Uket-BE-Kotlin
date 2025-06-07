@@ -29,9 +29,6 @@ class EntryGroupService(
         return entryGroups.filter { it.ticketCount < it.totalTicketCount }
     }
 
-    fun getByIdWithUketEventRoundAndUketEvent(entryGroupId: Long): EntryGroup = entryGroupRepository.findByIdWithUketEventRoundAndUketEvent(entryGroupId)
-        ?: throw IllegalStateException("해당 입장 그룹을 찾을 수 없습니다.")
-
     @Transactional
     fun increaseReservedCount(entryGroupId: Long, count: Int) {
         val entryGroup = this.getById(entryGroupId)
@@ -60,6 +57,8 @@ class EntryGroupService(
 
     @Transactional
     fun deleteAllByEventId(uketEventId: Long) {
-        TODO("Not yet implemented")
+        val entryGroups = entryGroupRepository.findAllByUketEventId(uketEventId)
+
+        entryGroupRepository.deleteAllInBatch(entryGroups)
     }
 }

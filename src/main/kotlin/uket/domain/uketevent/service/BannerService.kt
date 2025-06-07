@@ -21,6 +21,8 @@ class BannerService(
 
     @Transactional
     fun deleteAllByEventId(uketEventId: Long) {
-        TODO("Not yet implemented")
+        val banners = bannerRepository.findAllByUketEventId(uketEventId)
+
+        bannerRepository.deleteAllInBatch(banners)
     }
 }

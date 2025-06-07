@@ -11,7 +11,7 @@ import uket.facade.DeleteUketEventFacade
 @Component
 class 등록취소EventRegistrationStatusState(
     val eventRegistrationService: EventRegistrationService,
-    val deleteUketEventFacade: DeleteUketEventFacade
+    val deleteUketEventFacade: DeleteUketEventFacade,
 ) : EventRegistrationStatusState {
     override val status: EventRegistrationStatus = EventRegistrationStatus.등록_취소
     override val allowedPrevStatus: Set<EventRegistrationStatus> = setOf(

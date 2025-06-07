@@ -70,6 +70,8 @@ class UketEventRoundService(
 
     @Transactional
     fun deleteAllByEventId(uketEventId: Long) {
-        TODO("Not yet implemented")
+        val uketEventRounds = uketEventRoundRepository.findAllByUketEventId(uketEventId)
+
+        uketEventRoundRepository.deleteAllInBatch(uketEventRounds)
     }
 }

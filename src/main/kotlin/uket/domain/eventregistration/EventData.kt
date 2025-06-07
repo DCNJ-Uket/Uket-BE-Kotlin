@@ -22,7 +22,7 @@ data class EventData(
     val thumbnailImageId: String,
     val banners: List<BannerInfoDto>,
     val paymentInfo: PaymentInfoDto,
-    val buyTicketLimit: Int
+    val buyTicketLimit: Int,
 ) {
     data class EventRoundDto(
         val date: LocalDate, // yyyy-MM-dd

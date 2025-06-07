@@ -58,7 +58,6 @@ class UketEvent(
     @Column(name = "last_round_datetime")
     val lastRoundDateTime: LocalDateTime,
 ) : BaseTimeEntity() {
-
     @Column(name = "is_visible")
     var isVisible: Boolean = false
         protected set

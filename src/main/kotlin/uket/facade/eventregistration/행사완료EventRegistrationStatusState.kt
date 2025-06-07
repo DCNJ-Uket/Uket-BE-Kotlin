@@ -11,7 +11,7 @@ import uket.domain.uketevent.service.UketEventService
 @Component
 class 행사완료EventRegistrationStatusState(
     val eventRegistrationService: EventRegistrationService,
-    val uketEventService: UketEventService
+    val uketEventService: UketEventService,
 ) : EventRegistrationStatusState {
     override val status: EventRegistrationStatus = EventRegistrationStatus.행사_완료
     override val allowedPrevStatus: Set<EventRegistrationStatus> = setOf(EventRegistrationStatus.등록_완료)

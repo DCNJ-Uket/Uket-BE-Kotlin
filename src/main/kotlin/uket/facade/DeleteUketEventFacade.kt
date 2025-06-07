@@ -16,7 +16,6 @@ class DeleteUketEventFacade(
     private val bannerService: BannerService,
     private val eventRegistrationService: EventRegistrationService,
 ) {
-
     @Transactional
     fun invoke(uketEventId: Long) {
         bannerService.deleteAllByEventId(uketEventId)

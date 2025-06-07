@@ -28,7 +28,7 @@ class EventController(
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventFacade: UketEventFacade,
     private val organizationService: OrganizationService,
-    private val bannerService: BannerService
+    private val bannerService: BannerService,
 ) {
     @Operation(summary = "활성화된 행사 목록 조회", description = "누구나 조회 가능한 행사 목록을 가져옵니다")
     @GetMapping("/uket-events")
