@@ -43,25 +43,27 @@ class EntryGroupServiceTest :
     }) {
     companion object {
         private fun setDB(now: LocalDateTime): Triple<UketEvent, UketEventRound, List<EntryGroup>> {
-            val uketEventRounds =
-                UketEventRandomUtil.createUketEventRounds(
-                    listOf(now.plusDays(7)),
+            val uketEvent = UketEventRandomUtil.createUketEvent()
+
+            val uketEventRound =
+                UketEventRandomUtil.createUketEventRound(
+                    uketEvent,
+                    now.plusDays(7),
                     now.minusDays(2),
                     now.plusDays(2),
                 )
 
-            val uketEvent = UketEventRandomUtil.createUketEvent(
-                uketEventRounds
-            )
+            val entryGroups = List(3) { index ->
+                UketEventRandomUtil.createEntryGroup(
+                    uketEventRound,
+                    now.plusHours((index - 1).toLong())
+                )
+            }
 
-            val entryGroups = UketEventRandomUtil.createEntryGroup(
-                uketEventRounds[0],
-                listOf(now.minusHours(1), now, now.plusHours(1))
-            )
             entryGroups[1].totalTicketCount = 0
             entryGroups[1].ticketCount = 0
 
-            return Triple(uketEvent, uketEventRounds[0], listOf(entryGroups[1], entryGroups[2]))
+            return Triple(uketEvent, uketEventRound, listOf(entryGroups[1], entryGroups[2]))
         }
     }
 }
