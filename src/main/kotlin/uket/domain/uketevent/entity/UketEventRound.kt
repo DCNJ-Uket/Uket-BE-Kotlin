@@ -21,7 +21,7 @@ class UketEventRound(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uket_event_id")
-    var uketEvent: UketEvent?,
+    var uketEvent: UketEvent,
 
     @Column(name = "event_round_datetime")
     val eventRoundDateTime: LocalDateTime,
