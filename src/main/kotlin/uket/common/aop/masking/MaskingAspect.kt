@@ -9,7 +9,7 @@ import uket.common.response.CustomPageResponse
 @Aspect
 @Component
 class MaskingAspect {
-    @Around("execution(* uket.api.*Controller.*(..))")
+    @Around("execution(* uket.api..*Controller.*(..))")
     fun maskReturnValue(joinPoint: ProceedingJoinPoint): Any? {
         val result = joinPoint.proceed()
         return when (result) {
