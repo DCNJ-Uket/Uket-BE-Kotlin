@@ -49,4 +49,9 @@ class UketEventService(
     fun deleteById(id: Long) {
         uketEventRepository.deleteById(id)
     }
+
+    @Transactional
+    fun save(uketEvent: UketEvent): UketEvent {
+        return uketEventRepository.save(uketEvent)
+    }
 }

@@ -35,7 +35,12 @@ class 검수완료EventRegistrationStatusState(
     }
 
     private fun 등록완료To검수완료(id: Long) {
-        uketEventService.deleteById(id)
+        val eventRegistration = eventRegistrationService.findById(id)
+        val uketEventId = eventRegistration?.uketEventId
+
+        if (uketEventId != null) {
+            uketEventService.deleteById(uketEventId)
+        }
     }
 
     override fun updateStatus(id: Long): EventRegistration = eventRegistrationService.updateStatus(id, status)

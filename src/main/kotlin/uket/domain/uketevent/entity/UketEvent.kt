@@ -1,18 +1,16 @@
 package uket.domain.uketevent.entity
 
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
@@ -40,7 +38,7 @@ class UketEvent(
     val totalTicketCount: Int,
 
     @Column(name = "ticket_price")
-    val ticketPrice: Int,
+    val ticketPrice: Long,
 
     @Embedded
     val details: EventDetails,
@@ -51,46 +49,12 @@ class UketEvent(
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
 
-    _uketEventRounds: List<UketEventRound>,
-    _banners: List<Banner>,
-) : BaseTimeEntity() {
-    @OneToMany(
-        mappedBy = "uketEvent",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    val uketEventRounds: List<UketEventRound> = _uketEventRounds.map {
-        UketEventRound(
-            id = it.id,
-            uketEvent = this,
-            eventRoundDateTime = it.eventRoundDateTime,
-            ticketingStartDateTime = it.ticketingStartDateTime,
-            ticketingEndDateTime = it.ticketingEndDateTime
-        )
-    }
-
     @Column(name = "first_round_datetime")
-    val firstRoundDateTime: LocalDateTime = uketEventRounds.minOf { it.eventRoundDateTime }
+    val firstRoundDateTime: LocalDateTime,
 
     @Column(name = "last_round_datetime")
-    val lastRoundDateTime: LocalDateTime = uketEventRounds.maxOf { it.eventRoundDateTime }
-
-    @OneToMany(
-        mappedBy = "uketEvent",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    var banners: List<Banner> = _banners.map {
-        Banner(
-            id = it.id,
-            uketEvent = this,
-            imageId = it.imageId,
-            link = it.link
-        )
-    }
-
+    val lastRoundDateTime: LocalDateTime,
+) : BaseTimeEntity() {
     @Embeddable
     data class EventDetails(
         @Column(name = "information")
@@ -105,15 +69,10 @@ class UketEvent(
     data class EventContact(
         @Column(name = "contact_type")
         @Enumerated(EnumType.STRING)
-        val type: ContactType,
+        val type: EventContactType,
         @Column(name = "contact_content")
         val content: String,
         @Column(name = "contact_link")
         val link: String?,
-    ) {
-        enum class ContactType {
-            INSTAGRAM,
-            KAKAO,
-        }
-    }
+    )
 }

@@ -16,8 +16,13 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.BatchSize
 import uket.common.LoggerDelegate
 import uket.common.enums.BankCode
+import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
+import uket.domain.uketevent.entity.Banner
+import uket.domain.uketevent.entity.EntryGroup
+import uket.domain.uketevent.entity.UketEvent
+import uket.domain.uketevent.entity.UketEventRound
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -84,6 +89,10 @@ class EventRegistration(
         }
     }
 
+    @Column(name = "uket_event_id")
+    var uketEventId: Long? = null
+        protected set
+
     @OneToMany(
         mappedBy = "eventRegistration",
         fetch = FetchType.LAZY,
@@ -140,7 +149,15 @@ class EventRegistration(
         val caution: String,
         @Embedded
         val contact: EventContact,
-    )
+    ) {
+        fun toUketEvent(): UketEvent.EventDetails {
+            return UketEvent.EventDetails(
+                information = information,
+                caution = caution,
+                contact = contact.toUketEvent()
+            )
+        }
+    }
 
     @Embeddable
     data class PaymentInfo(
@@ -161,17 +178,66 @@ class EventRegistration(
     data class EventContact(
         @Column(name = "contact_type")
         @Enumerated(EnumType.STRING)
-        val type: ContactType,
+        val type: EventContactType,
         @Column(name = "contact_content")
         val content: String,
         @Column(name = "contact_link")
         val link: String?,
     ) {
-        enum class ContactType {
-            INSTAGRAM,
-            KAKAO,
-            전화번호,
-            기타,
+        fun toUketEvent(): UketEvent.EventContact {
+            return UketEvent.EventContact(
+                type = type,
+                content = content,
+                link = link
+            )
+        }
+    }
+
+    fun toUketEvent(): UketEvent {
+        return UketEvent(
+            organizationId = organizationId,
+            eventName = eventName,
+            eventType = eventType,
+            location = location,
+            totalTicketCount = totalTicketCount,
+            ticketPrice = paymentInfo.ticketPrice,
+            details = details.toUketEvent(),
+            eventImageId = uketEventImageId,
+            thumbnailImageId = thumbnailImageId,
+            firstRoundDateTime = eventRound.minOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
+            lastRoundDateTime = eventRound.maxOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
+        )
+    }
+
+    fun toEventRounds(): List<UketEventRound> {
+        return eventRound.map {
+            UketEventRound(
+                uketEventId = uketEventId!!,
+                eventRoundDateTime = LocalDateTime.of(it.eventRoundDate, it.eventStartTime),
+                ticketingStartDateTime = ticketingStartDateTime,
+                ticketingEndDateTime = ticketingEndDateTime
+            )
+        }
+    }
+
+    fun toEntryGroups(uketEventRound: UketEventRound): List<EntryGroup> {
+        return entryGroup.map {
+            EntryGroup(
+                uketEventId = uketEventId!!,
+                uketEventRoundId = uketEventRound.id,
+                entryStartDateTime = LocalDateTime.of(uketEventRound.eventRoundDateTime.toLocalDate(), it.entryStartTime),
+                totalTicketCount = it.ticketCount
+            )
+        }
+    }
+
+    fun toBanners(): List<Banner> {
+        return banners.map {
+            Banner(
+                uketEventId = uketEventId!!,
+                imageId = it.imageId,
+                link = it.link
+            )
         }
     }
 
@@ -181,6 +247,10 @@ class EventRegistration(
 
     fun updateId(registrationId: Long) {
         this.id = registrationId
+    }
+
+    fun settingEvent(uketEventId: Long) {
+        this.uketEventId = uketEventId
     }
 
     companion object {

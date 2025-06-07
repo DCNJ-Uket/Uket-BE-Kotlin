@@ -53,4 +53,9 @@ class EntryGroupService(
     @Transactional(readOnly = true)
     fun findValidEntryGroup(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup> =
         entryGroupRepository.findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds, at)
+
+    @Transactional
+    fun saveAll(entryGroups: List<EntryGroup>): List<EntryGroup> {
+        return entryGroupRepository.saveAll(entryGroups)
+    }
 }

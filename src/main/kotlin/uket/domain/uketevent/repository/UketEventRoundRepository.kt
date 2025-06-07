@@ -9,8 +9,8 @@ interface UketEventRoundRepository : JpaRepository<UketEventRound, Long> {
     @Query(
         """
             SELECT uer FROM UketEventRound uer
-            JOIN uer.uketEvent ue ON ue.id = :uketEventId
             WHERE uer.eventRoundDateTime >= :date
+            AND uer.uketEventId = :uketEventId
         """
     )
     fun findByUketEventIdAndEventRoundDateAfter(uketEventId: Long, date: LocalDateTime): List<UketEventRound>
@@ -18,8 +18,7 @@ interface UketEventRoundRepository : JpaRepository<UketEventRound, Long> {
     @Query(
         """
             SELECT uer FROM UketEventRound uer
-            JOIN FETCH uer.uketEvent ue
-            WHERE ue.id IN :eventIds
+            WHERE uer.uketEventId IN :eventIds
         """
     )
     fun findAllByUketEventIdInWithUketEvent(eventIds: List<Long>): List<UketEventRound>
