@@ -6,26 +6,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import uket.common.enums.BankCode
-import uket.common.enums.EventType
-import uket.domain.admin.entity.Admin
-import uket.domain.admin.entity.Organization
-import uket.domain.payment.entity.Payment
-import uket.domain.payment.entity.PaymentHistory
-import uket.domain.payment.enums.PaymentManner
-import uket.domain.payment.enums.PaymentStatus
-import uket.domain.reservation.entity.Ticket
-import uket.domain.reservation.enums.TicketStatus
-import uket.domain.terms.entity.Document
-import uket.domain.terms.entity.TermSign
-import uket.domain.terms.entity.Terms
-import uket.domain.terms.enums.TermsType
-import uket.domain.uketevent.entity.EntryGroup
-import uket.domain.uketevent.entity.UketEvent
-import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.user.entity.User
 import uket.domain.user.enums.Platform
-import java.time.LocalDateTime
 
 @DataJpaTest
 class DomainEntityTest {

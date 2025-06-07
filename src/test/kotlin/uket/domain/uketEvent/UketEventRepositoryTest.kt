@@ -5,14 +5,12 @@ import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import jakarta.persistence.EntityManager
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
 import uket.domain.uketEvent.util.UketEventRandomUtil
-import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.repository.UketEventRepository
@@ -42,7 +40,7 @@ class UketEventRepositoryTest(
             }
         }
     }
-) {
+    ) {
     override fun extensions(): List<Extension> {
         return super.extensions() + listOf(SpringExtension) // SpringExtension 활성화
     }

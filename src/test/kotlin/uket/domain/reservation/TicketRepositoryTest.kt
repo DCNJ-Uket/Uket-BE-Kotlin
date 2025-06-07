@@ -55,7 +55,6 @@ class TicketRepositoryTest(
                 ticketingEndDateTime = LocalDateTime.now()
             )
 
-
             entityManager.persist(uketEvent)
             entityManager.persist(uketEventRound)
 
