@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import uket.common.ErrorLevel
 import uket.common.PublicException
@@ -12,7 +13,13 @@ import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "entry_group")
+@Table(
+    name = "entry_group",
+    indexes = [
+        Index(name = "index_entry_group_01", columnList = "uketEventId"),
+        Index(name = "index_entry_group_02", columnList = "uketEventRoundId"),
+    ]
+)
 class EntryGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

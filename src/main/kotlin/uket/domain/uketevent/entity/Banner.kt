@@ -5,10 +5,14 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "banner")
+@Table(
+    name = "banner",
+    indexes = [Index(name = "index_banner_01", columnList = "uketEventId")]
+)
 class Banner(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

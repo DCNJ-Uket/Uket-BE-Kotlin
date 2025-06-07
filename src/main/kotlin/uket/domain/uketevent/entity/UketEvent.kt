@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import uket.common.enums.EventContactType
 import uket.common.enums.EventType
@@ -16,7 +17,13 @@ import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "uket_event")
+@Table(
+    name = "uket_event",
+    indexes = [
+        Index(name = "index_uket_event_01", columnList = "uketEventId"),
+        Index(name = "index_uket_event_02", columnList = "organizationId"),
+    ]
+)
 class UketEvent(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

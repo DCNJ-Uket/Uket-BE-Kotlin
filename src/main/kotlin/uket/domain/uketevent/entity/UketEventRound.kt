@@ -5,12 +5,16 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "uket_event_round")
+@Table(
+    name = "uket_event_round",
+    indexes = [Index(name = "index_uket_event_round_01", columnList = "uketEventId")]
+)
 class UketEventRound(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
