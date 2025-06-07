@@ -15,11 +15,11 @@ interface StatusState<T : Enum<T>, Entity> {
                 systemMessage = "[${this::class.simpleName}] ${status}는 현재상태($currentStatus)에서 변경될 수 없는 상태입니다."
             )
         }
-        execute(id)
+        execute(id, currentStatus)
         return updateStatus(id)
     }
 
-    fun execute(id: Long)
+    fun execute(id: Long, currentStatus: T)
 
     fun updateStatus(id: Long): Entity
 }

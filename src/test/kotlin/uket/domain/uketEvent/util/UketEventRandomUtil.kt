@@ -3,7 +3,6 @@ package uket.domain.uketEvent.util
 import org.jeasy.random.EasyRandom
 import org.jeasy.random.EasyRandomParameters
 import org.jeasy.random.FieldPredicates.named
-import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
@@ -13,7 +12,6 @@ import kotlin.random.Random
 class UketEventRandomUtil {
     companion object {
         fun createUketEvent(
-            banners: List<Banner> = listOf(),
             eventName: String = "name",
             id: Long = 0L,
         ): UketEvent {
@@ -22,23 +20,13 @@ class UketEventRandomUtil {
                     .randomize(named("organizationId")) { 1L }
                     .randomize(named("id")) { id }
                     .randomize(named("eventName")) { eventName }
-                    .randomize(named("banners")) {
-                        banners.map {
-                            Banner(
-                                id = it.id,
-                                uketEvent = null,
-                                imageId = it.imageId,
-                                link = it.link
-                            )
-                        }
-                    }.randomize(named("buyTicketLimit")) {
+                    .randomize(named("buyTicketLimit")) {
                         4
                     }.randomize(named("ticketPrice")) {
                         1000
                     }
             )
             val uketEvent = easyRandom.nextObject(UketEvent::class.java)
-            uketEvent.banners.forEach { it.uketEvent = uketEvent }
 
             return uketEvent
         }
@@ -53,7 +41,7 @@ class UketEventRandomUtil {
             val easyRandomEventRound = EasyRandom(
                 EasyRandomParameters()
                     .randomize(named("id")) { id }
-                    .randomize(named("uketEvent")) { uketEvent }
+                    .randomize(named("uketEventId")) { uketEvent.id }
                     .randomize(named("eventRoundDateTime")) { uketEventRoundDate }
                     .randomize(named("ticketingStartDateTime")) { ticketingStartDateTime }
                     .randomize(named("ticketingEndDateTime")) { ticketingEndDateTime }

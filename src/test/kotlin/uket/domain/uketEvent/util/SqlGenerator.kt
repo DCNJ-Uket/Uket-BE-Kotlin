@@ -29,11 +29,9 @@ class SqlGenerator {
                 )
 
                 values += listOf(
-                    uketEventRound.id,
+                    uketEventRoundId,
                     uketEventId,
-                    entryGroupName,
                     entryStartDateTime,
-                    entryEndDateTime,
                     ticketCount,
                     totalTicketCount,
                     createdAt,
@@ -63,7 +61,7 @@ class SqlGenerator {
                 )
 
                 values += listOf(
-                    uketEvent!!.id,
+                    uketEventId,
                     eventRoundDateTime,
                     ticketingStartDateTime,
                     ticketingEndDateTime,

@@ -7,4 +7,6 @@ import uket.domain.eventregistration.entity.EventRegistration
 
 interface EventRegistrationRepository : JpaRepository<EventRegistration, Long> {
     fun findAllByOrganizationId(organizationId: Long, pageable: Pageable): Page<EventRegistration>
+
+    fun findByUketEventId(uketEventId: Long): EventRegistration?
 }

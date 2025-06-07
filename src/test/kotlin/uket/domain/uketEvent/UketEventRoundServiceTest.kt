@@ -78,7 +78,6 @@ class UketEventRoundServiceTest :
 
             val uketEvent =
                 UketEventRandomUtil.createUketEvent(
-                    listOf(),
                     "eventA",
                     1L,
                 )
@@ -94,7 +93,6 @@ class UketEventRoundServiceTest :
 
             val uketEvent2 =
                 UketEventRandomUtil.createUketEvent(
-                    listOf(),
                     "eventB",
                     2L
                 )

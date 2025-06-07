@@ -31,9 +31,11 @@ class UketEventFacade(
         val uketEventRounds = uketEventRoundService.getNowTicketingRounds(eventId, at)
         val uketEventRoundIds = uketEventRounds.map { it.id }
 
-        return entryGroupService
-            .findValidEntryGroup(uketEventRoundIds, at)
-            .groupBy { it.uketEventRound }
+        val validEntryGroups = entryGroupService.findValidEntryGroup(uketEventRoundIds, at)
+
+        return uketEventRounds.associateWith { uketEventRound ->
+            validEntryGroups.filter { uketEventRound.id == it.uketEventRoundId }
+        }
     }
 
     @Transactional(readOnly = true)

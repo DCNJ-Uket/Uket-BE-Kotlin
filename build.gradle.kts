@@ -102,9 +102,9 @@ kotlin {
 
 allOpen {
     // 해당 어노테이션이 붙은 클래스는 자동으로 open 처리
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 configure<KtlintExtension> {

@@ -4,7 +4,7 @@ import uket.common.enums.BankCode
 
 data class TicketingResponse(
     val ticketIds: List<Long>,
-    val totalPrice: Int,
+    val totalPrice: Long,
     val depositUrl: String,
     val bankCode: BankCode,
 )

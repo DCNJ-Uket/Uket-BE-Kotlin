@@ -29,9 +29,6 @@ class EntryGroupService(
         return entryGroups.filter { it.ticketCount < it.totalTicketCount }
     }
 
-    fun getByIdWithUketEventRoundAndUketEvent(entryGroupId: Long): EntryGroup = entryGroupRepository.findByIdWithUketEventRoundAndUketEvent(entryGroupId)
-        ?: throw IllegalStateException("해당 입장 그룹을 찾을 수 없습니다.")
-
     @Transactional
     fun increaseReservedCount(entryGroupId: Long, count: Int) {
         val entryGroup = this.getById(entryGroupId)
@@ -52,4 +49,16 @@ class EntryGroupService(
     @Transactional(readOnly = true)
     fun findValidEntryGroup(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup> =
         entryGroupRepository.findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds, at)
+
+    @Transactional
+    fun saveAll(entryGroups: List<EntryGroup>): List<EntryGroup> {
+        return entryGroupRepository.saveAll(entryGroups)
+    }
+
+    @Transactional
+    fun deleteAllByEventId(uketEventId: Long) {
+        val entryGroups = entryGroupRepository.findAllByUketEventId(uketEventId)
+
+        entryGroupRepository.deleteAllInBatch(entryGroups)
+    }
 }

@@ -6,7 +6,7 @@ import uket.uket.facade.dto.PaymentWithTicketPriceResult
 data class PaymentInfoResponse(
     val organizationId: Long,
     val depositLink: String,
-    val ticketPrice: Int,
+    val ticketPrice: Long,
     val account: OrganizationAccount,
 ) {
     data class OrganizationAccount(

@@ -72,4 +72,19 @@ class EventRegistrationService(
             )
         }
     }
+
+    @Transactional
+    fun settingEvent(eventRegistrationId: Long, uketEventId: Long): EventRegistration {
+        val eventRegistration = getById(eventRegistrationId)
+        eventRegistration.settingEvent(uketEventId)
+
+        return eventRegistrationRepository.save(eventRegistration)
+    }
+
+    @Transactional
+    fun clearUketEvent(uketEventId: Long) {
+        val eventRegistration = eventRegistrationRepository.findByUketEventId(uketEventId)
+
+        eventRegistration?.clearUketEvent()
+    }
 }
