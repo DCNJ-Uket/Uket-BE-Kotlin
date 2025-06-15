@@ -32,7 +32,6 @@ class UketEventFacadeTest :
                 val eventId = i + 1L
 
                 val event = createUketEvent(
-                    listOf(),
                     "행사$eventId",
                     eventId,
                 )
@@ -65,9 +64,6 @@ class UketEventFacadeTest :
                         roundId.toLong()
                     )
                 }
-
-                uketEventRounds.forEach { event.addEventRound(it) }
-
                 rounds.addAll(uketEventRounds)
             }
 
@@ -78,7 +74,7 @@ class UketEventFacadeTest :
                     createEntryGroup(
                         round,
                         round.eventRoundDateTime.plusHours(index.toLong()),
-                        eventId = round.uketEvent.id
+                        eventId = round.uketEventId
                     )
                 }
                 groups.addAll(entryGroups)

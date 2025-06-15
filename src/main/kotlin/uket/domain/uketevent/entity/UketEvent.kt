@@ -1,24 +1,29 @@
 package uket.domain.uketevent.entity
 
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
+import jakarta.persistence.Index
 import jakarta.persistence.Table
+import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "uket_event")
+@Table(
+    name = "uket_event",
+    indexes = [
+        Index(name = "index_uket_event_01", columnList = "uketEventId"),
+        Index(name = "index_uket_event_02", columnList = "organizationId"),
+    ]
+)
 class UketEvent(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +45,7 @@ class UketEvent(
     val totalTicketCount: Int,
 
     @Column(name = "ticket_price")
-    val ticketPrice: Int,
+    val ticketPrice: Long,
 
     @Column(name = "buy_ticket_limit")
     val buyTicketLimit: Int,
@@ -54,33 +59,23 @@ class UketEvent(
     @Column(name = "thumbnail_image_id")
     val thumbnailImageId: String,
 
-    _banners: List<Banner>,
-) : BaseTimeEntity() {
-    fun addEventRound(uketEventRound: UketEventRound) {
-        firstRoundDateTime = minOf(firstRoundDateTime, uketEventRound.eventRoundDateTime)
-        lastRoundDateTime = maxOf(lastRoundDateTime, uketEventRound.eventRoundDateTime)
-    }
-
     @Column(name = "first_round_datetime")
-    var firstRoundDateTime: LocalDateTime = LocalDateTime.MAX
+    val firstRoundDateTime: LocalDateTime,
 
     @Column(name = "last_round_datetime")
-    var lastRoundDateTime: LocalDateTime = LocalDateTime.MIN
+    val lastRoundDateTime: LocalDateTime,
+) : BaseTimeEntity() {
+    @Column(name = "is_visible")
+    var isVisible: Boolean = false
+        protected set
 
-    @OneToMany(
-        mappedBy = "uketEvent",
-        fetch = FetchType.LAZY,
-        orphanRemoval = true,
-        cascade = [CascadeType.ALL],
-    )
-    var banners: List<Banner> = _banners.map {
-        Banner(
-            id = it.id,
-            uketEvent = this,
-            imageId = it.imageId,
-            link = it.link
-        )
-    }
+    @Column(name = "event_open_date_time")
+    var eventOpenDateTime: LocalDateTime? = null
+        protected set
+
+    @Column(name = "event_finish_date_time")
+    var eventFinishDateTime: LocalDateTime? = null
+        protected set
 
     @Embeddable
     data class EventDetails(
@@ -96,15 +91,20 @@ class UketEvent(
     data class EventContact(
         @Column(name = "contact_type")
         @Enumerated(EnumType.STRING)
-        val type: ContactType,
+        val type: EventContactType,
         @Column(name = "contact_content")
         val content: String,
         @Column(name = "contact_link")
         val link: String?,
-    ) {
-        enum class ContactType {
-            INSTAGRAM,
-            KAKAO,
-        }
+    )
+
+    fun open(now: LocalDateTime = LocalDateTime.now()) {
+        this.isVisible = true
+        this.eventOpenDateTime = now
+    }
+
+    fun finish(now: LocalDateTime = LocalDateTime.now()) {
+        this.isVisible = false
+        this.eventFinishDateTime = now
     }
 }

@@ -2,12 +2,10 @@ package uket.domain.uketevent.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.Index
 import jakarta.persistence.Table
 import uket.common.ErrorLevel
 import uket.common.PublicException
@@ -15,29 +13,29 @@ import uket.domain.BaseTimeEntity
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "entry_group")
+@Table(
+    name = "entry_group",
+    indexes = [
+        Index(name = "index_entry_group_01", columnList = "uketEventId"),
+        Index(name = "index_entry_group_02", columnList = "uketEventRoundId"),
+    ]
+)
 class EntryGroup(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uket_event_round_id")
-    var uketEventRound: UketEventRound,
-
+    @Column(name = "uket_event_id")
     val uketEventId: Long,
 
-    @Column(name = "entry_group_name")
-    val entryGroupName: String,
+    @Column(name = "uket_event_round_id")
+    val uketEventRoundId: Long,
 
     @Column(name = "entry_start_datetime")
     val entryStartDateTime: LocalDateTime,
 
-    @Column(name = "entry_end_datetime")
-    val entryEndDateTime: LocalDateTime,
-
     @Column(name = "ticket_count")
-    var ticketCount: Int,
+    var ticketCount: Int = 0,
 
     @Column(name = "total_ticket_count")
     var totalTicketCount: Int,

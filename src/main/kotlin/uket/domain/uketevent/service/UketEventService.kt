@@ -45,6 +45,31 @@ class UketEventService(
     fun findAllNowActiveOrderedPerformance(at: LocalDateTime): List<UketEvent> =
         uketEventRepository.findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
 
-    fun getEventByEntryGroupId(entryGroupId: Long): UketEvent = uketEventRepository.findByEntryGroupId(entryGroupId)
-        ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
+    @Transactional
+    fun deleteById(id: Long) {
+        uketEventRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun save(uketEvent: UketEvent): UketEvent {
+        return uketEventRepository.save(uketEvent)
+    }
+
+    @Transactional
+    fun open(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.open()
+
+        return uketEventRepository.save(uketEvent)
+    }
+
+    @Transactional
+    fun finish(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.finish()
+
+        return uketEventRepository.save(uketEvent)
+    }
 }
