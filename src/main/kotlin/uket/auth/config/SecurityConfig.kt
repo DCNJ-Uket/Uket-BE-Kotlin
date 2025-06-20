@@ -91,6 +91,10 @@ class SecurityConfig(
                     .permitAll()
             }.authorizeHttpRequests { registry ->
                 registry
+                    .requestMatchers("/image/*")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
+                registry
                     .requestMatchers("/admin/users/login")
                     .permitAll()
                     .requestMatchers("/auth/**")
