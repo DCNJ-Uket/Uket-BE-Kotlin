@@ -95,6 +95,7 @@ class EventRegistrationController(
         )
     }
 
+
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "내 행사 전체 조회", description = "내 행사 전체를 조회합니다.")
     @GetMapping("/admin/uket-event-registrations")
