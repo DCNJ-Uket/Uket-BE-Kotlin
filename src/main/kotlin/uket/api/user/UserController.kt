@@ -105,14 +105,15 @@ class UserController(
         userId: Long,
         @RequestBody
         request: UpdateUserInfoRequest,
-    ) : ResponseEntity<UserInfoResponse> {
+    ): ResponseEntity<UserInfoResponse> {
         val user = userService.updateUserInfo(
             userId,
             request.email,
             request.name,
             request.depositorName,
             request.phoneNumber,
-            request.profileImage)
+            request.profileImage
+        )
         return ResponseEntity.ok(UserInfoResponse.from(user))
     }
 
