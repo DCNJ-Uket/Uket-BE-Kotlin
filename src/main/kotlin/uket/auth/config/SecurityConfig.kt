@@ -105,6 +105,10 @@ class SecurityConfig(
                     .permitAll()
             }.authorizeHttpRequests { registry ->
                 registry
+                    .requestMatchers("/image/*")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
+                registry
                     .anyRequest()
                     .authenticated()
             }.sessionManagement { session ->

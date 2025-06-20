@@ -1,7 +1,6 @@
 package uket.api.common
 
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -18,7 +17,6 @@ class ImageController(
     private val s3ImageFacade: S3ImageFacade,
     private val s3Service: S3Service,
 ) {
-    @SecurityRequirement(name = "JWT")
     @Operation(summary = "이미지 조회", description = "이미지 id를 이용해 해당 image를 서버로부터 넘겨받습니다.")
     @GetMapping("/image/{imageId}")
     fun getImage(
