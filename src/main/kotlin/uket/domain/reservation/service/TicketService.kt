@@ -11,12 +11,14 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
+import uket.uket.domain.reservation.repository.TicketJdbcRepository
 import java.util.UUID
 
 @Service
 @Transactional(readOnly = true)
 class TicketService(
     private val ticketRepository: TicketRepository,
+    private val ticketJdbcRepository: TicketJdbcRepository,
 ) {
     fun getById(ticketId: Long): Ticket {
         val ticket = ticketRepository.findByIdOrNull(ticketId)
@@ -24,32 +26,25 @@ class TicketService(
         return ticket
     }
 
-    fun findAllByUserIdAndStatusNotWithEntryGroup(
-        userId: Long,
-        ticketStatus: TicketStatus,
-    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
-
-    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-        val excludedStatuses: List<TicketStatus> =
-            listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED, TicketStatus.REFUND_REQUESTED)
-        return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
-    }
-
     fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> = ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
 
     fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> = ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
 
     @Transactional
-    fun publishTicket(createTicketCommand: CreateTicketCommand): Ticket {
-        val ticket: Ticket = Ticket(
-            userId = createTicketCommand.userId,
-            entryGroupId = createTicketCommand.entryGroupId,
-            status = createTicketCommand.ticketStatus,
-            ticketNo = UUID.randomUUID().toString(),
-            enterAt = null,
-        )
+    fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
+        val tickets = List(count) {
+            Ticket(
+                userId = createTicketCommand.userId,
+                entryGroupId = createTicketCommand.entryGroupId,
+                status = createTicketCommand.ticketStatus,
+                ticketNo = UUID.randomUUID().toString(),
+                enterAt = null,
+            )
+        }
+        ticketJdbcRepository.saveAllBatch(tickets)
 
-        return ticketRepository.save(ticket)
+        val ticketNos = tickets.map { it.ticketNo }
+        return ticketRepository.findByTicketNoIn(ticketNos)
     }
 
     @Transactional
@@ -69,12 +64,7 @@ class TicketService(
         val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
             ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
 
-        if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
-            ticket.cancelBeforePayment()
-        } else if (ticket.status == TicketStatus.BEFORE_ENTER) {
-            ticket.cancelAfterPayment()
-        }
-
+        ticket.cancel()
         ticket.updateDeletedAt()
         ticketRepository.save(ticket)
     }
@@ -114,6 +104,15 @@ class TicketService(
             TicketStatus.EXPIRED -> 5
             TicketStatus.REFUND_REQUESTED -> 6
             else -> 7
+        }
+    }
+
+    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, TicketStatus.notActiveStatuses)
+
+    fun validateTicketOwner(userId: Long, ticketId: Long) {
+        val ticket = this.getById(ticketId)
+        if (ticket.userId != userId) {
+            throw IllegalArgumentException("유저가 소유한 티켓이 아닙니다.")
         }
     }
 }

@@ -44,4 +44,32 @@ class UketEventService(
     @Transactional(readOnly = true)
     fun findAllNowActiveOrderedPerformance(at: LocalDateTime): List<UketEvent> =
         uketEventRepository.findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+
+    @Transactional
+    fun deleteById(id: Long) {
+        uketEventRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun save(uketEvent: UketEvent): UketEvent {
+        return uketEventRepository.save(uketEvent)
+    }
+
+    @Transactional
+    fun open(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.open()
+
+        return uketEventRepository.save(uketEvent)
+    }
+
+    @Transactional
+    fun finish(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.finish()
+
+        return uketEventRepository.save(uketEvent)
+    }
 }

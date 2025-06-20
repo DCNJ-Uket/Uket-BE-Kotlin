@@ -1,6 +1,7 @@
 package uket.domain.eventregistration
 
 import uket.common.enums.BankCode
+import uket.common.enums.EventContactType
 import uket.domain.eventregistration.entity.EventRegistration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -20,6 +21,7 @@ data class EventData(
     val thumbnailImageId: String,
     val banners: List<BannerInfoDto>,
     val paymentInfo: PaymentInfoDto,
+    val buyTicketLimit: Int,
 ) {
     data class EventRoundDto(
         val date: LocalDate, // yyyy-MM-dd
@@ -37,7 +39,7 @@ data class EventData(
     )
 
     data class ContactInfoDto(
-        val type: EventRegistration.EventContact.ContactType, // 예: INSTAGRAM
+        val type: EventContactType, // 예: INSTAGRAM
         val content: String, // 예: @soritor
         val link: String?, // 예: https://~
     )
@@ -95,7 +97,8 @@ data class EventData(
                     accountNumber = paymentInfo.accountNumber,
                     depositorName = paymentInfo.depositorName,
                     depositUrl = paymentInfo.depositUrl
-                )
+                ),
+                buyTicketLimit = buyTicketLimit
             )
         }
     }

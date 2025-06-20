@@ -18,6 +18,7 @@ data class UketEventRegistrationSummaryResponse(
     val ticketingStartDateTime: ZonedDateTime,
     val registrationStatus: String,
     val isModifiable: Boolean,
+    val buyTicketLimit: Int,
 ) {
     companion object {
         fun from(eventRegistration: EventRegistration): UketEventRegistrationSummaryResponse = UketEventRegistrationSummaryResponse(
@@ -30,7 +31,8 @@ data class UketEventRegistrationSummaryResponse(
             eventEndDate = eventRegistration.eventEndDate,
             ticketingStartDateTime = eventRegistration.ticketingStartDateTime.toKr(),
             registrationStatus = eventRegistration.status.toResponseFormat(),
-            isModifiable = eventRegistration.status.isModifiable
+            isModifiable = eventRegistration.status.isModifiable,
+            buyTicketLimit = eventRegistration.buyTicketLimit
         )
     }
 }

@@ -30,13 +30,9 @@ class EntryGroupService(
     }
 
     @Transactional
-    fun increaseReservedCount(entryGroupId: Long) {
+    fun increaseReservedCount(entryGroupId: Long, count: Int) {
         val entryGroup = this.getById(entryGroupId)
-        val isSuccess: Boolean = entryGroup.increaseReservedCount()
-
-        if (java.lang.Boolean.FALSE == isSuccess) {
-            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
-        }
+        entryGroup.increaseReservedCount(count)
         entryGroupRepository.save(entryGroup)
     }
 
@@ -53,4 +49,16 @@ class EntryGroupService(
     @Transactional(readOnly = true)
     fun findValidEntryGroup(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup> =
         entryGroupRepository.findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds, at)
+
+    @Transactional
+    fun saveAll(entryGroups: List<EntryGroup>): List<EntryGroup> {
+        return entryGroupRepository.saveAll(entryGroups)
+    }
+
+    @Transactional
+    fun deleteAllByEventId(uketEventId: Long) {
+        val entryGroups = entryGroupRepository.findAllByUketEventId(uketEventId)
+
+        entryGroupRepository.deleteAllInBatch(entryGroups)
+    }
 }
