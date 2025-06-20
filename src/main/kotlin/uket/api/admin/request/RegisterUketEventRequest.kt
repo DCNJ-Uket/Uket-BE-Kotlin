@@ -40,7 +40,6 @@ data class RegisterUketEventRequest(
                 eventStartDate = eventRound.minOf { it.date },
                 eventEndDate = eventRound.maxOf { it.date },
                 totalTicketCount = totalTicketCount,
-                ticketBuyLimit = ticketBuyLimit,
                 details = EventRegistration.EventDetails(
                     information = details.information,
                     caution = details.caution,
