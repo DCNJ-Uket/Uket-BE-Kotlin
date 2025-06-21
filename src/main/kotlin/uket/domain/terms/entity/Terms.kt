@@ -21,7 +21,7 @@ class Terms(
     @Enumerated(EnumType.STRING)
     val termsType: TermsType,
     val documentNo: Long,
-    val isActive: Boolean,
+    var isActive: Boolean,
 ) : BaseTimeEntity() {
     fun checkMandatory(isAgreed: Boolean) {
         if (termsType !== TermsType.MANDATORY) {
