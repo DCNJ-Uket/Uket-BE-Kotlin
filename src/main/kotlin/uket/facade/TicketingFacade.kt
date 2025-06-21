@@ -38,11 +38,12 @@ class TicketingFacade(
         val event = uketEventService.getById(eventRound.uketEventId)
         validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
 
+        entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
+
         val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
         // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
         performerService.addTicketCountForPerformer(performer.id, buyCount)
 
-        entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
         return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, pName), buyCount)
     }
 
