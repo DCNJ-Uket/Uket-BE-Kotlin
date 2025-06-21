@@ -69,6 +69,23 @@ class UserService(
     }
 
     /*
+        유저 정보 수정
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    fun updateUserInfo(
+        userId: Long,
+        email: String?,
+        name: String?,
+        profileImage: String?,
+        depositorName: String?,
+        phoneNumber: String?,
+    ): User {
+        var user = userRepository.findById(userId).get()
+        user.updateEntireUserInfo(email, name, profileImage, depositorName, phoneNumber)
+        return userRepository.save(user)
+    }
+
+    /*
         유저 삭제
      */
     @Transactional

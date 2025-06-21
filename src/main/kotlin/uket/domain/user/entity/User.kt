@@ -41,4 +41,18 @@ class User(
         this.depositorName = depositorName
         this.phoneNumber = phoneNumber
     }
+
+    fun updateEntireUserInfo(
+        email: String? = null,
+        name: String? = null,
+        profileImage: String? = null,
+        depositorName: String? = null,
+        phoneNumber: String? = null,
+    ) {
+        email?.let { this.email = it }
+        name?.let { this.name = it }
+        profileImage?.let { this.profileImage = it }
+        depositorName?.let { this.depositorName = it }
+        phoneNumber?.let { this.phoneNumber = it }
+    }
 }
