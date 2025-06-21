@@ -56,6 +56,15 @@ class UketEventService(
     }
 
     @Transactional
+    fun init(uketEventId: Long): UketEvent {
+        val uketEvent = getById(uketEventId)
+
+        uketEvent.init()
+
+        return uketEventRepository.save(uketEvent)
+    }
+
+    @Transactional
     fun open(uketEventId: Long): UketEvent {
         val uketEvent = getById(uketEventId)
 

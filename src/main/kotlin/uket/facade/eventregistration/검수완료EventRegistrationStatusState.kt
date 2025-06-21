@@ -6,13 +6,13 @@ import uket.domain.eventregistration.entity.EventRegistration
 import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.domain.eventregistration.service.EventRegistrationStatusState
+import uket.domain.uketevent.service.UketEventService
 import uket.facade.CreateUketEventFacade
-import uket.facade.DeleteUketEventFacade
 
 @Component
 class 검수완료EventRegistrationStatusState(
     val eventRegistrationService: EventRegistrationService,
-    val deleteUketEventFacade: DeleteUketEventFacade,
+    val uketEventService: UketEventService,
     val createUketEventFacade: CreateUketEventFacade,
 ) : EventRegistrationStatusState {
     override val status: EventRegistrationStatus = EventRegistrationStatus.검수_완료
@@ -41,13 +41,9 @@ class 검수완료EventRegistrationStatusState(
         val uketEventId = eventRegistration?.uketEventId
 
         if (uketEventId != null) {
-            deleteUketEventFacade.invoke(uketEventId)
+            uketEventService.init(uketEventId)
         }
     }
 
     override fun updateStatus(id: Long): EventRegistration = eventRegistrationService.updateStatus(id, status)
-
-    companion object {
-        val doNothing = {}
-    }
 }

@@ -97,6 +97,12 @@ class UketEvent(
         val link: String?,
     )
 
+    fun init() {
+        this.isVisible = false
+        this.eventOpenDateTime = null
+        this.eventFinishDateTime = null
+    }
+
     fun open(now: LocalDateTime = LocalDateTime.now()) {
         this.isVisible = true
         this.eventOpenDateTime = now
