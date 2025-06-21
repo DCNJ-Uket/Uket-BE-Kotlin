@@ -32,5 +32,6 @@ class PerformerService(
     @Transactional(readOnly = true)
     fun findAllByUketEventRoundId(roundId: Long): List<Performer> = performerRepository.findAllByUketEventRoundId(roundId)
 
+    @Transactional(readOnly = true)
     fun findByNameAndRoundId(name: String, roundId: Long): Performer = performerRepository.findByNameAndUketEventRoundId(name, roundId)
 }
