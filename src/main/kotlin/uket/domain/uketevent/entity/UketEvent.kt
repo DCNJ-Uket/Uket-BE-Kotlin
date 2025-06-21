@@ -20,8 +20,7 @@ import java.time.LocalDateTime
 @Table(
     name = "uket_event",
     indexes = [
-        Index(name = "index_uket_event_01", columnList = "id"),
-        Index(name = "index_uket_event_02", columnList = "organizationId"),
+        Index(name = "index_uket_event_01", columnList = "organizationId")
     ]
 )
 class UketEvent(
