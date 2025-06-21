@@ -17,6 +17,7 @@ class Ticket(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
+    val performerName: String,
     val userId: Long,
     val entryGroupId: Long,
     @Enumerated(EnumType.STRING)
