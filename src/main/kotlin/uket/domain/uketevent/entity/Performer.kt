@@ -1,24 +1,22 @@
 package uket.domain.uketevent.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 
 @Entity
 class Performer(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long,
+    val id: Long,
 
-    @ManyToOne
-    @JoinColumn(name = "uket_event_round_id")
-    private val uketEventRound: UketEventRound,
+    @Column(name = "uket_event_round_id")
+    val uketEventRoundId: Long,
 
-    private val name: String,
+    val name: String,
 
-    private var totalTicketCount: Int,
+    var totalTicketCount: Int,
 ) {
     fun addTicketCount(addCount: Int) {
         totalTicketCount += addCount

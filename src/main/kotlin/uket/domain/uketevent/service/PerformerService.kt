@@ -28,4 +28,9 @@ class PerformerService(
         val performer = getById(performerId)
         performer.minusTicketCount(ticketCount)
     }
+
+    @Transactional(readOnly = true)
+    fun findAllByUketEventRoundId(roundId: Long): List<Performer> = performerRepository.findAllByUketEventRoundId(roundId)
+
+    fun findByNameAndRoundId(name: String, roundId: Long): Performer = performerRepository.findByNameAndUketEventRoundId(name, roundId)
 }
