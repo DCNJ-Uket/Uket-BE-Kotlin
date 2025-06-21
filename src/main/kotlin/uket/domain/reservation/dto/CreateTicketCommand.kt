@@ -6,5 +6,5 @@ data class CreateTicketCommand(
     val userId: Long,
     val entryGroupId: Long,
     val ticketStatus: TicketStatus,
-    val friend: String,
+    val performerName: String,
 )

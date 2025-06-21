@@ -74,6 +74,7 @@ class TicketRepositoryTest(
                 entryGroupId = entryGroup.id,
                 status = TicketStatus.BEFORE_ENTER,
                 ticketNo = "ticketA",
+                performerName = "홍길동",
                 enterAt = null,
             )
             entityManager.persist(ticket)

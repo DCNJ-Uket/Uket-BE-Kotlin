@@ -12,10 +12,12 @@ import uket.api.user.response.ActiveEventsResponse
 import uket.api.user.response.EntryGroupListItemResponse
 import uket.api.user.response.EventDetailResponse
 import uket.api.user.response.EventRoundListItemResponse
+import uket.api.user.response.PerformerResponse
 import uket.api.user.response.ReservationInfoResponse
 import uket.common.response.ListResponse
 import uket.domain.admin.service.OrganizationService
 import uket.domain.uketevent.service.BannerService
+import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.UketEventFacade
@@ -29,6 +31,7 @@ class EventController(
     private val uketEventFacade: UketEventFacade,
     private val organizationService: OrganizationService,
     private val bannerService: BannerService,
+    private val performerService: PerformerService,
 ) {
     @Operation(summary = "활성화된 행사 목록 조회", description = "누구나 조회 가능한 행사 목록을 가져옵니다")
     @GetMapping("/uket-events")
@@ -101,5 +104,15 @@ class EventController(
 
         val response = ReservationInfoResponse.of(uketEvent, roundResponses)
         return ResponseEntity.ok(response)
+    }
+
+    @Operation(summary = "회차 출연자 목록 조회", description = "회차의 공연자 목록을 조회합니다.")
+    @GetMapping("/rounds/{id}/performers")
+    fun getPerformers(
+        @PathVariable("id") uketEventRoundId: Long,
+    ): ResponseEntity<ListResponse<PerformerResponse>> {
+        val performers = performerService.findAllByUketEventRoundId(uketEventRoundId)
+        val responses = performers.map { PerformerResponse.from(it) }
+        return ResponseEntity.ok(ListResponse(responses))
     }
 }

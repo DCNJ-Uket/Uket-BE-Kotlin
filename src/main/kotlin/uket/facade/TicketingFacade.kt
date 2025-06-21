@@ -10,6 +10,7 @@ import uket.domain.reservation.service.TicketService
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.service.EntryGroupService
+import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.service.UserService
@@ -23,9 +24,10 @@ class TicketingFacade(
     private val entryGroupService: EntryGroupService,
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventService: UketEventService,
+    private val performerService: PerformerService,
 ) {
     @DistributedLock(key = "'ticketing' + #entryGroupId")
-    fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
+    fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
         val entryGroup = entryGroupService.getById(entryGroupId)
@@ -37,7 +39,12 @@ class TicketingFacade(
         validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
 
         entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
-        return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, friend), buyCount)
+
+        val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
+        // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
+        performerService.addTicketCountForPerformer(performer.id, buyCount)
+
+        return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, pName), buyCount)
     }
 
     private fun validateTicketCount(buyCount: Int) {

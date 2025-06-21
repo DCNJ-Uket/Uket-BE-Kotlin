@@ -32,12 +32,14 @@ class TicketService(
 
     @Transactional
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
+        println(createTicketCommand.performerName)
         val tickets = List(count) {
             Ticket(
                 userId = createTicketCommand.userId,
                 entryGroupId = createTicketCommand.entryGroupId,
                 status = createTicketCommand.ticketStatus,
                 ticketNo = UUID.randomUUID().toString(),
+                performerName = createTicketCommand.performerName,
                 enterAt = null,
             )
         }
