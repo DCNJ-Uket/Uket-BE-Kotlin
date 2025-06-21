@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uket.api.user.request.TermsAgreeRequest
+import uket.api.user.response.OptionalTermAnswerResponse
 import uket.api.user.response.TermsAgreeResponse
 import uket.api.user.response.TermsResponse
 import uket.auth.config.userId.LoginUserId
@@ -16,11 +17,13 @@ import uket.common.response.ListResponse
 import uket.domain.terms.dto.TermsAgreeAnswer
 import uket.domain.terms.entity.TermSign
 import uket.facade.TermsDocumentFacade
+import uket.facade.TermsTermSignFacade
 
 @Tag(name = "약관 관련 API", description = "약관 관련 API 입니다")
 @RestController
 class TermsController(
     private val termsDocumentFacade: TermsDocumentFacade,
+    private val termsTermSignFacade: TermsTermSignFacade,
 ) {
     @Operation(summary = "유저 확인 필요 약관 목록 제공", description = "유저가 확인해야하는 약관 목록을 제공합니다")
     @GetMapping("/terms/check-required")
@@ -31,6 +34,18 @@ class TermsController(
     ): ResponseEntity<ListResponse<TermsResponse>> {
         val checkRequireTerms = termsDocumentFacade.getAllActiveAndCheckRequiredByUser(userId)
         val responses = checkRequireTerms.map { TermsResponse.of(it) }
+        return ResponseEntity.ok(ListResponse(responses))
+    }
+
+    @Operation(summary = "유저 선택 약관 동의 여부 조회", description = "유저의 선택 약관에 대한 동의 여부를 조회합니다")
+    @GetMapping("/terms/optional-answer")
+    fun getOptionalTermAnswers(
+        @LoginUserId
+        @Parameter(hidden = true)
+        userId: Long,
+    ): ResponseEntity<ListResponse<OptionalTermAnswerResponse>> {
+        val optionalTermAnswers = termsTermSignFacade.getAllActiveAndOptionalUserAnswers(userId)
+        val responses = optionalTermAnswers.map { OptionalTermAnswerResponse.of(it) }
         return ResponseEntity.ok(ListResponse(responses))
     }
 
