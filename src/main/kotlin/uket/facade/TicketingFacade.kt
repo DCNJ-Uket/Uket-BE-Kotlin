@@ -44,7 +44,15 @@ class TicketingFacade(
         // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
         performerService.addTicketCountForPerformer(performer.id, buyCount)
 
-        return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, pName), buyCount)
+        return ticketService.publishTickets(
+            createTicketCommand = CreateTicketCommand(
+                userId = user.id,
+                entryGroupId = entryGroup.id,
+                ticketStatus = TicketStatus.init(event.ticketPrice),
+                performerName = pName
+            ),
+            count = buyCount
+        )
     }
 
     private fun validateTicketCount(buyCount: Int) {
