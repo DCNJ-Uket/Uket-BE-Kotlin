@@ -8,7 +8,7 @@ import uket.uket.modules.push.UserMessageSendEvent
 import uket.uket.modules.push.UserMessageTemplate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.Locale
 
 @Service
 class TicketingCompletionMessageSendService(
