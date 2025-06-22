@@ -17,7 +17,6 @@ import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
 import uket.modules.redis.aop.DistributedLock
-import uket.uket.facade.TicketingCompletionMessageSendService
 import java.time.LocalDateTime
 
 @Service
@@ -78,7 +77,7 @@ class TicketingFacade(
             eventName = event.eventName,
             eventType = event.eventType,
             ticketNo = ticket.ticketNo,
-            eventDate = entryGroup.entryStartDateTime.toString(),
+            eventDate = entryGroup.entryStartDateTime,
             eventLocation = event.location
         )
     }

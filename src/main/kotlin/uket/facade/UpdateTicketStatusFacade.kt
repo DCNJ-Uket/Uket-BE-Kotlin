@@ -8,7 +8,6 @@ import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.service.UserService
 import uket.modules.redis.aop.DistributedLock
-import uket.uket.facade.TicketingCompletionMessageSendService
 
 @Component
 class UpdateTicketStatusFacade(
@@ -35,7 +34,7 @@ class UpdateTicketStatusFacade(
                 eventName = event.eventName,
                 eventType = event.eventType,
                 ticketNo = ticket.ticketNo,
-                eventDate = entryGroup.entryStartDateTime.toString(),
+                eventDate = entryGroup.entryStartDateTime,
                 eventLocation = event.location
             )
         }
