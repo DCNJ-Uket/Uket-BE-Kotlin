@@ -8,13 +8,16 @@ import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
 import uket.domain.uketevent.entity.EntryGroup
+import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
+import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
 import uket.modules.redis.aop.DistributedLock
+import uket.uket.facade.TicketingCompletionMessageSendService
 import java.time.LocalDateTime
 
 @Service
@@ -25,6 +28,7 @@ class TicketingFacade(
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventService: UketEventService,
     private val performerService: PerformerService,
+    private val ticketingCompletionMessageSendService: TicketingCompletionMessageSendService,
 ) {
     @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
@@ -44,7 +48,7 @@ class TicketingFacade(
         // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
         performerService.addTicketCountForPerformer(performer.id, buyCount)
 
-        return ticketService.publishTickets(
+        val tickets = ticketService.publishTickets(
             createTicketCommand = CreateTicketCommand(
                 userId = user.id,
                 entryGroupId = entryGroup.id,
@@ -52,6 +56,30 @@ class TicketingFacade(
                 performerName = pName
             ),
             count = buyCount
+        )
+
+        val ticket = tickets.get(0)
+        if (ticket.status == TicketStatus.BEFORE_ENTER) {
+            sendTicketingCompletionMessage(ticket, user, event, entryGroup)
+        }
+
+        return tickets
+    }
+
+    private fun sendTicketingCompletionMessage(
+        ticket: Ticket,
+        user: User,
+        event: UketEvent,
+        entryGroup: EntryGroup,
+    ) {
+        ticketingCompletionMessageSendService.send(
+            userName = user.name,
+            userPhoneNumber = user.phoneNumber!!,
+            eventName = event.eventName,
+            eventType = event.eventType,
+            ticketNo = ticket.ticketNo,
+            eventDate = entryGroup.entryStartDateTime.toString(),
+            eventLocation = event.location
         )
     }
 

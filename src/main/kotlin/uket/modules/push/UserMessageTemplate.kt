@@ -17,21 +17,19 @@ sealed class UserMessageTemplate(
     ) {
         private const val 예매내역목록_LINK_PATH = "ticket-list"
 
-        override fun makeContext(command: Command): Map<String, String> {
-            return with(command as 관람일당일안내Command) {
-                mapOf(
-                    "이름" to userName,
-                    "행사명" to eventName,
-                    "행사타입" to eventType,
-                    "행사일시" to 행사일시,
-                    "행사장소" to 행사장소,
-                    "예매번호" to ticketNo,
-                    LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
-                )
-            }
+        override fun makeContext(command: Command): Map<String, String> = with(command as 예매완료알림Command) {
+            mapOf(
+                "이름" to userName,
+                "행사명" to eventName,
+                "행사타입" to eventType,
+                "행사일시" to 행사일시,
+                "행사장소" to 행사장소,
+                "예매번호" to ticketNo,
+                LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
+            )
         }
 
-        data class 관람일당일안내Command(
+        data class 예매완료알림Command(
             val userName: String,
             val eventName: String,
             val eventType: String,
@@ -47,17 +45,15 @@ sealed class UserMessageTemplate(
     ) {
         private const val 예매내역목록_LINK_PATH = "ticket-list"
 
-        override fun makeContext(command: Command): Map<String, String> {
-            return with(command as 관람일당일안내Command) {
-                mapOf(
-                    "이름" to userName,
-                    "행사명" to eventName,
-                    "행사타입" to eventType,
-                    "행사일시" to 행사일시,
-                    "행사장소" to 행사장소,
-                    LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
-                )
-            }
+        override fun makeContext(command: Command): Map<String, String> = with(command as 관람일당일안내Command) {
+            mapOf(
+                "이름" to userName,
+                "행사명" to eventName,
+                "행사타입" to eventType,
+                "행사일시" to 행사일시,
+                "행사장소" to 행사장소,
+                LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
+            )
         }
 
         data class 관람일당일안내Command(
@@ -75,20 +71,18 @@ sealed class UserMessageTemplate(
     ) {
         private const val 예매내역목록_LINK_PATH = "ticket-list"
 
-        override fun makeContext(command: Command): Map<String, String> {
-            return with(command as 관람일당일안내Command) {
-                mapOf(
-                    "이름" to userName,
-                    "행사명" to eventName,
-                    "행사타입" to eventType,
-                    "행사일시" to 행사일시,
-                    "행사장소" to 행사장소,
-                    LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
-                )
-            }
+        override fun makeContext(command: Command): Map<String, String> = with(command as 관람일하루전안내Command) {
+            mapOf(
+                "이름" to userName,
+                "행사명" to eventName,
+                "행사타입" to eventType,
+                "행사일시" to 행사일시,
+                "행사장소" to 행사장소,
+                LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
+            )
         }
 
-        data class 관람일당일안내Command(
+        data class 관람일하루전안내Command(
             val userName: String,
             val eventName: String,
             val eventType: String,
@@ -101,19 +95,17 @@ sealed class UserMessageTemplate(
         code = "uket_ticket_cancel",
         referrer = REFERRER_TICKET_CANCEL
     ) {
-        override fun makeContext(command: Command): Map<String, String> {
-            return with(command as 티켓취소알림톡Command) {
-                mapOf(
-                    "이름" to userName,
-                    "행사명" to eventName,
-                    "주최명" to organizationName,
-                    "행사타입" to eventType,
-                    "예매번호" to 예매번호
-                )
-            }
+        override fun makeContext(command: Command): Map<String, String> = with(command as 티켓취소알림Command) {
+            mapOf(
+                "이름" to userName,
+                "행사명" to eventName,
+                "주최명" to organizationName,
+                "행사타입" to eventType,
+                "예매번호" to 예매번호
+            )
         }
 
-        data class 티켓취소알림톡Command(
+        data class 티켓취소알림Command(
             val userName: String,
             val eventName: String,
             val organizationName: String,
