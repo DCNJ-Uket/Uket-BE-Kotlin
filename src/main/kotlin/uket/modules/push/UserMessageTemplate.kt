@@ -13,7 +13,7 @@ sealed class UserMessageTemplate(
 
     data object 예매완료알림톡 : UserMessageTemplate(
         code = "uket_ticket_paid",
-        referrer = REFERRER_TICLET_PAID
+        referrer = REFERRER_TICKET_PAID
     ) {
         private const val 예매내역목록_LINK_PATH = "ticket-list"
 
@@ -36,6 +36,34 @@ sealed class UserMessageTemplate(
             val ticketNo: String,
             val 행사일시: String,
             val 행사장소: String,
+        ) : Command
+    }
+
+    data object 결제안내알림톡 : UserMessageTemplate(
+        code = "uket_ticket_payment",
+        referrer = REFERRER_TICKET_PAYMENT
+    ) {
+        private const val 예매내역목록_LINK_PATH = "ticket-list"
+
+        override fun makeContext(command: Command): Map<String, String> = with(command as 결제안내Command) {
+            mapOf(
+                "행사명" to eventName,
+                "금액" to ticketPrice,
+                "은행이름" to bankName,
+                "계좌번호" to accountNumber,
+                "예금주" to depositorName,
+                "이름" to userName,
+                LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
+            )
+        }
+
+        data class 결제안내Command(
+            val eventName: String,
+            val ticketPrice: String,
+            val bankName: String,
+            val accountNumber: String,
+            val depositorName: String,
+            val userName: String,
         ) : Command
     }
 
@@ -120,6 +148,7 @@ sealed class UserMessageTemplate(
         private const val REFERRER_TICKET_CANCEL = "NK3MiV1n"
         private const val REFERRER_EVENT_REMIND = "WjsTGIUz"
         private const val REFERRER_EVENT_TODAY = "3x0jJanU"
-        private const val REFERRER_TICLET_PAID = "RqqcPBKL"
+        private const val REFERRER_TICKET_PAID = "RqqcPBKL"
+        private const val REFERRER_TICKET_PAYMENT = "JwuAfMZC"
     }
 }
