@@ -2,7 +2,7 @@ package uket.facade
 
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
-import uket.common.enums.BankCode
+import uket.domain.payment.entity.Payment
 import uket.uket.modules.push.ReceiverType
 import uket.uket.modules.push.UserMessageSendEvent
 import uket.uket.modules.push.UserMessageTemplate
@@ -13,10 +13,8 @@ class PaymentInformationMessageSendService(
 ) {
     fun send(
         eventName: String,
-        ticketPrice: Int,
-        bankCode: BankCode,
-        accountNumber: String,
-        depositorName: String,
+        ticketPrice: Long,
+        account: Payment.Account,
         userName: String,
         userPhoneNumber: String,
     ) {
@@ -27,9 +25,9 @@ class PaymentInformationMessageSendService(
                     command = UserMessageTemplate.결제안내알림톡.결제안내Command(
                         eventName = eventName,
                         ticketPrice = ticketPrice.toString(),
-                        bankName = bankCode.name,
-                        accountNumber = accountNumber,
-                        depositorName = depositorName,
+                        bankName = account.bankCode.name,
+                        accountNumber = account.accountNumber,
+                        depositorName = account.depositorName,
                         userName = userName
                     ),
                     receiverType = ReceiverType.PHONE_NUMBER,
