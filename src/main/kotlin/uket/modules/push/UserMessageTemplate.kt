@@ -22,7 +22,8 @@ sealed class UserMessageTemplate(
                 "이름" to userName,
                 "행사명" to eventName,
                 "행사타입" to eventType,
-                "행사일시" to 행사일시,
+                "행사일자" to 행사일자,
+                "행사시간" to 행사시간,
                 "행사장소" to 행사장소,
                 "예매번호" to ticketNo,
                 LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
@@ -34,7 +35,8 @@ sealed class UserMessageTemplate(
             val eventName: String,
             val eventType: String,
             val ticketNo: String,
-            val 행사일시: String,
+            val 행사일자: String,
+            val 행사시간: String,
             val 행사장소: String,
         ) : Command
     }
@@ -150,5 +152,7 @@ sealed class UserMessageTemplate(
         private const val REFERRER_EVENT_TODAY = "3x0jJanU"
         private const val REFERRER_TICKET_PAID = "RqqcPBKL"
         private const val REFERRER_TICKET_PAYMENT = "JwuAfMZC"
+
+        const val TEMPLATE_MAXIMUM_LENGTH = 14
     }
 }

@@ -23,9 +23,12 @@ class TicketingCompletionMessageSendService(
         eventDate: LocalDateTime,
         eventLocation: String,
     ) {
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일 HH시 mm분", Locale.KOREAN)
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일", Locale.KOREAN)
+        val timeFormatter = DateTimeFormatter.ofPattern("HH시 mm분", Locale.KOREAN)
         val dateString = eventDate
-            .format(formatter)
+            .format(dateFormatter)
+        val timeString = eventDate
+            .format(timeFormatter)
 
         applicationEventPublisher
             .publishEvent(
@@ -36,7 +39,8 @@ class TicketingCompletionMessageSendService(
                         eventName = eventName,
                         eventType = eventType.krName,
                         ticketNo = ticketNo,
-                        행사일시 = dateString,
+                        행사일자 = dateString,
+                        행사시간 = timeString,
                         행사장소 = eventLocation
                     ),
                     receiverType = ReceiverType.PHONE_NUMBER,
