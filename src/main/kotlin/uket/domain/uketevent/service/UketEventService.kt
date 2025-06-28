@@ -4,10 +4,9 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.dto.EventNameDto
+import uket.common.enums.EventType
 import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.repository.UketEventRepository
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 @Service
 class UketEventService(
@@ -34,16 +33,8 @@ class UketEventService(
     }
 
     @Transactional(readOnly = true)
-    fun findAllNowActiveOrdered(at: LocalDateTime): List<UketEvent> =
-        uketEventRepository.findAllByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
-
-    @Transactional(readOnly = true)
-    fun findAllNowActiveOrderedFestival(at: LocalDateTime): List<UketEvent> =
-        uketEventRepository.findAllFestivalByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
-
-    @Transactional(readOnly = true)
-    fun findAllNowActiveOrderedPerformance(at: LocalDateTime): List<UketEvent> =
-        uketEventRepository.findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(at.truncatedTo(ChronoUnit.DAYS))
+    fun findAllVisibleOrderedEventByEventTypes(eventTypes: List<EventType>): List<UketEvent> =
+        uketEventRepository.findAllVisibleInEventTypesOrderByFirstRoundDateTime(eventTypes)
 
     @Transactional
     fun deleteById(id: Long) {
@@ -51,9 +42,7 @@ class UketEventService(
     }
 
     @Transactional
-    fun save(uketEvent: UketEvent): UketEvent {
-        return uketEventRepository.save(uketEvent)
-    }
+    fun save(uketEvent: UketEvent): UketEvent = uketEventRepository.save(uketEvent)
 
     @Transactional
     fun init(uketEventId: Long): UketEvent {
