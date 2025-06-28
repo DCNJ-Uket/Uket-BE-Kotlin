@@ -1,5 +1,7 @@
+import io.kotest.core.spec.style.DescribeSpec
+
 // package uket.domain.uketEvent
-//
+
 // import io.kotest.core.spec.IsolationMode
 // import io.kotest.core.spec.style.DescribeSpec
 // import io.kotest.matchers.shouldBe
@@ -12,8 +14,8 @@
 // import java.time.LocalDateTime
 // import java.time.temporal.ChronoUnit
 //
-// class UketEventServiceTest :
-//    DescribeSpec({
+class UketEventServiceTest :
+    DescribeSpec({
 //        isolationMode = IsolationMode.InstancePerLeaf
 //
 //        val uketEventRepository = mockk<UketEventRepository>()
@@ -37,7 +39,8 @@
 //                }
 //            }
 //        }
-//    }) {
+    })
+// {
 //    companion object {
 //        fun setDB(now: LocalDateTime): List<UketEvent> {
 //            val uketEvent1 = UketEventRandomUtil.createUketEvent()
