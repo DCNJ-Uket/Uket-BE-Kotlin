@@ -107,12 +107,12 @@ class UserController(
         request: UpdateUserInfoRequest,
     ): ResponseEntity<UserInfoResponse> {
         val user = userService.updateUserInfo(
-            userId,
-            request.email,
-            request.name,
-            request.depositorName,
-            request.phoneNumber,
-            request.profileImage
+            userId = userId,
+            email = request.email,
+            name = request.name,
+            profileImage = request.profileImage,
+            depositorName = request.depositorName,
+            phoneNumber = request.phoneNumber
         )
         return ResponseEntity.ok(UserInfoResponse.from(user))
     }
