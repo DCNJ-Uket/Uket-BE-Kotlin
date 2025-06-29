@@ -109,7 +109,8 @@ class UketEvent(
     }
 
     fun finish(now: LocalDateTime = LocalDateTime.now()) {
-        this.isVisible = false
+//        this.isVisible = false
+//        TODO 추후에 행사가 많아서 비어보이지 않으면 적용
         this.eventFinishDateTime = now
     }
 }
