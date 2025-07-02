@@ -51,12 +51,14 @@ class EventController(
         val event = uketEventService.getDetailById(eventId)
         val organization = organizationService.getById(event.organizationId)
         val banners = bannerService.findAllByUketEventId(event.id)
+        val ticketingStatus = uketEventFacade.getCurrentEventTicketingStatus(eventId, LocalDateTime.now())
 
         return ResponseEntity.ok(
             EventDetailResponse.of(
                 uketEvent = event,
                 organization = organization,
-                banners = banners
+                banners = banners,
+                ticketingStatus = ticketingStatus
             )
         )
     }
