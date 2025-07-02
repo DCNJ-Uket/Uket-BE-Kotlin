@@ -40,6 +40,12 @@ class UketEventFacade(
     }
 
     @Transactional(readOnly = true)
+    fun getCurrentEventTicketingStatus(eventId: Long, at: LocalDateTime): TicketingStatus {
+        val eventRounds = uketEventRoundService.getEventRoundsByEventId(eventId)
+        return getTicketingStatus(eventRounds, at)
+    }
+
+    @Transactional(readOnly = true)
     fun getNowActiveEventItemList(type: String, at: LocalDateTime): List<EventListItem> {
         val eventTypes = when (type) {
             "FESTIVAL" -> listOf(EventType.FESTIVAL)
