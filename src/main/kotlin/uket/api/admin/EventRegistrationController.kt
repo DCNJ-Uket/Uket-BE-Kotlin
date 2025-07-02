@@ -108,10 +108,14 @@ class EventRegistrationController(
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
         val admin = adminService.getByIdWithOrganization(adminId)
 
-        val uketEventRegistrationSummaryResponse = eventRegistrationService.findAllByOrganizationId(admin.organization.id, pageRequest).map {
-            UketEventRegistrationSummaryResponse.from(it)
+        val registrations = if (admin.isSuperAdmin) {
+            eventRegistrationService.findAll(pageRequest)
+        } else {
+            eventRegistrationService.findAllByOrganizationId(admin.organization.id, pageRequest)
         }
-        return CustomPageResponse(uketEventRegistrationSummaryResponse)
+
+        val summaryResponse = registrations.map { UketEventRegistrationSummaryResponse.from(it) }
+        return CustomPageResponse(summaryResponse)
     }
 
     @SecurityRequirement(name = "JWT")
