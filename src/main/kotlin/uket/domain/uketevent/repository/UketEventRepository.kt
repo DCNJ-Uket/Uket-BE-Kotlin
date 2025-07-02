@@ -20,10 +20,10 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
         """
             SELECT ue from UketEvent ue 
             WHERE ue.id = :uketEventId AND 
-            ue.lastRoundDateTime >= CURRENT_DATE
+            ue.isVisible = true
         """
     )
-    fun findByIdAndLastRoundDateAfterNowWithBanners(uketEventId: Long): UketEvent?
+    fun findVisibleOneById(uketEventId: Long): UketEvent?
 
     fun findAllByOrganizationId(organizationId: Long): List<UketEvent>
 

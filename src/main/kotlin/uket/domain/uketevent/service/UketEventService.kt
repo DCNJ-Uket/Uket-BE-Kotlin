@@ -21,7 +21,7 @@ class UketEventService(
 
     @Transactional(readOnly = true)
     fun getDetailById(uketEventId: Long): UketEvent {
-        val uketEvent = uketEventRepository.findByIdAndLastRoundDateAfterNowWithBanners(uketEventId)
+        val uketEvent = uketEventRepository.findVisibleOneById(uketEventId)
             ?: throw IllegalStateException("해당 행사를 찾을 수 없습니다.")
         return uketEvent
     }
