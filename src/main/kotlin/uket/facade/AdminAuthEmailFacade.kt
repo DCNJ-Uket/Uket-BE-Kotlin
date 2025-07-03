@@ -82,6 +82,12 @@ class AdminAuthEmailFacade(
         return AdminAuthToken.of(accessToken, admin, admin.organization.name)
     }
 
+    fun checkEmailTokenExpired(token: String): Boolean {
+        val redisKey = EMAIL_TOKEN_PREFIX + token
+        val key = redisUtil.getData(redisKey).orElse(null)
+        return key == null
+    }
+
     private fun validateEmail(email: String) {
         adminService.checkDuplicateEmail(email)
     }

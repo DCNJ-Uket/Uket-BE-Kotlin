@@ -6,12 +6,14 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import uket.api.user.request.LoginRequest
 import uket.api.user.request.TokenReissueRequest
+import uket.api.user.request.UpdateUserInfoRequest
 import uket.api.user.request.UserRegisterRequest
 import uket.api.user.response.AuthResponse
 import uket.api.user.response.UserDeleteResponse
@@ -92,6 +94,26 @@ class UserController(
         userId: Long,
     ): ResponseEntity<UserInfoResponse> {
         val user = userService.getById(userId)
+        return ResponseEntity.ok(UserInfoResponse.from(user))
+    }
+
+    @Operation(summary = "유저 정보 수정", description = "유저 정보를 수정합니다")
+    @PatchMapping("/users/info")
+    fun updateUserInfo(
+        @Parameter(hidden = true)
+        @LoginUserId
+        userId: Long,
+        @RequestBody
+        request: UpdateUserInfoRequest,
+    ): ResponseEntity<UserInfoResponse> {
+        val user = userService.updateUserInfo(
+            userId = userId,
+            email = request.email,
+            name = request.name,
+            profileImage = request.profileImage,
+            depositorName = request.depositorName,
+            phoneNumber = request.phoneNumber
+        )
         return ResponseEntity.ok(UserInfoResponse.from(user))
     }
 

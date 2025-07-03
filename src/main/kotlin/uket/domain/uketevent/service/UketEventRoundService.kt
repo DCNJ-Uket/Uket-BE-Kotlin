@@ -63,6 +63,11 @@ class UketEventRoundService(
         return rounds.groupBy { it.uketEventId }
     }
 
+    @Transactional(readOnly = true)
+    fun getEventRoundsByEventId(eventId: Long): List<UketEventRound> {
+        return uketEventRoundRepository.findAllByUketEventId(eventId)
+    }
+
     @Transactional
     fun saveAll(uketEventRounds: List<UketEventRound>): List<UketEventRound> {
         return uketEventRoundRepository.saveAll(uketEventRounds)

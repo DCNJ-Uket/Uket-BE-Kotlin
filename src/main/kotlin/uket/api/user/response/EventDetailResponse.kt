@@ -4,6 +4,7 @@ import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
 import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
+import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
 data class EventDetailResponse(
@@ -19,6 +20,7 @@ data class EventDetailResponse(
     val organizationName: String,
     val contact: UketEvent.EventContact,
     val location: String,
+    val ticketingStatus: TicketingStatus,
 ) {
     data class EventDetailBannerDto(
         val imageId: Long,
@@ -37,6 +39,7 @@ data class EventDetailResponse(
             uketEvent: UketEvent,
             organization: Organization,
             banners: List<Banner>,
+            ticketingStatus: TicketingStatus,
         ): EventDetailResponse = EventDetailResponse(
             eventId = uketEvent.id,
             eventName = uketEvent.eventName,
@@ -49,7 +52,8 @@ data class EventDetailResponse(
             detailImageId = uketEvent.eventImageId,
             caution = uketEvent.details.caution,
             organizationName = organization.name,
-            contact = uketEvent.details.contact
+            contact = uketEvent.details.contact,
+            ticketingStatus = ticketingStatus
         )
     }
 }

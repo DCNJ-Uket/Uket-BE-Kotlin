@@ -1,6 +1,7 @@
 package uket.api.admin
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.PageRequest
@@ -101,15 +102,20 @@ class EventRegistrationController(
     fun getUketEventRegistrations(
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
+        @Parameter(hidden = true)
         @LoginAdminId adminId: Long,
     ): CustomPageResponse<UketEventRegistrationSummaryResponse> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"))
         val admin = adminService.getByIdWithOrganization(adminId)
 
-        val uketEventRegistrationSummaryResponse = eventRegistrationService.findAllByOrganizationId(admin.organization.id, pageRequest).map {
-            UketEventRegistrationSummaryResponse.from(it)
+        val registrations = if (admin.isSuperAdmin) {
+            eventRegistrationService.findAll(pageRequest)
+        } else {
+            eventRegistrationService.findAllByOrganizationId(admin.organization.id, pageRequest)
         }
-        return CustomPageResponse(uketEventRegistrationSummaryResponse)
+
+        val summaryResponse = registrations.map { UketEventRegistrationSummaryResponse.from(it) }
+        return CustomPageResponse(summaryResponse)
     }
 
     @SecurityRequirement(name = "JWT")
@@ -126,6 +132,7 @@ class EventRegistrationController(
     @Operation(summary = "행사 상태 변경", description = "해당 행사의 등록 상태를 변경합니다.")
     @PutMapping("/admin/uket-event-registrations/{uketEventRegistrationId}/status/{registrationStatus}")
     fun changeRegistrationStatus(
+        @Parameter(hidden = true)
         @LoginAdminId adminId: Long,
         @PathVariable("uketEventRegistrationId") uketEventRegistrationId: Long,
         @PathVariable("registrationStatus") registrationStatusString: String,

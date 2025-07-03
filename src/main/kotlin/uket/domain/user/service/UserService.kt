@@ -69,6 +69,29 @@ class UserService(
     }
 
     /*
+        유저 정보 수정
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    fun updateUserInfo(
+        userId: Long,
+        email: String?,
+        name: String?,
+        profileImage: String?,
+        depositorName: String?,
+        phoneNumber: String?,
+    ): User {
+        val user = userRepository.findById(userId).get()
+        user.updateEntireUserInfo(
+            email = email,
+            name = name,
+            profileImage = profileImage,
+            depositorName = depositorName,
+            phoneNumber = phoneNumber
+        )
+        return userRepository.save(user)
+    }
+
+    /*
         유저 삭제
      */
     @Transactional

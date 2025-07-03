@@ -3,15 +3,19 @@ package uket.facade
 import org.springframework.stereotype.Service
 import uket.common.ErrorLevel
 import uket.common.PublicException
+import uket.domain.payment.service.PaymentService
 import uket.domain.reservation.dto.CreateTicketCommand
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
 import uket.domain.uketevent.entity.EntryGroup
+import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.service.EntryGroupService
+import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
+import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
 import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
@@ -23,9 +27,13 @@ class TicketingFacade(
     private val entryGroupService: EntryGroupService,
     private val uketEventRoundService: UketEventRoundService,
     private val uketEventService: UketEventService,
+    private val performerService: PerformerService,
+    private val ticketingCompletionMessageSendService: TicketingCompletionMessageSendService,
+    private val paymentInformationMessageSendService: PaymentInformationMessageSendService,
+    private val paymentService: PaymentService,
 ) {
     @DistributedLock(key = "'ticketing' + #entryGroupId")
-    fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, friend: String, at: LocalDateTime): List<Ticket> {
+    fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
         val entryGroup = entryGroupService.getById(entryGroupId)
@@ -37,7 +45,53 @@ class TicketingFacade(
         validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
 
         entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
-        return ticketService.publishTickets(CreateTicketCommand(user.id, entryGroup.id, TicketStatus.BEFORE_PAYMENT, friend), buyCount)
+
+        val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
+        // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
+        performerService.addTicketCountForPerformer(performer.id, buyCount)
+
+        val tickets = ticketService.publishTickets(
+            createTicketCommand = CreateTicketCommand(
+                userId = user.id,
+                entryGroupId = entryGroup.id,
+                ticketStatus = TicketStatus.init(event.ticketPrice),
+                performerName = pName
+            ),
+            count = buyCount
+        )
+
+        sendUserKakaoTalkMessage(tickets, user, event, entryGroup)
+
+        return tickets
+    }
+
+    private fun sendUserKakaoTalkMessage(
+        tickets: List<Ticket>,
+        user: User,
+        event: UketEvent,
+        entryGroup: EntryGroup,
+    ) {
+        val ticket = tickets.get(0)
+        if (ticket.status == TicketStatus.BEFORE_ENTER) {
+            ticketingCompletionMessageSendService.send(
+                userName = user.name,
+                userPhoneNumber = user.phoneNumber!!,
+                eventName = event.eventName,
+                eventType = event.eventType,
+                ticketNo = ticket.ticketNo,
+                eventDate = entryGroup.entryStartDateTime,
+                eventLocation = event.location
+            )
+        } else if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
+            val payment = paymentService.getByOrganizationId(event.organizationId)
+            paymentInformationMessageSendService.send(
+                eventName = event.eventName,
+                ticketPrice = event.ticketPrice,
+                account = payment.account,
+                userName = user.name,
+                userPhoneNumber = user.phoneNumber!!
+            )
+        }
     }
 
     private fun validateTicketCount(buyCount: Int) {

@@ -12,6 +12,7 @@ import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
 import uket.uket.domain.reservation.repository.TicketJdbcRepository
+import uket.uket.modules.push.UserMessageTemplate
 import java.util.UUID
 
 @Service
@@ -26,18 +27,27 @@ class TicketService(
         return ticket
     }
 
-    fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> = ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
+    fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> =
+        ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(
+            organizationId,
+            uketEventId,
+            TicketStatus.FINISH_ENTER,
+            pageable
+        )
 
-    fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> = ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
+    fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> =
+        ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
 
     @Transactional
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
+        println(createTicketCommand.performerName)
         val tickets = List(count) {
             Ticket(
                 userId = createTicketCommand.userId,
                 entryGroupId = createTicketCommand.entryGroupId,
                 status = createTicketCommand.ticketStatus,
-                ticketNo = UUID.randomUUID().toString(),
+                ticketNo = createTicketNo(),
+                performerName = createTicketCommand.performerName,
                 enterAt = null,
             )
         }
@@ -46,6 +56,12 @@ class TicketService(
         val ticketNos = tickets.map { it.ticketNo }
         return ticketRepository.findByTicketNoIn(ticketNos)
     }
+
+    private fun createTicketNo() = UUID
+        .randomUUID()
+        .toString()
+        .replace("-", "")
+        .substring(0, UserMessageTemplate.TEMPLATE_MAXIMUM_LENGTH)
 
     @Transactional
     fun updateTicket(ticket: Ticket) {
@@ -107,7 +123,12 @@ class TicketService(
         }
     }
 
-    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> = ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(userId, entryGroupId, TicketStatus.notActiveStatuses)
+    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> =
+        ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(
+            userId,
+            entryGroupId,
+            TicketStatus.notActiveStatuses
+        )
 
     fun validateTicketOwner(userId: Long, ticketId: Long) {
         val ticket = this.getById(ticketId)

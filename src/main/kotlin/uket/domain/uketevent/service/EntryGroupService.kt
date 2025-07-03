@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.repository.EntryGroupRepository
-import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -36,7 +35,7 @@ class EntryGroupService(
         entryGroupRepository.save(entryGroup)
     }
 
-    @DistributedLock(key = "#reservationId")
+    @Transactional
     fun decreaseReservedCount(entryGroupId: Long) {
         val entryGroup = this.getById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()
@@ -44,6 +43,7 @@ class EntryGroupService(
         check(isSuccess) {
             "예매된 티켓이 존재하지 않습니다."
         }
+        entryGroupRepository.save(entryGroup)
     }
 
     @Transactional(readOnly = true)

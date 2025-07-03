@@ -20,8 +20,7 @@ import java.time.LocalDateTime
 @Table(
     name = "uket_event",
     indexes = [
-        Index(name = "index_uket_event_01", columnList = "uketEventId"),
-        Index(name = "index_uket_event_02", columnList = "organizationId"),
+        Index(name = "index_uket_event_01", columnList = "organizationId")
     ]
 )
 class UketEvent(
@@ -98,13 +97,20 @@ class UketEvent(
         val link: String?,
     )
 
+    fun init() {
+        this.isVisible = false
+        this.eventOpenDateTime = null
+        this.eventFinishDateTime = null
+    }
+
     fun open(now: LocalDateTime = LocalDateTime.now()) {
         this.isVisible = true
         this.eventOpenDateTime = now
     }
 
     fun finish(now: LocalDateTime = LocalDateTime.now()) {
-        this.isVisible = false
+//        this.isVisible = false
+//        TODO 추후에 행사가 많아서 비어보이지 않으면 적용
         this.eventFinishDateTime = now
     }
 }

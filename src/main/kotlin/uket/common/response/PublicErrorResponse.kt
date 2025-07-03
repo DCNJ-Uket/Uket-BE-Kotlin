@@ -9,6 +9,7 @@ const val DEFAULT_PUBLIC_ERROR_MESSAGE = "이용에 불편을 드려 죄송합�
 data class PublicErrorResponse(
     val title: String? = DEFAULT_PUBLIC_ERROR_TITLE,
     val message: String? = DEFAULT_PUBLIC_ERROR_MESSAGE,
+    val systemMessage: String? = null,
     val errorLevel: ErrorLevel = ErrorLevel.ERROR,
 ) {
     companion object {
@@ -38,9 +39,10 @@ data class PublicErrorResponse(
         ): PublicErrorResponse {
             log.trace(systemMessage ?: exception.message, exception)
 
-            return PublicErrorResponse(
+            return of(
                 title = title,
-                message = publicMessage,
+                publicMessage = publicMessage,
+                systemMessage = systemMessage ?: exception.message,
                 errorLevel = ErrorLevel.TRACE
             )
         }
@@ -53,9 +55,10 @@ data class PublicErrorResponse(
         ): PublicErrorResponse {
             log.debug(systemMessage ?: exception.message, exception)
 
-            return PublicErrorResponse(
+            return of(
                 title = title,
-                message = publicMessage,
+                publicMessage = publicMessage,
+                systemMessage = systemMessage ?: exception.message,
                 errorLevel = ErrorLevel.DEBUG
             )
         }
@@ -68,9 +71,10 @@ data class PublicErrorResponse(
         ): PublicErrorResponse {
             log.info(systemMessage ?: exception.message, exception)
 
-            return PublicErrorResponse(
+            return of(
                 title = title,
-                message = publicMessage,
+                publicMessage = publicMessage,
+                systemMessage = systemMessage ?: exception.message,
                 errorLevel = ErrorLevel.INFO
             )
         }
@@ -83,9 +87,10 @@ data class PublicErrorResponse(
         ): PublicErrorResponse {
             log.warn(systemMessage ?: exception.message, exception)
 
-            return PublicErrorResponse(
+            return of(
                 title = title,
-                message = publicMessage,
+                publicMessage = publicMessage,
+                systemMessage = systemMessage ?: exception.message,
                 errorLevel = ErrorLevel.WARN
             )
         }
@@ -98,10 +103,25 @@ data class PublicErrorResponse(
         ): PublicErrorResponse {
             log.error(systemMessage ?: exception.message, exception)
 
-            return PublicErrorResponse(
+            return of(
                 title = title,
-                message = publicMessage,
+                publicMessage = publicMessage,
+                systemMessage = systemMessage ?: exception.message,
                 errorLevel = ErrorLevel.ERROR
+            )
+        }
+
+        fun of(
+            title: String? = null,
+            publicMessage: String? = null,
+            systemMessage: String? = null,
+            errorLevel: ErrorLevel = ErrorLevel.ERROR,
+        ): PublicErrorResponse {
+            return PublicErrorResponse(
+                title = title ?: DEFAULT_PUBLIC_ERROR_TITLE,
+                message = publicMessage ?: DEFAULT_PUBLIC_ERROR_MESSAGE,
+                systemMessage = systemMessage,
+                errorLevel = errorLevel
             )
         }
     }

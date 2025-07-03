@@ -36,6 +36,7 @@ import uket.domain.reservation.service.TicketService
 import uket.domain.reservation.service.search.TicketSearcher
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.EnterUketEventFacade
+import uket.facade.UpdateTicketStatusFacade
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController
@@ -43,6 +44,7 @@ import uket.facade.EnterUketEventFacade
 @ApiResponse(responseCode = "200", description = "OK")
 class AdminTicketController(
     private val enterUketEventFacade: EnterUketEventFacade,
+    private val updateTicketStatusFacade: UpdateTicketStatusFacade,
     private val ticketService: TicketService,
     private val ticketSearchers: List<TicketSearcher>,
     private val adminService: AdminService,
@@ -65,8 +67,10 @@ class AdminTicketController(
         @PathVariable("ticketId") ticketId: Long,
         @PathVariable("ticketStatus") ticketStatus: TicketStatus,
     ): ResponseEntity<UpdateTicketStatusResponse> {
-        val ticket: Ticket = ticketService.updateTicketStatus(ticketId, ticketStatus)
-        val response = UpdateTicketStatusResponse.from(ticket)
+        val ticket: Ticket = ticketService.getById(ticketId)
+        val updatedTicket = updateTicketStatusFacade.updateTicketStatus(ticket.entryGroupId, ticketId, ticketStatus, ticket.userId)
+
+        val response = UpdateTicketStatusResponse.from(updatedTicket)
         return ResponseEntity.ok(response)
     }
 
