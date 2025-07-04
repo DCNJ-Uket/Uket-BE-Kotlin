@@ -31,6 +31,9 @@ class UketEvent(
     @Column(name = "organization_id")
     val organizationId: Long,
 
+    @Column(name = "payment_id")
+    val paymentId: Long,
+
     @Column(name = "event_name")
     val eventName: String,
 

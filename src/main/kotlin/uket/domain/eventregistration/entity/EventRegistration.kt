@@ -19,6 +19,7 @@ import uket.common.enums.BankCode
 import uket.common.enums.EventContactType
 import uket.common.enums.EventType
 import uket.domain.BaseTimeEntity
+import uket.domain.payment.entity.Payment
 import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
@@ -53,7 +54,7 @@ class EventRegistration(
     @Column(name = "event_start_date")
     val eventStartDate: LocalDate,
 
-    @Column(name = "ticketing_end_date")
+    @Column(name = "event_end_date")
     val eventEndDate: LocalDate,
 
     @Column(name = "ticketing_start_date_time")
@@ -91,6 +92,10 @@ class EventRegistration(
             message
         }
     }
+
+    @Column(name = "payment_id")
+    var paymentId: Long? = null
+        protected set
 
     @Column(name = "uket_event_id")
     var uketEventId: Long? = null
@@ -153,13 +158,11 @@ class EventRegistration(
         @Embedded
         val contact: EventContact,
     ) {
-        fun toUketEvent(): UketEvent.EventDetails {
-            return UketEvent.EventDetails(
-                information = information,
-                caution = caution,
-                contact = contact.toUketEvent()
-            )
-        }
+        fun toUketEvent(): UketEvent.EventDetails = UketEvent.EventDetails(
+            information = information,
+            caution = caution,
+            contact = contact.toUketEvent()
+        )
     }
 
     @Embeddable
@@ -187,63 +190,64 @@ class EventRegistration(
         @Column(name = "contact_link")
         val link: String?,
     ) {
-        fun toUketEvent(): UketEvent.EventContact {
-            return UketEvent.EventContact(
-                type = type,
-                content = content,
-                link = link
-            )
-        }
-    }
-
-    fun toUketEvent(): UketEvent {
-        return UketEvent(
-            organizationId = organizationId,
-            eventName = eventName,
-            eventType = eventType,
-            location = location,
-            totalTicketCount = totalTicketCount,
-            ticketPrice = paymentInfo.ticketPrice,
-            details = details.toUketEvent(),
-            eventImageId = uketEventImageId,
-            thumbnailImageId = thumbnailImageId,
-            firstRoundDateTime = eventRound.minOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
-            lastRoundDateTime = eventRound.maxOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
-            buyTicketLimit = buyTicketLimit
+        fun toUketEvent(): UketEvent.EventContact = UketEvent.EventContact(
+            type = type,
+            content = content,
+            link = link
         )
     }
 
-    fun toEventRounds(): List<UketEventRound> {
-        return eventRound.map {
-            UketEventRound(
-                uketEventId = uketEventId!!,
-                eventRoundDateTime = LocalDateTime.of(it.eventRoundDate, it.eventStartTime),
-                ticketingStartDateTime = ticketingStartDateTime,
-                ticketingEndDateTime = ticketingEndDateTime
-            )
-        }
+    fun toUketEvent(): UketEvent = UketEvent(
+        organizationId = organizationId,
+        paymentId = paymentId!!,
+        eventName = eventName,
+        eventType = eventType,
+        location = location,
+        totalTicketCount = totalTicketCount,
+        ticketPrice = paymentInfo.ticketPrice,
+        details = details.toUketEvent(),
+        eventImageId = uketEventImageId,
+        thumbnailImageId = thumbnailImageId,
+        firstRoundDateTime = eventRound.minOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
+        lastRoundDateTime = eventRound.maxOf { LocalDateTime.of(it.eventRoundDate, it.eventStartTime) },
+        buyTicketLimit = buyTicketLimit
+    )
+
+    fun toEventRounds(): List<UketEventRound> = eventRound.map {
+        UketEventRound(
+            uketEventId = uketEventId!!,
+            eventRoundDateTime = LocalDateTime.of(it.eventRoundDate, it.eventStartTime),
+            ticketingStartDateTime = ticketingStartDateTime,
+            ticketingEndDateTime = ticketingEndDateTime
+        )
     }
 
-    fun toEntryGroups(uketEventRound: UketEventRound): List<EntryGroup> {
-        return entryGroup.map {
-            EntryGroup(
-                uketEventId = uketEventId!!,
-                uketEventRoundId = uketEventRound.id,
-                entryStartDateTime = LocalDateTime.of(uketEventRound.eventRoundDateTime.toLocalDate(), it.entryStartTime),
-                totalTicketCount = it.ticketCount
-            )
-        }
+    fun toEntryGroups(uketEventRound: UketEventRound): List<EntryGroup> = entryGroup.map {
+        EntryGroup(
+            uketEventId = uketEventId!!,
+            uketEventRoundId = uketEventRound.id,
+            entryStartDateTime = LocalDateTime.of(uketEventRound.eventRoundDateTime.toLocalDate(), it.entryStartTime),
+            totalTicketCount = it.ticketCount
+        )
     }
 
-    fun toBanners(): List<Banner> {
-        return banners.map {
-            Banner(
-                uketEventId = uketEventId!!,
-                imageId = it.imageId,
-                link = it.link
-            )
-        }
+    fun toBanners(): List<Banner> = banners.map {
+        Banner(
+            uketEventId = uketEventId!!,
+            imageId = it.imageId,
+            link = it.link
+        )
     }
+
+    fun toPayment(): Payment = Payment(
+        organizationId = organizationId,
+        account = Payment.Account(
+            bankCode = paymentInfo.bankCode,
+            accountNumber = paymentInfo.accountNumber,
+            depositorName = paymentInfo.depositorName
+        ),
+        depositLink = paymentInfo.depositUrl
+    )
 
     fun updateStatus(registrationStatus: EventRegistrationStatus) {
         this.status = registrationStatus
@@ -259,6 +263,10 @@ class EventRegistration(
 
     fun clearUketEvent() {
         this.uketEventId = null
+    }
+
+    fun settingPayment(paymentId: Long) {
+        this.paymentId = paymentId
     }
 
     companion object {
