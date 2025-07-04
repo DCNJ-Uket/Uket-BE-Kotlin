@@ -8,6 +8,7 @@ import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.service.UserService
+import uket.facade.message.TicketingCompletionMessageSendService
 import uket.modules.redis.aop.DistributedLock
 
 @Component

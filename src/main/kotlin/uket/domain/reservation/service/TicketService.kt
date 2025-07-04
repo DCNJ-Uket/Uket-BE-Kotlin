@@ -76,33 +76,8 @@ class TicketService(
     }
 
     @Transactional
-    fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
-        val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
-            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
-
-        ticket.cancel()
-        ticket.updateDeletedAt()
-        ticketRepository.save(ticket)
-    }
-
-    @Transactional
     fun deleteAllByUserId(userId: Long) {
         ticketRepository.deleteAllByUserId(userId)
-    }
-
-    fun validateTicketStatus(ticketId: Long) {
-        val ticket = this.getById(ticketId)
-        val ticketStatus: TicketStatus = ticket.status
-
-        check(ticketStatus != TicketStatus.FINISH_ENTER) { "입장이 이미 완료된 티켓입니다. 재입장은 담당자에게 문의 부탁드립니다." }
-        check(ticketStatus != TicketStatus.EXPIRED) { TicketStatus.EXPIRED.msg }
-        check(ticketStatus != TicketStatus.REFUND_REQUESTED) { TicketStatus.REFUND_REQUESTED.msg }
-    }
-
-    fun checkTicketOwner(userId: Long, ticketId: Long) {
-        require(ticketRepository.existsByUserIdAndId(userId, ticketId)) {
-            "해당 사용자는 해당 티켓을 소유하고 있지 않습니다."
-        }
     }
 
     fun findUserTickets(userId: Long): List<Ticket> {
@@ -130,10 +105,17 @@ class TicketService(
             TicketStatus.notActiveStatuses
         )
 
-    fun validateTicketOwner(userId: Long, ticketId: Long) {
+    fun checkTicketOwner(userId: Long, ticketId: Long) {
         val ticket = this.getById(ticketId)
-        if (ticket.userId != userId) {
+        check(ticket.userId == userId) {
             throw IllegalArgumentException("유저가 소유한 티켓이 아닙니다.")
+        }
+    }
+
+    fun checkCancelTicketStatus(ticketId: Long) {
+        val ticket = getById(ticketId)
+        check(ticket.status in TicketStatus.cancelableStatuses) {
+            throw IllegalStateException("티켓 취소 가능한 상태가 아닙니다.")
         }
     }
 }

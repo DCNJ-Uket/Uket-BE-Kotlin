@@ -116,4 +116,6 @@ class UketEvent(
 //        TODO 추후에 행사가 많아서 비어보이지 않으면 적용
         this.eventFinishDateTime = now
     }
+
+    fun isFree(): Boolean = ticketPrice == 0L
 }
