@@ -46,9 +46,11 @@ class TicketingFacade(
 
         entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
 
-        val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
-        // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
-        performerService.addTicketCountForPerformer(performer.id, buyCount)
+        if (pName.isNotEmpty()) {
+            val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
+            // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
+            performerService.addTicketCountForPerformer(performer.id, buyCount)
+        }
 
         val tickets = ticketService.publishTickets(
             createTicketCommand = CreateTicketCommand(
