@@ -80,7 +80,7 @@ class CancelTicketFacade(
     }
 
     private fun checkTicketingTime(eventRound: UketEventRound, now: LocalDateTime) {
-        check(eventRound.isNowTicketing(now)) {
+        check(eventRound.isCancelable(now)) {
             throw PublicException(
                 publicMessage = "티켓 취소 가능한 시간이 아닙니다.",
                 systemMessage = "[CancelTicketFacade] 티켓팅 기간이 아닐 때 티켓 취소 요청 | eventRoundId=${eventRound.id}"
