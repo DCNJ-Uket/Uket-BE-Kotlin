@@ -1,4 +1,4 @@
-package uket.facade
+package uket.facade.message
 
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
