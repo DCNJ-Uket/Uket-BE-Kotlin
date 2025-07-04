@@ -24,7 +24,8 @@ class EventRegistrationService(
         ?: throw IllegalArgumentException("[EventRegistrationService] EventRegistration을 조회할 수 없습니다. | eventRegistrationId: $id")
 
     @Transactional(readOnly = true)
-    fun findAllByOrganizationId(organizationId: Long, pageable: Pageable): Page<EventRegistration> = eventRegistrationRepository.findAllByOrganizationId(organizationId, pageable)
+    fun findAllByOrganizationId(organizationId: Long, pageable: Pageable): Page<EventRegistration> =
+        eventRegistrationRepository.findAllByOrganizationId(organizationId, pageable)
 
     @Transactional(readOnly = true)
     fun getByIdWithEventRoundAndEntryGroup(id: Long): EventRegistration {
@@ -38,10 +39,14 @@ class EventRegistrationService(
     }
 
     @Transactional
-    fun registerEvent(eventRegistration: EventRegistration): EventRegistration = eventRegistrationRepository.save(eventRegistration)
+    fun registerEvent(eventRegistration: EventRegistration): EventRegistration =
+        eventRegistrationRepository.save(eventRegistration)
 
     @Transactional
-    fun updateEventRegistration(originalEventRegistrationId: Long, updatedEventRegistration: EventRegistration): EventRegistration {
+    fun updateEventRegistration(
+        originalEventRegistrationId: Long,
+        updatedEventRegistration: EventRegistration,
+    ): EventRegistration {
         updatedEventRegistration.updateId(originalEventRegistrationId)
         return eventRegistrationRepository.save(updatedEventRegistration)
     }
