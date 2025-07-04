@@ -85,7 +85,7 @@ class TicketingFacade(
                 eventLocation = event.location
             )
         } else if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
-            val payment = paymentService.getByOrganizationId(event.organizationId)
+            val payment = paymentService.getById(event.paymentId)
             paymentInformationMessageSendService.send(
                 eventName = event.eventName,
                 ticketPrice = event.ticketPrice,
