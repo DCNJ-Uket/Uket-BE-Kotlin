@@ -27,4 +27,7 @@ class PaymentService(
             )
         return payment
     }
+
+    @Transactional
+    fun save(payment: Payment): Payment = paymentRepository.save(payment)
 }
