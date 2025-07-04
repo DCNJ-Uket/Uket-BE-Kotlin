@@ -179,6 +179,7 @@ class UketEventRepositoryTest(
 
             val uketEvent = UketEvent(
                 organizationId = organization.id,
+                paymentId = 1L,
                 eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
                 location = "locationA",
