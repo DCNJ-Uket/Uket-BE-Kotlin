@@ -24,10 +24,7 @@ class UpdateTicketStatusFacade(
         if (ticketStatus === TicketStatus.RESERVATION_CANCEL) {
             entryGroupService.decreaseReservedCount(entryGroupId)
 
-            val ticket = ticketService.getById(ticketId)
-            val entryGroup = entryGroupService.getById(entryGroupId)
-            val performer = performerService.findByNameAndRoundId(ticket.performerName, entryGroup.uketEventRoundId)
-            performerService.minusTicketCountForPerformer(performer.id, 1);
+            reduceTicketCountForPerformer(ticketId, entryGroupId)
         }
         if (ticketStatus == TicketStatus.BEFORE_ENTER) {
             val user = userService.getById(userId)
@@ -46,5 +43,14 @@ class UpdateTicketStatusFacade(
             )
         }
         return ticketService.updateTicketStatus(ticketId, ticketStatus)
+    }
+
+    private fun reduceTicketCountForPerformer(ticketId: Long, entryGroupId: Long) {
+        val ticket = ticketService.getById(ticketId)
+        if (ticket.performerName.isNotEmpty()) {
+            val entryGroup = entryGroupService.getById(entryGroupId)
+            val performer = performerService.findByNameAndRoundId(ticket.performerName, entryGroup.uketEventRoundId)
+            performerService.minusTicketCountForPerformer(performer.id, 1);
+        }
     }
 }
