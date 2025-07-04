@@ -14,7 +14,10 @@ class PaymentService(
     @Transactional(readOnly = true)
     fun getById(paymentId: Long): Payment {
         val payment = paymentRepository.findByIdOrNull(paymentId)
-            ?: throw IllegalStateException("해당 결제 정보를 찾을 수 없습니다")
+            ?: throw PublicNotFoundException(
+                publicMessage = "결제 정보를 찾을 수 없습니다",
+                systemMessage = "[PaymentService] 해당 결제정보를 찾을 수 없습니다. | paymentId: $paymentId"
+            )
         return payment
     }
 
