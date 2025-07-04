@@ -18,8 +18,6 @@ import uket.domain.payment.service.PaymentService
 import uket.domain.reservation.service.QRService
 import uket.domain.reservation.service.TicketService
 import uket.domain.uketevent.service.EntryGroupService
-import uket.domain.uketevent.service.PerformerService
-import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.CancelTicketFacade
 import uket.facade.TicketingFacade
@@ -34,8 +32,6 @@ class TicketController(
     private val entryGroupService: EntryGroupService,
     private val ticketService: TicketService,
     private val qRService: QRService,
-    private val uketEventRoundService: UketEventRoundService,
-    private val performerService: PerformerService,
     private val cancelTicketFacade: CancelTicketFacade,
 ) {
     @Operation(summary = "티켓 예매", description = "유저가 예매 가능한 그룹에 대한 티켓을 예매할 수 있습니다.")
