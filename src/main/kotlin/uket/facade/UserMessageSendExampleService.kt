@@ -17,7 +17,7 @@ class UserMessageSendExampleService(
         applicationEventPublisher.publishEvent(
             UserMessageSendEvent(
                 templateCode = UserMessageTemplate.티켓취소알림톡.code,
-                command = UserMessageTemplate.티켓취소알림톡.티켓취소알림톡Command(
+                command = UserMessageTemplate.티켓취소알림톡.티켓취소알림Command(
                     userName = "홍길동",
                     eventName = "소리터",
                     organizationName = "소리터",
@@ -34,7 +34,7 @@ class UserMessageSendExampleService(
         applicationEventPublisher.publishEvent(
             UserMessageBulkSendEvent(
                 templateCode = UserMessageTemplate.티켓취소알림톡.code,
-                command = UserMessageTemplate.티켓취소알림톡.티켓취소알림톡Command(
+                command = UserMessageTemplate.티켓취소알림톡.티켓취소알림Command(
                     userName = "홍길동",
                     eventName = "소리터",
                     organizationName = "소리터",

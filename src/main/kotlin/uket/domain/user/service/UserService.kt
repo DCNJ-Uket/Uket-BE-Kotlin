@@ -80,8 +80,14 @@ class UserService(
         depositorName: String?,
         phoneNumber: String?,
     ): User {
-        var user = userRepository.findById(userId).get()
-        user.updateEntireUserInfo(email, name, profileImage, depositorName, phoneNumber)
+        val user = userRepository.findById(userId).get()
+        user.updateEntireUserInfo(
+            email = email,
+            name = name,
+            profileImage = profileImage,
+            depositorName = depositorName,
+            phoneNumber = phoneNumber
+        )
         return userRepository.save(user)
     }
 

@@ -28,6 +28,11 @@ class EventRegistrationService(
         eventRegistrationRepository.findAllByOrganizationId(organizationId, pageable)
 
     @Transactional(readOnly = true)
+    fun findAll(pageable: Pageable): Page<EventRegistration> {
+        return eventRegistrationRepository.findAll(pageable)
+    }
+
+    @Transactional(readOnly = true)
     fun getByIdWithEventRoundAndEntryGroup(id: Long): EventRegistration {
         val eventRegistration = getById(id)
 

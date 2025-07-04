@@ -68,7 +68,7 @@ class AdminTicketController(
         @PathVariable("ticketStatus") ticketStatus: TicketStatus,
     ): ResponseEntity<UpdateTicketStatusResponse> {
         val ticket: Ticket = ticketService.getById(ticketId)
-        val updatedTicket = updateTicketStatusFacade.updateTicketStatus(ticket.entryGroupId, ticketId, ticketStatus)
+        val updatedTicket = updateTicketStatusFacade.updateTicketStatus(ticket.entryGroupId, ticketId, ticketStatus, ticket.userId)
 
         val response = UpdateTicketStatusResponse.from(updatedTicket)
         return ResponseEntity.ok(response)

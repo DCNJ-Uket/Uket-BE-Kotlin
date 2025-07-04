@@ -1,6 +1,7 @@
 package uket.common.enums
 
 enum class BankCode(val code: String) {
+    무료("000"),
     한국은행("001"),
     산업은행("002"),
     기업은행("003"),

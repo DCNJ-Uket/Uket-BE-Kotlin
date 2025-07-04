@@ -97,6 +97,8 @@ class SecurityConfig(
                 registry
                     .requestMatchers("/admin/users/login")
                     .permitAll()
+                    .requestMatchers("/admin/users/register-expired")
+                    .permitAll()
                     .requestMatchers("/auth/**")
                     .permitAll()
                     .requestMatchers("/uket-events/*/rounds/**")
