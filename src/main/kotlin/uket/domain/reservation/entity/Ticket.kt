@@ -25,11 +25,11 @@ class Ticket(
     val ticketNo: String,
     var enterAt: LocalDateTime?,
 ) : DeletableEntity() {
-    fun cancel() {
-        if (this.status == TicketStatus.BEFORE_PAYMENT) {
-            this.status = TicketStatus.RESERVATION_CANCEL
-        } else if (this.status == TicketStatus.BEFORE_ENTER) {
-            this.status = TicketStatus.REFUND_REQUESTED
+    fun cancel(isFree: Boolean) {
+        if (!isFree && status in TicketStatus.refundableStatuses) {
+            status = TicketStatus.REFUND_REQUESTED
+        } else {
+            status = TicketStatus.RESERVATION_CANCEL
         }
     }
 

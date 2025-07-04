@@ -3,6 +3,7 @@ package uket.facade
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.common.PublicException
+import uket.domain.admin.service.OrganizationService
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
@@ -12,6 +13,8 @@ import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
+import uket.domain.user.service.UserService
+import uket.facade.message.TicketCancelMessageSendService
 import java.time.LocalDateTime
 
 @Service
@@ -21,6 +24,9 @@ class CancelTicketFacade(
     val uketEventRoundService: UketEventRoundService,
     val uketEventService: UketEventService,
     val performerService: PerformerService,
+    private val ticketCancelMessageSendService: TicketCancelMessageSendService,
+    private val userService: UserService,
+    private val organizationService: OrganizationService,
 ) {
     @Transactional
     fun invoke(ticketId: Long, userId: Long, now: LocalDateTime): Ticket {
@@ -35,11 +41,32 @@ class CancelTicketFacade(
 
         val event = uketEventService.getById(eventRound.uketEventId)
 
-        val updatedTicket = changeTicketStatus(event, ticket)
+        ticket.cancel(event.isFree())
         entryGroup.decreaseReservedCount();
         reducePerformerTicketCount(ticket, eventRound)
 
-        return updatedTicket
+        if (ticket.status == TicketStatus.REFUND_REQUESTED) {
+            sendTicketCancelMessage(event, ticket, userId)
+        }
+
+        return ticket
+    }
+
+    private fun sendTicketCancelMessage(
+        event: UketEvent,
+        ticket: Ticket,
+        userId: Long,
+    ) {
+        val user = userService.getById(userId)
+        val organization = organizationService.getById(event.organizationId)
+        ticketCancelMessageSendService.send(
+            user.name,
+            user.phoneNumber!!,
+            event.eventName,
+            event.eventType,
+            ticket.ticketNo,
+            organization.name
+        )
     }
 
     private fun reducePerformerTicketCount(
@@ -50,15 +77,6 @@ class CancelTicketFacade(
             val performer = performerService.findByNameAndRoundId(ticket.performerName, eventRound.id)
             performerService.minusTicketCountForPerformer(performer.id, 1)
         }
-    }
-
-    private fun changeTicketStatus(event: UketEvent, ticket: Ticket): Ticket {
-        if (event.ticketPrice == 0L) {
-            ticket.status = TicketStatus.RESERVATION_CANCEL
-        } else {
-            ticket.status = TicketStatus.REFUND_REQUESTED
-        }
-        return ticket;
     }
 
     private fun checkTicketingTime(eventRound: UketEventRound, now: LocalDateTime) {
