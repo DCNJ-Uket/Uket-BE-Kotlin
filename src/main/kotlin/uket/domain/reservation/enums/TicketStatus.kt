@@ -15,6 +15,8 @@ enum class TicketStatus(
     companion object {
         val notActiveStatuses: List<TicketStatus> = mutableListOf(RESERVATION_CANCEL)
 
+        val cancelableStatuses: List<TicketStatus> = mutableListOf(BEFORE_ENTER, BEFORE_PAYMENT)
+
         fun init(ticketPrice: Long): TicketStatus {
             if (ticketPrice == 0L) {
                 return BEFORE_ENTER
