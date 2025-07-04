@@ -19,12 +19,14 @@ class PaymentService(
     }
 
     @Transactional(readOnly = true)
-    fun getByOrganizationId(organizationId: Long): Payment {
+    fun getByOrganizationId(organizationId: Long): List<Payment> {
         val payment = paymentRepository.findByOrganizationId(organizationId)
-            ?: throw PublicNotFoundException(
+        if (payment.isEmpty()) {
+            throw PublicNotFoundException(
                 publicMessage = "결제 정보를 찾을 수 없습니다",
                 systemMessage = "[PaymentService] Organization 의 결제정보를 찾을 수 없습니다. | organizationId: $organizationId"
             )
+        }
         return payment
     }
 

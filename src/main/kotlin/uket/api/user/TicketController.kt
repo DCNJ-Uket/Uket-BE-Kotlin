@@ -44,7 +44,7 @@ class TicketController(
         val tickets = ticketingFacade.ticketing(userId, request.entryGroupId, request.buyCount, request.performerName, now)
         val entryGroup = entryGroupService.getById(request.entryGroupId)
         val event = uketEventService.getById(entryGroup.uketEventId)
-        val payment = paymentService.getByOrganizationId(event.organizationId)
+        val payment = paymentService.getById(event.paymentId)
 
         return ResponseEntity.ok(
             TicketingResponse(
