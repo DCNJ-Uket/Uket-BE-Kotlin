@@ -18,4 +18,28 @@ class DevController(
         )
         return newAccessToken
     }
+
+    @GetMapping("/timezone")
+    fun checkTime(): Map<String, String> {
+        // 1. JVM의 기본 시간대 정보 출력
+        val jvmDefaultZone = java.util.TimeZone
+            .getDefault()
+            .id
+
+        // 2. LocalDateTime.now()가 어떤 값을 생성하는지 확인
+        val localDateTimeNow = java.time.LocalDateTime
+            .now()
+            .toString()
+
+        // 3. ZonedDateTime.now()가 어떤 값을 생성하는지 확인
+        val zonedDateTimeNow = java.time.ZonedDateTime
+            .now()
+            .toString()
+
+        return mapOf(
+            "jvm.default.timezone" to jvmDefaultZone,
+            "LocalDateTime.now()" to localDateTimeNow,
+            "ZonedDateTime.now()" to zonedDateTimeNow
+        )
+    }
 }
