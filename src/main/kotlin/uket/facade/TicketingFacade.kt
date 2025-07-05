@@ -17,6 +17,8 @@ import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
+import uket.facade.message.PaymentInformationMessageSendService
+import uket.facade.message.TicketingCompletionMessageSendService
 import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
 
@@ -32,6 +34,8 @@ class TicketingFacade(
     private val paymentInformationMessageSendService: PaymentInformationMessageSendService,
     private val paymentService: PaymentService,
 ) {
+    private final val NO_TICKET_LIMIT = 0;
+
     @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
@@ -42,13 +46,18 @@ class TicketingFacade(
 
         val user = userService.getById(userId)
         val event = uketEventService.getById(eventRound.uketEventId)
-        validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
+
+        if (event.buyTicketLimit != NO_TICKET_LIMIT) {
+            validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
+        }
 
         entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
 
-        val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
-        // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
-        performerService.addTicketCountForPerformer(performer.id, buyCount)
+        if (pName.isNotEmpty()) {
+            val performer = performerService.findByNameAndRoundId(pName, eventRound.id)
+            // TODO 지인 별 인원 제한 존재 시 validation 추가 필요
+            performerService.addTicketCountForPerformer(performer.id, buyCount)
+        }
 
         val tickets = ticketService.publishTickets(
             createTicketCommand = CreateTicketCommand(
@@ -83,7 +92,7 @@ class TicketingFacade(
                 eventLocation = event.location
             )
         } else if (ticket.status == TicketStatus.BEFORE_PAYMENT) {
-            val payment = paymentService.getByOrganizationId(event.organizationId)
+            val payment = paymentService.getById(event.paymentId)
             paymentInformationMessageSendService.send(
                 eventName = event.eventName,
                 ticketPrice = event.ticketPrice,

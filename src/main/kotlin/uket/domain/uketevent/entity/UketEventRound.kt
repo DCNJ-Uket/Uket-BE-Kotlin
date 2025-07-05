@@ -32,7 +32,14 @@ class UketEventRound(
     @Column(name = "ticketing_end_datetime")
     val ticketingEndDateTime: LocalDateTime,
 ) : BaseTimeEntity() {
-    fun isNowTicketing(at: LocalDateTime): Boolean = !(at.isBefore(this.ticketingStartDateTime) || at.isAfter(this.ticketingEndDateTime))
+    // TODO 7/17 공연에 대해서는 DB에 직접 주입하는 값
+    @Column(name = "ticket_cancel_end_date_time")
+    val ticketCancelEndDateTime: LocalDateTime? = null
+
+    fun isCancelable(at: LocalDateTime): Boolean = at <= ticketCancelEndDateTime
+
+    fun isNowTicketing(at: LocalDateTime): Boolean =
+        !(at.isBefore(this.ticketingStartDateTime) || at.isAfter(this.ticketingEndDateTime))
 
     fun isTicketingEnd(at: LocalDateTime): Boolean = at.isAfter(ticketingEndDateTime)
 }

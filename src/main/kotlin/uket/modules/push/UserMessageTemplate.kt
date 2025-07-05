@@ -69,6 +69,29 @@ sealed class UserMessageTemplate(
         ) : Command
     }
 
+    data object 티켓취소알림톡 : UserMessageTemplate(
+        code = "uket_ticket_cancel",
+        referrer = REFERRER_TICKET_CANCEL
+    ) {
+        override fun makeContext(command: Command): Map<String, String> = with(command as 티켓취소알림Command) {
+            mapOf(
+                "이름" to userName,
+                "행사명" to eventName,
+                "주최명" to organizationName,
+                "행사타입" to eventType,
+                "예매번호" to 예매번호
+            )
+        }
+
+        data class 티켓취소알림Command(
+            val userName: String,
+            val eventName: String,
+            val organizationName: String,
+            val eventType: String,
+            val 예매번호: String,
+        ) : Command
+    }
+
     data object 관람일당일안내알림톡 : UserMessageTemplate(
         code = "uket_event_today",
         referrer = REFERRER_EVENT_TODAY
@@ -118,29 +141,6 @@ sealed class UserMessageTemplate(
             val eventType: String,
             val 행사일시: String,
             val 행사장소: String,
-        ) : Command
-    }
-
-    data object 티켓취소알림톡 : UserMessageTemplate(
-        code = "uket_ticket_cancel",
-        referrer = REFERRER_TICKET_CANCEL
-    ) {
-        override fun makeContext(command: Command): Map<String, String> = with(command as 티켓취소알림Command) {
-            mapOf(
-                "이름" to userName,
-                "행사명" to eventName,
-                "주최명" to organizationName,
-                "행사타입" to eventType,
-                "예매번호" to 예매번호
-            )
-        }
-
-        data class 티켓취소알림Command(
-            val userName: String,
-            val eventName: String,
-            val organizationName: String,
-            val eventType: String,
-            val 예매번호: String,
         ) : Command
     }
 

@@ -33,6 +33,7 @@ class TicketRepositoryTest(
         beforeEach {
             val uketEvent = UketEvent(
                 organizationId = 1L,
+                paymentId = 1L,
                 eventName = "uketEventA",
                 eventType = EventType.FESTIVAL,
                 location = "00시00구",

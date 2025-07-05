@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.service.EventRegistrationService
+import uket.domain.payment.service.PaymentService
 import uket.domain.uketevent.service.BannerService
 import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.uketevent.service.UketEventRoundService
@@ -16,6 +17,7 @@ class CreateUketEventFacade(
     private val entryGroupService: EntryGroupService,
     private val bannerService: BannerService,
     private val eventRegistrationService: EventRegistrationService,
+    private val paymentService: PaymentService,
 ) {
     @Transactional
     fun invoke(eventRegistrationId: Long) {
@@ -24,8 +26,14 @@ class CreateUketEventFacade(
             "[CreateUketEventFacade] 검수 진행 상태가 아닌데 UketEvent를 생성할 수 없습니다. | eventRegistrationId: ${eventRegistration.id}"
         }
 
-        val savedUketEvent = uketEventService.save(eventRegistration.toUketEvent())
-        val savedEventRegistration = eventRegistrationService.settingEvent(
+        val savedPayment = paymentService.save(eventRegistration.toPayment())
+        var savedEventRegistration = eventRegistrationService.settingPayment(
+            eventRegistrationId = eventRegistrationId,
+            paymentId = savedPayment.id
+        )
+
+        val savedUketEvent = uketEventService.save(savedEventRegistration.toUketEvent())
+        savedEventRegistration = eventRegistrationService.settingEvent(
             eventRegistrationId = eventRegistrationId,
             uketEventId = savedUketEvent.id
         )

@@ -12,7 +12,7 @@ class EventPaymentInfoFacade(
 ) {
     fun getEventPaymentInfoWithTicketPrice(uketEventId: Long): PaymentWithTicketPriceResult {
         val uketEvent = uketEventService.getById(uketEventId)
-        val payment = paymentService.getByOrganizationId(uketEvent.organizationId)
+        val payment = paymentService.getById(uketEvent.paymentId)
 
         return PaymentWithTicketPriceResult(
             payment = payment,
