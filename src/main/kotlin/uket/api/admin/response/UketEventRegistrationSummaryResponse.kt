@@ -22,18 +22,19 @@ data class UketEventRegistrationSummaryResponse(
     val buyTicketLimit: Int,
 ) {
     companion object {
-        fun of(eventRegistration: EventRegistration, organization: Organization): UketEventRegistrationSummaryResponse = UketEventRegistrationSummaryResponse(
-            organizationId = eventRegistration.organizationId,
-            organizationName = organization.name,
-            uketEventRegistrationId = eventRegistration.id,
-            eventName = eventRegistration.eventName,
-            eventType = eventRegistration.eventType,
-            eventStartDate = eventRegistration.eventStartDate,
-            eventEndDate = eventRegistration.eventEndDate,
-            ticketingStartDateTime = eventRegistration.ticketingStartDateTime.toKr(),
-            registrationStatus = eventRegistration.status.toResponseFormat(),
-            isModifiable = eventRegistration.status.isModifiable,
-            buyTicketLimit = eventRegistration.buyTicketLimit
-        )
+        fun of(eventRegistration: EventRegistration, organization: Organization): UketEventRegistrationSummaryResponse =
+            UketEventRegistrationSummaryResponse(
+                organizationId = eventRegistration.organizationId,
+                organizationName = organization.name,
+                uketEventRegistrationId = eventRegistration.id,
+                eventName = eventRegistration.eventName,
+                eventType = eventRegistration.eventType,
+                eventStartDate = eventRegistration.eventStartDate,
+                eventEndDate = eventRegistration.eventEndDate,
+                ticketingStartDateTime = eventRegistration.ticketingStartDateTime.toKr(),
+                registrationStatus = eventRegistration.status.toResponseFormat(),
+                isModifiable = eventRegistration.status.isModifiable,
+                buyTicketLimit = eventRegistration.buyTicketLimit
+            )
     }
 }
