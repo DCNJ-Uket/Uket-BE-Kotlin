@@ -34,6 +34,8 @@ class TicketingFacade(
     private val paymentInformationMessageSendService: PaymentInformationMessageSendService,
     private val paymentService: PaymentService,
 ) {
+    private final val NO_TICKET_LIMIT = 0;
+
     @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
@@ -44,7 +46,10 @@ class TicketingFacade(
 
         val user = userService.getById(userId)
         val event = uketEventService.getById(eventRound.uketEventId)
-        validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
+
+        if (event.buyTicketLimit != NO_TICKET_LIMIT) {
+            validateTicketingCount(user.id, eventRound.id, buyCount, event.buyTicketLimit)
+        }
 
         entryGroupService.increaseReservedCount(entryGroup.id, buyCount)
 
