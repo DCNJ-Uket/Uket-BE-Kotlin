@@ -3,6 +3,7 @@ package uket.api.admin.response
 import uket.common.TimeUtils.toKr
 import uket.common.enums.EventType
 import uket.common.toResponseFormat
+import uket.domain.admin.entity.Organization
 import uket.domain.eventregistration.entity.EventRegistration
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -21,9 +22,9 @@ data class UketEventRegistrationSummaryResponse(
     val buyTicketLimit: Int,
 ) {
     companion object {
-        fun from(eventRegistration: EventRegistration): UketEventRegistrationSummaryResponse = UketEventRegistrationSummaryResponse(
+        fun of(eventRegistration: EventRegistration, organization: Organization): UketEventRegistrationSummaryResponse = UketEventRegistrationSummaryResponse(
             organizationId = eventRegistration.organizationId,
-            organizationName = eventRegistration.eventName,
+            organizationName = organization.name,
             uketEventRegistrationId = eventRegistration.id,
             eventName = eventRegistration.eventName,
             eventType = eventRegistration.eventType,

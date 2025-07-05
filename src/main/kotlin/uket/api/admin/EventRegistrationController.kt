@@ -114,7 +114,10 @@ class EventRegistrationController(
             eventRegistrationService.findAllByOrganizationId(admin.organization.id, pageRequest)
         }
 
-        val summaryResponse = registrations.map { UketEventRegistrationSummaryResponse.from(it) }
+        val organizationMap = registrations
+            .map { organizationService.getById(it.organizationId) }
+            .associateBy { it.id }
+        val summaryResponse = registrations.map { UketEventRegistrationSummaryResponse.of(it, organizationMap[it.organizationId]!!) }
         return CustomPageResponse(summaryResponse)
     }
 
@@ -140,7 +143,8 @@ class EventRegistrationController(
         val admin = adminService.getById(adminId)
         check(admin.isSuperAdmin) { "슈퍼 어드민이 아닌데 호출되었습니다." }
 
-        val eventRegistrationStatusState = eventRegistrationStatusStateResolver.resolve(registrationStatusString.toEnum())
+        val eventRegistrationStatusState =
+            eventRegistrationStatusStateResolver.resolve(registrationStatusString.toEnum())
 
         val eventRegistration = eventRegistrationStatusState.invoke(
             id = uketEventRegistrationId,
