@@ -64,7 +64,7 @@ app:
       access-token-expiration: 7_200_000
       refresh-token-expiration: 7_200_000
       email-token-expiration: 864_000_000
-      ticket-token-expiration: 1_200_000
+      ticket-token-expiration: 180_000
   kakao:
     token_uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
