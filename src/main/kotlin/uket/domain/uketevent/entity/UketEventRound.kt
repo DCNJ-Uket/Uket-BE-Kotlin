@@ -38,7 +38,8 @@ class UketEventRound(
 
     fun isCancelable(at: LocalDateTime): Boolean = at <= ticketCancelEndDateTime
 
-    fun isNowTicketing(at: LocalDateTime): Boolean = !(at.isBefore(this.ticketingStartDateTime) || at.isAfter(this.ticketingEndDateTime))
+    fun isNowTicketing(at: LocalDateTime): Boolean =
+        !(at.isBefore(this.ticketingStartDateTime) || at.isAfter(this.ticketingEndDateTime))
 
     fun isTicketingEnd(at: LocalDateTime): Boolean = at.isAfter(ticketingEndDateTime)
 }

@@ -24,11 +24,12 @@ import uket.auth.config.userId.LoginUserId
 import uket.auth.dto.UserAuthToken
 import uket.auth.jwt.JwtAuthTokenUtil
 import uket.common.response.ListResponse
-import uket.domain.reservation.service.TicketService
 import uket.domain.user.dto.RegisterUserCommand
 import uket.domain.user.enums.Platform
 import uket.domain.user.service.UserService
+import uket.facade.FindUserTicketsFacade
 import uket.facade.UserAuthFacade
+import java.time.LocalDateTime
 
 @Tag(name = "멤버 관련 API", description = "멤버 관련 API 입니다")
 @RestController
@@ -36,7 +37,7 @@ class UserController(
     private val userAuthFacade: UserAuthFacade,
     private val jwtAuthTokenUtil: JwtAuthTokenUtil,
     private val userService: UserService,
-    private val ticketService: TicketService,
+    private val findUserTicketsFacade: FindUserTicketsFacade,
 ) {
     @Operation(summary = "소셜 로그인", description = "소셜 로그인을 진행합니다.")
     @PostMapping("auth/login/{provider}")
@@ -124,8 +125,7 @@ class UserController(
         @LoginUserId
         userId: Long,
     ): ResponseEntity<ListResponse<UserTicketResponse>> {
-        val tickets = ticketService.findUserTickets(userId)
-        val responses = tickets.map { UserTicketResponse.of(it) }
+        val responses = findUserTicketsFacade.findUserTickets(userId, LocalDateTime.now())
         return ResponseEntity.ok(ListResponse<UserTicketResponse>(responses))
     }
 

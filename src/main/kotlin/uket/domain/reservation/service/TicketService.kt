@@ -80,23 +80,8 @@ class TicketService(
         ticketRepository.deleteAllByUserId(userId)
     }
 
-    fun findUserTickets(userId: Long): List<Ticket> {
-        val tickets = ticketRepository.findAllByUserId(userId)
-        val sortedTickets = tickets.sortedWith(ticketSortComparator())
-        return sortedTickets
-    }
-
-    private fun ticketSortComparator() = compareBy<Ticket> {
-        when (it.status) {
-            TicketStatus.BEFORE_ENTER -> 1
-            TicketStatus.BEFORE_PAYMENT -> 2
-            TicketStatus.FINISH_ENTER -> 3
-            TicketStatus.RESERVATION_CANCEL -> 4
-            TicketStatus.EXPIRED -> 5
-            TicketStatus.REFUND_REQUESTED -> 6
-            else -> 7
-        }
-    }
+    @Transactional(readOnly = true)
+    fun findAllByUserId(userId: Long): List<Ticket> = ticketRepository.findAllByUserId(userId)
 
     fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> =
         ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(
