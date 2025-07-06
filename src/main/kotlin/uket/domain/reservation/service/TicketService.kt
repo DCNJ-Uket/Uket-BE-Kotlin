@@ -5,9 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.api.admin.dto.LiveEnterUserDto
 import uket.domain.reservation.dto.CreateTicketCommand
-import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
@@ -27,16 +25,11 @@ class TicketService(
         return ticket
     }
 
-    fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> =
-        ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(
-            organizationId,
-            uketEventId,
-            TicketStatus.FINISH_ENTER,
-            pageable
-        )
+    fun findTicketsByEntryGroupIds(entryGroupIds: Set<Long>, pageable: Pageable): Page<Ticket> =
+        ticketRepository.findTicketsByEntryGroupIdIn(entryGroupIds, pageable)
 
-    fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> =
-        ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
+    fun findTicketsByEntryGroupIdsAndStatus(entryGroupIds: Set<Long>, status: TicketStatus, pageable: Pageable): Page<Ticket> =
+        ticketRepository.findTicketsByEntryGroupIdInAndStatus(entryGroupIds, status, pageable)
 
     @Transactional
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {

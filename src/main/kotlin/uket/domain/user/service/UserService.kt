@@ -25,6 +25,10 @@ class UserService(
         return user
     }
 
+    fun findByIds(userIds: Set<Long>): List<User> {
+        return userRepository.findByIdIn(userIds)
+    }
+
     /*
         유저 생성 또는 업데이트
      */

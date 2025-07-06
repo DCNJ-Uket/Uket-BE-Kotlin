@@ -8,4 +8,6 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByPlatformAndPlatformId(platform: Platform, platformId: String): User?
 
     fun existsByEmail(email: String): Boolean
+
+    fun findByIdIn(userIds: Set<Long>): List<User>
 }
