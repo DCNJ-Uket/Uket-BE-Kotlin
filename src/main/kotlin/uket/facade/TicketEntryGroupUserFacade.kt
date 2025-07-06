@@ -1,13 +1,17 @@
 package uket.facade
 
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.reservation.dto.TicketSearchDto
+import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
+import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.service.EntryGroupService
+import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
 
 @Service
@@ -51,25 +55,52 @@ class TicketEntryGroupUserFacade(
         val entryGroupMap = entryGroups.associateBy { it.id }
 
         val tickets = ticketService.findTicketsByEntryGroupIds(entryGroupIds, pageable)
-
         val userMap = userService.findByIds(tickets.map { it.userId }.toSet()).associateBy { it.id }
 
         val resultDtos = tickets.map { ticket ->
-            val entryGroup = entryGroupMap[ticket.entryGroupId]
-            val user = userMap[ticket.userId]
-
-            TicketSearchDto(
-                ticketId = ticket.id,
-                depositorName = user!!.depositorName!!,
-                telephone = user.phoneNumber!!,
-                showTime = entryGroup!!.entryStartDateTime,
-                orderDate = ticket.createdAt,
-                updatedDate = ticket.updatedAt,
-                ticketStatus = ticket.status,
-                performer = ticket.performerName ?: "",
+            convertToDto(
+                ticket = ticket,
+                user = userMap[ticket.userId],
+                entryGroup = entryGroupMap[ticket.entryGroupId]
             )
         }
 
         return resultDtos
+    }
+
+    @Transactional(readOnly = true)
+    fun toDtoPage(tickets: Page<Ticket>): Page<TicketSearchDto> {
+        val userIds = tickets.content.map { it.userId }.toSet()
+        val entryGroupIds = tickets.content.map { it.entryGroupId }.toSet()
+
+        val userMap = userService.findByIds(userIds).associateBy { it.id }
+        val entryGroupMap = entryGroupService.getByIds(entryGroupIds).associateBy { it.id }
+
+        val dtoList = tickets.content.map { ticket ->
+            convertToDto(
+                ticket = ticket,
+                user = userMap[ticket.userId],
+                entryGroup = entryGroupMap[ticket.entryGroupId]
+            )
+        }
+
+        return PageImpl(dtoList, tickets.pageable, tickets.totalElements)
+    }
+
+    private fun convertToDto(
+        ticket: Ticket,
+        user: User?,
+        entryGroup: EntryGroup?,
+    ): TicketSearchDto {
+        return TicketSearchDto(
+            ticketId = ticket.id,
+            depositorName = user!!.depositorName!!,
+            telephone = user.phoneNumber!!,
+            showTime = entryGroup!!.entryStartDateTime,
+            orderDate = ticket.createdAt,
+            updatedDate = ticket.updatedAt,
+            ticketStatus = ticket.status,
+            performer = ticket.performerName ?: "",
+        )
     }
 }
