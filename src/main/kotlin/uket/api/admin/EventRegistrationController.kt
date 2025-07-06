@@ -69,7 +69,7 @@ class EventRegistrationController(
         val organization = organizationService.getById(organizationId)
 
         val eventRegistration = eventRegistrationService.registerEvent(
-            request.toEntity(organization.id, eventType),
+            request.toEntity(organization.id, EventRegistrationStatus.검수_진행, eventType),
         )
         return RegisterUketEventResponse(
             uketEventRegistrationId = eventRegistration.id,
@@ -90,7 +90,7 @@ class EventRegistrationController(
 
         val modifiedEventRegistrationId = modifyEventRegistrationFacade.modify(
             originalEventRegistration.id,
-            request.toEntity(originalEventRegistration.organizationId, eventType)
+            request.toEntity(originalEventRegistration.organizationId, originalEventRegistration.status, eventType)
         )
 
         return RegisterUketEventResponse(
