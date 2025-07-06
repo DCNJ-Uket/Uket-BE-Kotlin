@@ -56,7 +56,7 @@ class TicketEntryGroupUserFacade(
         val userMap = userService.findByIds(tickets.content.map { it.userId }.toSet()).associateBy { it.id }
 
         val resultDtos = tickets.content.mapNotNull { ticket ->
-            val entryGroup = entryGroupMap[ticket.entryGroupId]  ?: return@mapNotNull null
+            val entryGroup = entryGroupMap[ticket.entryGroupId] ?: return@mapNotNull null
             val user = userMap[ticket.userId] ?: return@mapNotNull null
 
             TicketSearchDto(
