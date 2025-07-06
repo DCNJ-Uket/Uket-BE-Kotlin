@@ -12,9 +12,14 @@ object MaskingProcessor {
         val args = constructor.parameters.map { parameter ->
             val property = dtoClass.memberProperties.find { it.name == parameter.name } ?: return@map null
             val originalValue = property.getter.call(dto)
-            val maskedValue = property.findAnnotation<Mask>()?.let {
+
+            val field = dtoClass.java.getDeclaredField(parameter.name!!)
+            val mask = field.getAnnotation(Mask::class.java)
+
+            val maskedValue = mask?.let {
                 if (originalValue is String) MaskingUtil.maskingOf(it.type, originalValue) else originalValue
             } ?: originalValue
+
             maskedValue
         }.toTypedArray()
 
