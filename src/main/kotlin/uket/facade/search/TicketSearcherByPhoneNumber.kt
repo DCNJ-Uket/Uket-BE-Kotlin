@@ -1,4 +1,4 @@
-package uket.domain.reservation.service.search
+package uket.facade.search
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -7,14 +7,17 @@ import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
 import uket.domain.reservation.dto.TicketSearchDto
+import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.repository.TicketRepository
+import uket.domain.uketevent.service.EntryGroupService
 
 @Service
-class TicketSearcherByUserName(
+class TicketSearcherByPhoneNumber(
     ticketRepository: TicketRepository,
-) : TicketSearcher(ticketRepository) {
+    entryGroupService: EntryGroupService,
+) : TicketSearcher(ticketRepository,entryGroupService) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
-        return searchType == TicketSearchType.USER_NAME
+        return searchType == TicketSearchType.PHONE_NUMBER
     }
 
     @Transactional(readOnly = true)
@@ -23,7 +26,12 @@ class TicketSearcherByUserName(
         uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
-    ): Page<TicketSearchDto> {
-        return ticketRepository.findByUserName(organizationId, uketEventId, searchRequest.userName!!, pageable)
+    ): Page<Ticket> {
+        val entryGroupIds = entryGroupService.getEntryGroups(
+            organizationId = organizationId,
+            uketEventId = uketEventId
+        ).map { it.id }.toSet()
+
+        return ticketRepository.findByPhoneNumberEndingWith(searchRequest.phoneNumberLastFourDigits!!, entryGroupIds,pageable)
     }
 }

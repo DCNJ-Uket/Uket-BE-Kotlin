@@ -20,6 +20,11 @@ class EntryGroupService(
     }
 
     @Transactional(readOnly = true)
+    fun getByIds(ids: Set<Long>): List<EntryGroup> {
+        return entryGroupRepository.findAllById(ids)
+    }
+
+    @Transactional(readOnly = true)
     fun getEntryGroups(
         organizationId: Long,
         uketEventId: Long?,

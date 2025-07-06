@@ -66,7 +66,7 @@ class TicketEntryGroupUserFacade(
                 orderDate = ticket.createdAt,
                 updatedDate = ticket.updatedAt,
                 ticketStatus = ticket.status,
-                performer = ticket.performerName,
+                performer = ticket.performerName ?: "",
             )
         }
 

@@ -33,11 +33,12 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
-import uket.domain.reservation.service.search.TicketSearcher
+import uket.facade.search.TicketSearcher
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.EnterUketEventFacade
 import uket.facade.TicketEntryGroupUserFacade
 import uket.facade.UpdateTicketStatusFacade
+import uket.facade.assembler.TicketSearchAssembler
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController
@@ -51,6 +52,7 @@ class AdminTicketController(
     private val adminService: AdminService,
     private val uketEventService: UketEventService,
     private val ticketEntryGroupUserFacade: TicketEntryGroupUserFacade,
+    private val ticketSearchAssembler: TicketSearchAssembler,
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "입장 확인 API", description = "QR code를 통한 Token값으로 입장 확인을 할 수 있습니다.")
@@ -115,7 +117,7 @@ class AdminTicketController(
             if (searchType == TicketSearchType.NONE) {
                 ticketEntryGroupUserFacade.searchAllTickets(adminInfo.organizationId, uketEventId, pageRequest)
             } else {
-                ticketSearchers
+                val tickets = ticketSearchers
                     .stream()
                     .filter { it.isSupport(searchType) }
                     .findFirst()
@@ -126,6 +128,7 @@ class AdminTicketController(
                             title = "잘못된 검색 타입"
                         )
                     }.search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
+                ticketSearchAssembler.toDtoPage(tickets)
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))

@@ -1,4 +1,4 @@
-package uket.domain.reservation.service.search
+package uket.facade.search
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -6,14 +6,16 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
-import uket.domain.reservation.dto.TicketSearchDto
+import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.repository.TicketRepository
+import uket.domain.uketevent.service.EntryGroupService
 import java.time.LocalTime
 
 @Service
 class TicketSearcherByModifiedAt(
     ticketRepository: TicketRepository,
-) : TicketSearcher(ticketRepository) {
+    entryGroupService: EntryGroupService,
+) : TicketSearcher(ticketRepository,entryGroupService) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
         return searchType == TicketSearchType.MODIFIED_AT
     }
@@ -24,13 +26,18 @@ class TicketSearcherByModifiedAt(
         uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
-    ): Page<TicketSearchDto> {
+    ): Page<Ticket> {
         val modifiedAt = searchRequest.modifiedAt
             ?: throw IllegalStateException("modifiedAt은 null일 수 없습니다.")
 
         val modifyStart = modifiedAt.toLocalDate().atTime(LocalTime.MIN)
         val modifyEnd = modifiedAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByUpdatedAtBetween(organizationId, uketEventId, modifyStart, modifyEnd, pageable)
+        val entryGroupIds = entryGroupService.getEntryGroups(
+            organizationId = organizationId,
+            uketEventId = uketEventId
+        ).map { it.id }.toSet()
+
+        return ticketRepository.findByUpdatedAtBetween(modifyStart, modifyEnd, entryGroupIds,pageable)
     }
 }
