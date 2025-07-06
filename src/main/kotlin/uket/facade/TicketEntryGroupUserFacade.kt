@@ -52,7 +52,6 @@ class TicketEntryGroupUserFacade(
     fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> {
         val entryGroups = entryGroupService.getEntryGroups(organizationId, uketEventId)
         val entryGroupIds = entryGroups.map { it.id }.toSet()
-        println(entryGroupIds)
         val entryGroupMap = entryGroups.associateBy { it.id }
 
         val tickets = ticketService.findTicketsByEntryGroupIds(entryGroupIds, pageable)
@@ -75,7 +74,6 @@ class TicketEntryGroupUserFacade(
 
         val userMap = userService.findByIds(userIds).associateBy { it.id }
         val entryGroupMap = entryGroupService.getByIds(entryGroupIds).associateBy { it.id }
-        println(entryGroupIds)
 
         val dtoList = tickets.content.mapNotNull { ticket ->
             convertToDto(
