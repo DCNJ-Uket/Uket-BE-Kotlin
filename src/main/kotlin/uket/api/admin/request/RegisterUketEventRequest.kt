@@ -5,6 +5,7 @@ import uket.domain.eventregistration.EventData
 import uket.domain.eventregistration.entity.BannerRegistration
 import uket.domain.eventregistration.entity.EntryGroupRegistration
 import uket.domain.eventregistration.entity.EventRegistration
+import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.entity.EventRoundRegistration
 
 data class RegisterUketEventRequest(
@@ -23,7 +24,7 @@ data class RegisterUketEventRequest(
         }
     }
 
-    fun toEntity(organizationId: Long, eventType: EventType): EventRegistration {
+    fun toEntity(organizationId: Long, status: EventRegistrationStatus, eventType: EventType): EventRegistration {
         val eventData = when (eventType) {
             EventType.FESTIVAL -> this.festivalData!!
             EventType.PERFORMANCE -> this.performanceData!!
@@ -35,6 +36,7 @@ data class RegisterUketEventRequest(
                 eventName = eventName,
                 organizationId = organizationId,
                 location = location,
+                status = status,
                 ticketingStartDateTime = ticketingStartDateTime,
                 ticketingEndDateTime = ticketingEndDateTime,
                 eventStartDate = eventRound.minOf { it.date },
