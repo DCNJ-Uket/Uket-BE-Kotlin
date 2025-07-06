@@ -81,7 +81,7 @@ data class RegisterUketEventRequest(
             ).apply {
                 val originalEventID = originalEventRegistration.uketEventId
 
-                if(originalEventID != null) {
+                if (originalEventID != null) {
                     this.settingEvent(originalEventID)
                 }
             }
