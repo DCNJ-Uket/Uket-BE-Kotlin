@@ -29,6 +29,7 @@ import uket.common.response.CustomPageResponse
 import uket.common.toEnum
 import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
+import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.domain.eventregistration.service.EventRegistrationStatusStateResolver
 import uket.facade.S3ImageFacade
@@ -83,15 +84,15 @@ class EventRegistrationController(
         @RequestBody request: RegisterUketEventRequest,
     ): RegisterUketEventResponse {
         request.validateByEventType(eventType)
-        val originalEventRegistration = eventRegistrationService.getById(uketEventRegistrationId)
-        eventRegistrationService.validateUpdatableStatus(originalEventRegistration)
+        val eventRegistrationStatusState = eventRegistrationStatusStateResolver.resolve(EventRegistrationStatus.검수_진행)
 
-        val updatedEventRegistration = eventRegistrationService.updateEventRegistration(
-            originalEventRegistration.id, request.toEntity(originalEventRegistration.organizationId, eventType)
+        val eventRegistration = eventRegistrationStatusState.invoke(
+            id = uketEventRegistrationId,
+            currentStatus = eventRegistrationService.getById(uketEventRegistrationId).status
         )
 
         return RegisterUketEventResponse(
-            uketEventRegistrationId = updatedEventRegistration.id,
+            uketEventRegistrationId = eventRegistration.id,
             eventType = eventType,
         )
     }
