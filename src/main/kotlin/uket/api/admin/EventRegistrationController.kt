@@ -29,9 +29,11 @@ import uket.common.response.CustomPageResponse
 import uket.common.toEnum
 import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
+import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.domain.eventregistration.service.EventRegistrationStatusStateResolver
 import uket.facade.S3ImageFacade
+import uket.facade.eventregistration.ModifyEventRegistrationFacade
 
 @Tag(name = "어드민 행사 관련 API", description = "어드민 행사 관련 API 입니다.")
 @RestController
@@ -41,6 +43,7 @@ class EventRegistrationController(
     private val s3ImageFacade: S3ImageFacade,
     private val adminService: AdminService,
     private val eventRegistrationStatusStateResolver: EventRegistrationStatusStateResolver,
+    private val modifyEventRegistrationFacade: ModifyEventRegistrationFacade,
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "어드민 행사 사진 업로드", description = "행사를 등록하기전 해당 행사의 사진들을 먼저 등록합니다.")
@@ -66,7 +69,7 @@ class EventRegistrationController(
         val organization = organizationService.getById(organizationId)
 
         val eventRegistration = eventRegistrationService.registerEvent(
-            request.toEntity(organization.id, eventType),
+            request.toEntity(organization.id, EventRegistrationStatus.검수_진행, eventType),
         )
         return RegisterUketEventResponse(
             uketEventRegistrationId = eventRegistration.id,
@@ -84,14 +87,14 @@ class EventRegistrationController(
     ): RegisterUketEventResponse {
         request.validateByEventType(eventType)
         val originalEventRegistration = eventRegistrationService.getById(uketEventRegistrationId)
-        eventRegistrationService.validateUpdatableStatus(originalEventRegistration)
 
-        val updatedEventRegistration = eventRegistrationService.updateEventRegistration(
-            originalEventRegistration.id, request.toEntity(originalEventRegistration.organizationId, eventType)
+        val modifiedEventRegistrationId = modifyEventRegistrationFacade.modify(
+            originalEventRegistration.id,
+            request.toEntity(originalEventRegistration, eventType)
         )
 
         return RegisterUketEventResponse(
-            uketEventRegistrationId = updatedEventRegistration.id,
+            uketEventRegistrationId = modifiedEventRegistrationId,
             eventType = eventType,
         )
     }

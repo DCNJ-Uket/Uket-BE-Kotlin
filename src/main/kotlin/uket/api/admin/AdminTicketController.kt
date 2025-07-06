@@ -141,7 +141,12 @@ class AdminTicketController(
         @LoginAdminId adminId: Long,
     ): ResponseEntity<FilterEventResponse> {
         val adminInfo = adminService.getAdminInfo(adminId)
-        val eventList = uketEventService.getEventsByOrganizationId(adminInfo.organizationId)
+
+        val eventList = if (adminInfo.isSuperAdmin) {
+            uketEventService.findAll()
+        } else {
+            uketEventService.getEventsByOrganizationId(adminInfo.organizationId)
+        }
         return ResponseEntity.ok(FilterEventResponse(eventList))
     }
 }

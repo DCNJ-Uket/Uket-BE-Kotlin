@@ -11,6 +11,7 @@ data class UserTicketResponse(
     val ticketId: Long,
     val userId: Long,
     val entryGroupId: Long,
+    val uketEventId: Long,
 
     val ticketStatus: String,
 
@@ -38,6 +39,7 @@ data class UserTicketResponse(
             ticketId = ticket.id,
             userId = ticket.userId,
             entryGroupId = ticket.entryGroupId,
+            uketEventId = event.id,
             ticketStatus = ticket.status.value,
             organizationName = organization.name,
             eventName = event.eventName,

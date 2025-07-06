@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -53,6 +54,7 @@ class TicketController(
             TicketingResponse(
                 ticketIds = tickets.map { it.id },
                 totalPrice = event.ticketPrice * tickets.size,
+                account = payment.account,
                 depositUrl = payment.depositLink,
                 bankCode = payment.account.bankCode
             )
@@ -76,7 +78,7 @@ class TicketController(
             .body(qrCodeByte)
     }
 
-    @PostMapping("/tickets/{id}/cancel")
+    @DeleteMapping("/tickets/{id}/cancel")
     @Operation(summary = "티켓 취소", description = "티켓을 취소합니다.")
     fun cancelTicket(
         @Parameter(hidden = true)

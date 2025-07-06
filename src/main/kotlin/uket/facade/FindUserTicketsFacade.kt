@@ -81,8 +81,8 @@ class FindUserTicketsFacade(
 
     private fun ticketSortComparator() = compareBy<Ticket> {
         when (it.status) {
-            TicketStatus.BEFORE_ENTER -> 1
-            TicketStatus.BEFORE_PAYMENT -> 2
+            TicketStatus.BEFORE_PAYMENT -> 1
+            TicketStatus.BEFORE_ENTER -> 2
             TicketStatus.FINISH_ENTER -> 3
             TicketStatus.RESERVATION_CANCEL -> 4
             TicketStatus.EXPIRED -> 5

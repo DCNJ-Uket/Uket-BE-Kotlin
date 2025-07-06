@@ -52,20 +52,20 @@ class TicketEntryGroupUserFacade(
     fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> {
         val entryGroups = entryGroupService.getEntryGroups(organizationId, uketEventId)
         val entryGroupIds = entryGroups.map { it.id }.toSet()
+        println(entryGroupIds)
         val entryGroupMap = entryGroups.associateBy { it.id }
 
         val tickets = ticketService.findTicketsByEntryGroupIds(entryGroupIds, pageable)
         val userMap = userService.findByIds(tickets.map { it.userId }.toSet()).associateBy { it.id }
 
-        val resultDtos = tickets.map { ticket ->
+        val resultDtos = tickets.content.mapNotNull { ticket ->
             convertToDto(
                 ticket = ticket,
-                user = userMap[ticket.userId],
-                entryGroup = entryGroupMap[ticket.entryGroupId]
+                user = userMap[ticket.userId] ?: return@mapNotNull null,
+                entryGroup = entryGroupMap[ticket.entryGroupId] ?: return@mapNotNull null
             )
         }
-
-        return resultDtos
+        return PageImpl(resultDtos, pageable, tickets.totalElements)
     }
 
     @Transactional(readOnly = true)
@@ -75,28 +75,28 @@ class TicketEntryGroupUserFacade(
 
         val userMap = userService.findByIds(userIds).associateBy { it.id }
         val entryGroupMap = entryGroupService.getByIds(entryGroupIds).associateBy { it.id }
+        println(entryGroupIds)
 
-        val dtoList = tickets.content.map { ticket ->
+        val dtoList = tickets.content.mapNotNull { ticket ->
             convertToDto(
                 ticket = ticket,
-                user = userMap[ticket.userId],
-                entryGroup = entryGroupMap[ticket.entryGroupId]
+                user = userMap[ticket.userId] ?: return@mapNotNull null,
+                entryGroup = entryGroupMap[ticket.entryGroupId] ?: return@mapNotNull null
             )
         }
-
         return PageImpl(dtoList, tickets.pageable, tickets.totalElements)
     }
 
     private fun convertToDto(
         ticket: Ticket,
-        user: User?,
-        entryGroup: EntryGroup?,
+        user: User,
+        entryGroup: EntryGroup,
     ): TicketSearchDto {
         return TicketSearchDto(
             ticketId = ticket.id,
-            depositorName = user!!.depositorName!!,
+            depositorName = user.depositorName!!,
             telephone = user.phoneNumber!!,
-            showTime = entryGroup!!.entryStartDateTime,
+            showTime = entryGroup.entryStartDateTime,
             orderDate = ticket.createdAt,
             updatedDate = ticket.updatedAt,
             ticketStatus = ticket.status,

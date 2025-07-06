@@ -28,8 +28,14 @@ class UketEventService(
 
     @Transactional(readOnly = true)
     fun getEventsByOrganizationId(organizationId: Long): List<EventNameDto> {
-        val events = uketEventRepository.findAllByOrganizationId(organizationId)
+        val events = uketEventRepository.findAllByOrganizationIdOrderByCreatedAtDesc(organizationId)
         return events.map { event -> EventNameDto.of(organizationId, event) }
+    }
+
+    @Transactional(readOnly = true)
+    fun findAll(): List<EventNameDto> {
+        val events = uketEventRepository.findAllByOrderByCreatedAtDesc()
+        return events.map { event -> EventNameDto.of(event.organizationId, event) }
     }
 
     @Transactional(readOnly = true)

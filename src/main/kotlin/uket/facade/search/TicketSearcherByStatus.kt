@@ -30,6 +30,7 @@ class TicketSearcherByStatus(
             organizationId = organizationId,
             uketEventId = uketEventId
         ).map { it.id }.toSet()
+        println(entryGroupIds)
 
         return ticketRepository.findByStatus(searchRequest.status!!, entryGroupIds, pageable)
     }
