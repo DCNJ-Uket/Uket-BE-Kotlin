@@ -29,6 +29,7 @@ import uket.common.response.CustomPageResponse
 import uket.common.toEnum
 import uket.domain.admin.service.AdminService
 import uket.domain.admin.service.OrganizationService
+import uket.domain.eventregistration.entity.EventRegistrationStatus
 import uket.domain.eventregistration.service.EventRegistrationService
 import uket.domain.eventregistration.service.EventRegistrationStatusStateResolver
 import uket.facade.S3ImageFacade
