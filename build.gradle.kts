@@ -9,6 +9,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6" // 스프링 의존성 관리
     id("org.jlleitschuh.gradle.ktlint") version "12.1.0" // 린트
 }
+val springCloudVersion by extra("2024.0.1")
 
 group = "uket"
 version = "0.0.1-SNAPSHOT"
@@ -21,6 +22,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -84,6 +86,11 @@ dependencies {
     // ratelimit
     implementation("com.bucket4j:bucket4j-core:8.3.0")
 }
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
+    }
+}
 
 tasks.test {
     useJUnitPlatform() // 테스트 시, JUnit 사용
@@ -95,9 +102,9 @@ kotlin {
 
 allOpen {
     // 해당 어노테이션이 붙은 클래스는 자동으로 open 처리
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 configure<KtlintExtension> {

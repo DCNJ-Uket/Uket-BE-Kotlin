@@ -1,3 +1,6 @@
+server:
+  port: ${SERVER_PORT}
+
 spring:
   config:
     activate:
@@ -61,7 +64,7 @@ app:
       access-token-expiration: 7_200_000
       refresh-token-expiration: 7_200_000
       email-token-expiration: 864_000_000
-      ticket-token-expiration: 1_200_000
+      ticket-token-expiration: 180_000
   kakao:
     token_uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
@@ -79,3 +82,8 @@ app:
     width: 300
     height: 300
     type: png
+  message:
+    nhn:
+      app-key: ${MESSAGE_SERVICE_APP_KEY}
+      secret-key: ${MESSAGE_SERVICE_SECRET_KEY}
+      sender-key: ${MESSAGE_SERVICE_SENDER_KEY}

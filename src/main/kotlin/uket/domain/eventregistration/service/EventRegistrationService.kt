@@ -9,19 +9,23 @@ import org.springframework.transaction.annotation.Transactional
 import uket.common.PublicException
 import uket.domain.eventregistration.entity.EventRegistration
 import uket.domain.eventregistration.entity.EventRegistrationStatus
+import uket.domain.uketevent.repository.UketEventRepository
 
 @Service
 class EventRegistrationService(
     val eventRegistrationRepository: EventRegistrationRepository,
+    private val uketEventRepository: UketEventRepository,
 ) {
     @Transactional(readOnly = true)
-    fun findById(id: Long): EventRegistration? {
-        return eventRegistrationRepository.findByIdOrNull(id)
-    }
+    fun findById(id: Long): EventRegistration? = eventRegistrationRepository.findByIdOrNull(id)
 
     @Transactional(readOnly = true)
     fun getById(id: Long): EventRegistration = findById(id)
         ?: throw IllegalArgumentException("[EventRegistrationService] EventRegistration을 조회할 수 없습니다. | eventRegistrationId: $id")
+
+    @Transactional(readOnly = true)
+    fun findAllByOrganizationId(organizationId: Long, pageable: Pageable): Page<EventRegistration> =
+        eventRegistrationRepository.findAllByOrganizationId(organizationId, pageable)
 
     @Transactional(readOnly = true)
     fun findAll(pageable: Pageable): Page<EventRegistration> {
@@ -40,12 +44,14 @@ class EventRegistrationService(
     }
 
     @Transactional
-    fun registerEvent(eventRegistration: EventRegistration): EventRegistration {
-        return eventRegistrationRepository.save(eventRegistration)
-    }
+    fun registerEvent(eventRegistration: EventRegistration): EventRegistration =
+        eventRegistrationRepository.save(eventRegistration)
 
     @Transactional
-    fun updateEventRegistration(originalEventRegistrationId: Long, updatedEventRegistration: EventRegistration): EventRegistration {
+    fun updateEventRegistration(
+        originalEventRegistrationId: Long,
+        updatedEventRegistration: EventRegistration,
+    ): EventRegistration {
         updatedEventRegistration.updateId(originalEventRegistrationId)
         return eventRegistrationRepository.save(updatedEventRegistration)
     }
@@ -71,5 +77,28 @@ class EventRegistrationService(
                 title = "행사 수정 불가능 상태"
             )
         }
+    }
+
+    @Transactional
+    fun settingEvent(eventRegistrationId: Long, uketEventId: Long): EventRegistration {
+        val eventRegistration = getById(eventRegistrationId)
+        eventRegistration.settingEvent(uketEventId)
+
+        return eventRegistrationRepository.save(eventRegistration)
+    }
+
+    @Transactional
+    fun clearUketEvent(uketEventId: Long) {
+        val eventRegistration = eventRegistrationRepository.findByUketEventId(uketEventId)
+
+        eventRegistration?.clearUketEvent()
+    }
+
+    @Transactional
+    fun settingPayment(eventRegistrationId: Long, paymentId: Long): EventRegistration {
+        val eventRegistration = getById(eventRegistrationId)
+        eventRegistration.settingPayment(paymentId)
+
+        return eventRegistrationRepository.save(eventRegistration)
     }
 }

@@ -1,5 +1,6 @@
 package uket.domain.admin.service
 
+import org.hibernate.Hibernate
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -20,6 +21,14 @@ class AdminService(
     fun getById(adminId: Long): Admin {
         val admin = adminRepository.findByIdOrNull(adminId)
             ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
+        return admin
+    }
+
+    @Transactional(readOnly = true)
+    fun getByIdWithOrganization(adminId: Long): Admin {
+        val admin = adminRepository.findByIdOrNull(adminId)
+            ?: throw IllegalStateException("해당 어드민을 찾을 수 없습니다")
+        Hibernate.initialize(admin.organization)
         return admin
     }
 

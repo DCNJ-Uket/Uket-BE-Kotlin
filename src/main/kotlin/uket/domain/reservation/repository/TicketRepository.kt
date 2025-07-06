@@ -5,8 +5,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import uket.api.admin.dto.LiveEnterUserDto
-import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import java.time.LocalDateTime
@@ -14,264 +12,98 @@ import java.time.LocalDateTime
 interface TicketRepository : JpaRepository<Ticket, Long> {
     @Query(
         """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-      AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND t.status = :status
+    SELECT t FROM Ticket t
+    WHERE t.status = :status
+    AND t.entryGroupId IN :entryGroupIds
 """
     )
     fun findByStatus(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
         @Param("status") status: TicketStatus,
+        @Param("entryGroupIds") entryGroupIds: Collection<Long>,
         pageable: Pageable,
-    ): Page<TicketSearchDto>
+    ): Page<Ticket>
 
     @Query(
         """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
+        SELECT t FROM Ticket t
+        WHERE t.createdAt BETWEEN :startAt AND :endAt
+        AND t.entryGroupId IN :entryGroupIds
+    """
     )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-      AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND t.createdAt BETWEEN :startAt AND :endAt
-"""
-    )
-    fun findByCreatedAtBetween(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
+    fun findByCreatedAtBetweenInEntryGroupIds(
         @Param("startAt") startAt: LocalDateTime,
         @Param("endAt") endAt: LocalDateTime,
+        @Param("entryGroupIds") entryGroupIds: Collection<Long>,
         pageable: Pageable,
-    ): Page<TicketSearchDto>
+    ): Page<Ticket>
 
     @Query(
         """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-      AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND t.createdAt BETWEEN :startAt AND :endAt
+    SELECT t FROM Ticket t
+    WHERE t.updatedAt BETWEEN :startAt AND :endAt
+    AND t.entryGroupId IN :entryGroupIds
 """
     )
     fun findByUpdatedAtBetween(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
         @Param("startAt") startAt: LocalDateTime,
         @Param("endAt") endAt: LocalDateTime,
+        @Param("entryGroupIds") entryGroupIds: Collection<Long>,
         pageable: Pageable,
-    ): Page<TicketSearchDto>
+    ): Page<Ticket>
 
     fun findByUserIdAndId(userId: Long, ticketId: Long): Ticket?
 
     @Query(
         """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    SELECT t FROM Ticket t
     JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-      AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND (u.name LIKE CONCAT('%', :userName, '%'))
+    WHERE (u.name LIKE CONCAT('%', :userName, '%'))
+    AND t.entryGroupId IN :entryGroupIds
 """
     )
     fun findByUserName(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
         @Param("userName") userName: String,
+        @Param("entryGroupIds") entryGroupIds: Collection<Long>,
         pageable: Pageable,
-    ): Page<TicketSearchDto>
-
-    @Query(
-        """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-      AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND ur.eventRoundDateTime BETWEEN :startAt AND :endAt
-"""
-    )
-    fun findByEventRoundTime(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
-        @Param("startAt") startAt: LocalDateTime,
-        @Param("endAt") endAt: LocalDateTime,
-        pageable: Pageable,
-    ): Page<TicketSearchDto>
+    ): Page<Ticket>
 
     @Query(
         """
         SELECT t FROM Ticket t
-        WHERE t.userId = :userId
-        AND t.status NOT IN :status
-        AND t.entryGroupId IN (
-            SELECT eg.id FROM EntryGroup eg 
-            WHERE eg.uketEventRound.uketEvent.lastRoundDateTime >= CURRENT_DATE
-        )
-    """,
+        WHERE t.entryGroupId IN :entryGroupIds
+"""
     )
-    fun findValidTicketsByUserIdAndStatusNotIn(userId: Long, excludedStatuses: List<TicketStatus>): List<Ticket>
+    fun findByEventRoundTime(
+        @Param("entryGroupIds") entryGroupIds: Collection<Long>,
+        pageable: Pageable,
+    ): Page<Ticket>
 
     fun findAllByUserId(userId: Long): List<Ticket>
 
-    fun findAllByUserIdAndStatusNot(userId: Long, status: TicketStatus): List<Ticket>
-
-    @Query(
-        """
-            SELECT t.* 
-            FROM ticket t 
-            JOIN entry_group eg ON t.entry_group_id = eg.id 
-            WHERE t.user_id = :userId 
-              AND t.status <> :status
-        """,
-        nativeQuery = true,
-    )
-    fun findAllByUserIdAndStatusNotWithEntryGroup(userId: Long, status: TicketStatus): List<Ticket>
-
-    @Query(
-        """
-    SELECT new uket.api.admin.dto.LiveEnterUserDto(
-        t.enterAt,
-        u.depositorName,
-        ur.eventRoundDateTime,
-        u.phoneNumber,
-        t.status
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-    AND (:uketEventId IS NULL OR e.id = :uketEventId)
-    AND t.status = :status
-"""
-    )
-    fun findLiveEnterUserDtosByUketEventAndRoundId(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
-        @Param("status") status: TicketStatus,
+    fun findTicketsByEntryGroupIdIn(
+        entryGroupIds: Set<Long>,
         pageable: Pageable,
-    ): Page<LiveEnterUserDto>
+    ): Page<Ticket>
 
-    @Query(
-        """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-    AND (:uketEventId IS NULL OR e.id = :uketEventId)
-"""
-    )
-    fun findAllByOrganizationId(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
+    fun findTicketsByEntryGroupIdInAndStatus(
+        entryGroupIds: Set<Long>,
+        status: TicketStatus,
         pageable: Pageable,
-    ): Page<TicketSearchDto>
+    ): Page<Ticket>
 
     @Query(
         """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN EntryGroup eg ON eg.id = t.entryGroupId
-    JOIN eg.uketEventRound ur
-    JOIN ur.uketEvent e
+    SELECT t FROM Ticket t
     JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-      AND (:uketEventId IS NULL OR e.id = :uketEventId)
-      AND u.phoneNumber LIKE %:lastFourDigits
+    WHERE u.phoneNumber LIKE %:lastFourDigits
+    AND t.entryGroupId IN :entryGroupIds
 """
     )
     fun findByPhoneNumberEndingWith(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
         @Param("lastFourDigits") lastFourDigits: String,
+        @Param("entryGroupIds") entryGroupIds: Collection<Long>,
         pageable: Pageable,
-    ): Page<TicketSearchDto>
+    ): Page<Ticket>
 
     fun existsByUserIdAndId(userId: Long, ticketId: Long): Boolean
 
@@ -280,4 +112,23 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
     fun existsByUserIdAndEntryGroupIdAndStatusNot(userId: Long, entryGroupId: Long, status: TicketStatus): Boolean
 
     fun deleteAllByUserId(userId: Long)
+
+    @Query(
+        """
+            SELECT t FROM Ticket t
+            JOIN EntryGroup eg ON eg.id = t.entryGroupId
+            WHERE t.userId = :userId
+            AND eg.uketEventRoundId = :eventRoundId
+            AND t.status NOT IN :status
+        """
+    )
+    fun findAllbyUserIdAndEventRoundIdAndStatusNot(userId: Long, eventRoundId: Long, status: List<TicketStatus>): List<Ticket>
+
+    @Query(
+        """
+            SELECT t FROM Ticket t
+            WHERE t.ticketNo IN :ticketNos
+        """
+    )
+    fun findByTicketNoIn(ticketNos: List<String>): List<Ticket>
 }

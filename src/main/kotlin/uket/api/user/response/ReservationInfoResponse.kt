@@ -1,13 +1,14 @@
 package uket.api.user.response
 
-import uket.domain.payment.entity.Payment
+import uket.domain.uketevent.entity.UketEvent
 import uket.domain.uketevent.entity.UketEventRound
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
 data class ReservationInfoResponse(
     val eventRounds: List<EventRoundWithGroupResponse>,
-    val ticketPrice: Int,
+    val ticketPrice: Long,
+    val buyTicketLimit: Int,
     val friend: String,
 ) {
     data class EventRoundWithGroupResponse(
@@ -31,11 +32,12 @@ data class ReservationInfoResponse(
 
     companion object {
         fun of(
-            payment: Payment,
+            uketEvent: UketEvent,
             roundResponses: List<EventRoundWithGroupResponse>,
         ): ReservationInfoResponse = ReservationInfoResponse(
             eventRounds = roundResponses,
-            ticketPrice = payment.ticketPrice.toInt(),
+            ticketPrice = uketEvent.ticketPrice,
+            buyTicketLimit = uketEvent.buyTicketLimit,
             friend = ""
         )
     }

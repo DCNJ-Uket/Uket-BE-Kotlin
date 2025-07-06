@@ -2,6 +2,7 @@ package uket.facade
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uket.common.enums.EventType
 import uket.domain.uketevent.dto.EventListItem
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEventRound
@@ -27,22 +28,31 @@ class UketEventFacade(
     }
 
     @Transactional(readOnly = true)
-    fun findValidEntryGroupMap(eventId: Long, at: LocalDateTime): Map<UketEventRound, List<EntryGroup>> {
+    fun getValidEntryGroupMap(eventId: Long, at: LocalDateTime): Map<UketEventRound, List<EntryGroup>> {
         val uketEventRounds = uketEventRoundService.getNowTicketingRounds(eventId, at)
         val uketEventRoundIds = uketEventRounds.map { it.id }
 
-        return entryGroupService
-            .findValidEntryGroup(uketEventRoundIds, at)
-            .groupBy { it.uketEventRound }
+        val validEntryGroups = entryGroupService.findValidEntryGroup(uketEventRoundIds, at)
+
+        return uketEventRounds.associateWith { uketEventRound ->
+            validEntryGroups.filter { uketEventRound.id == it.uketEventRoundId }
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun getCurrentEventTicketingStatus(eventId: Long, at: LocalDateTime): TicketingStatus {
+        val eventRounds = uketEventRoundService.getEventRoundsByEventId(eventId)
+        return getTicketingStatus(eventRounds, at)
     }
 
     @Transactional(readOnly = true)
     fun getNowActiveEventItemList(type: String, at: LocalDateTime): List<EventListItem> {
-        val activeOrderedEvents = when (type) {
-            "FESTIVAL" -> uketEventService.findAllNowActiveOrderedFestival(at)
-            "PERFORMANCE" -> uketEventService.findAllNowActiveOrderedPerformance(at)
-            else -> uketEventService.findAllNowActiveOrdered(at)
+        val eventTypes = when (type) {
+            "FESTIVAL" -> listOf(EventType.FESTIVAL)
+            "PERFORMANCE" -> listOf(EventType.PERFORMANCE)
+            else -> listOf(EventType.PERFORMANCE, EventType.PERFORMANCE)
         }
+        val activeOrderedEvents = uketEventService.findAllVisibleOrderedEventByEventTypes(eventTypes)
 
         val activeEventIds = activeOrderedEvents.map { it.id }
         val roundsMap = uketEventRoundService.getEventRoundsMapByEventIds(activeEventIds)

@@ -33,9 +33,11 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
-import uket.domain.reservation.service.search.TicketSearcher
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.EnterUketEventFacade
+import uket.facade.TicketEntryGroupUserFacade
+import uket.facade.UpdateTicketStatusFacade
+import uket.facade.search.TicketSearcher
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController
@@ -43,10 +45,12 @@ import uket.facade.EnterUketEventFacade
 @ApiResponse(responseCode = "200", description = "OK")
 class AdminTicketController(
     private val enterUketEventFacade: EnterUketEventFacade,
+    private val updateTicketStatusFacade: UpdateTicketStatusFacade,
     private val ticketService: TicketService,
     private val ticketSearchers: List<TicketSearcher>,
     private val adminService: AdminService,
     private val uketEventService: UketEventService,
+    private val ticketEntryGroupUserFacade: TicketEntryGroupUserFacade,
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "입장 확인 API", description = "QR code를 통한 Token값으로 입장 확인을 할 수 있습니다.")
@@ -65,8 +69,10 @@ class AdminTicketController(
         @PathVariable("ticketId") ticketId: Long,
         @PathVariable("ticketStatus") ticketStatus: TicketStatus,
     ): ResponseEntity<UpdateTicketStatusResponse> {
-        val ticket: Ticket = ticketService.updateTicketStatus(ticketId, ticketStatus)
-        val response = UpdateTicketStatusResponse.from(ticket)
+        val ticket: Ticket = ticketService.getById(ticketId)
+        val updatedTicket = updateTicketStatusFacade.updateTicketStatus(ticket.entryGroupId, ticketId, ticketStatus, ticket.userId)
+
+        val response = UpdateTicketStatusResponse.from(updatedTicket)
         return ResponseEntity.ok(response)
     }
 
@@ -103,24 +109,24 @@ class AdminTicketController(
         @LoginAdminId adminId: Long,
     ): ResponseEntity<CustomPageResponse<TicketSearchResponse>> {
         val pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "updatedAt"))
-        val ticketSearchType = searchType ?: TicketSearchType.default
         val adminInfo = adminService.getAdminInfo(adminId)
 
         val tickets: Page<TicketSearchDto> =
-            if (ticketSearchType == TicketSearchType.NONE) {
-                ticketService.searchAllTickets(adminInfo.organizationId, uketEventId, pageRequest)
+            if (searchType == TicketSearchType.NONE) {
+                ticketEntryGroupUserFacade.searchAllTickets(adminInfo.organizationId, uketEventId, pageRequest)
             } else {
-                ticketSearchers
+                val tickets = ticketSearchers
                     .stream()
-                    .filter { it.isSupport(ticketSearchType) }
+                    .filter { it.isSupport(searchType) }
                     .findFirst()
                     .orElseThrow {
                         throw PublicException(
                             publicMessage = "잘못된 검색 타입입니다.",
-                            systemMessage = "Not Valid TicketSearchType : TICKETSEARCHTYPE =$ticketSearchType",
+                            systemMessage = "Not Valid TicketSearchType : TICKETSEARCHTYPE =$searchType",
                             title = "잘못된 검색 타입"
                         )
                     }.search(adminInfo.organizationId, uketEventId, searchRequest, pageRequest);
+                ticketEntryGroupUserFacade.toDtoPage(tickets)
             }
 
         val response = CustomPageResponse(TicketSearchResponse.from(tickets))
@@ -135,7 +141,12 @@ class AdminTicketController(
         @LoginAdminId adminId: Long,
     ): ResponseEntity<FilterEventResponse> {
         val adminInfo = adminService.getAdminInfo(adminId)
-        val eventList = uketEventService.getEventsByOrganizationId(adminInfo.organizationId)
+
+        val eventList = if (adminInfo.isSuperAdmin) {
+            uketEventService.findAll()
+        } else {
+            uketEventService.getEventsByOrganizationId(adminInfo.organizationId)
+        }
         return ResponseEntity.ok(FilterEventResponse(eventList))
     }
 }

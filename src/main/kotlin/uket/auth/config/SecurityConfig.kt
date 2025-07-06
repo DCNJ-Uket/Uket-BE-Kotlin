@@ -87,9 +87,17 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers("/api/v1/dev/token/registered")
                     .permitAll()
+                    .requestMatchers("/api/v1/dev/index")
+                    .permitAll()
+            }.authorizeHttpRequests { registry ->
+                registry
+                    .requestMatchers("/image/*")
+                    .permitAll()
             }.authorizeHttpRequests { registry ->
                 registry
                     .requestMatchers("/admin/users/login")
+                    .permitAll()
+                    .requestMatchers("/admin/users/register-expired")
                     .permitAll()
                     .requestMatchers("/auth/**")
                     .permitAll()

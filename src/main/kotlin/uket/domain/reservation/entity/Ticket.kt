@@ -17,6 +17,7 @@ class Ticket(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
+    val performerName: String,
     val userId: Long,
     val entryGroupId: Long,
     @Enumerated(EnumType.STRING)
@@ -24,8 +25,12 @@ class Ticket(
     val ticketNo: String,
     var enterAt: LocalDateTime?,
 ) : DeletableEntity() {
-    fun cancel() {
-        this.status = TicketStatus.RESERVATION_CANCEL
+    fun cancel(isFree: Boolean) {
+        if (!isFree && status in TicketStatus.refundableStatuses) {
+            status = TicketStatus.REFUND_REQUESTED
+        } else {
+            status = TicketStatus.RESERVATION_CANCEL
+        }
     }
 
     fun enter() {

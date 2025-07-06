@@ -2,8 +2,8 @@ package uket.domain.uketevent.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import uket.common.enums.EventType
 import uket.domain.uketevent.entity.UketEvent
-import java.time.LocalDateTime
 
 interface UketEventRepository : JpaRepository<UketEvent, Long> {
     @Query(
@@ -18,48 +18,23 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
 
     @Query(
         """
-            SELECT ue FROM UketEvent ue 
-            WHERE ue.lastRoundDateTime >= CURRENT_DATE
-        """
-    )
-    fun findAllByEventEndDateAfterNowWithUketEventRound(): List<UketEvent>
-
-    @Query(
-        """
             SELECT ue from UketEvent ue 
-            LEFT JOIN FETCH ue.banners b
             WHERE ue.id = :uketEventId AND 
-            ue.lastRoundDateTime >= CURRENT_DATE
+            ue.isVisible = true
         """
     )
-    fun findByIdAndLastRoundDateAfterNowWithBanners(uketEventId: Long): UketEvent?
+    fun findVisibleOneById(uketEventId: Long): UketEvent?
 
-    fun findAllByOrganizationId(organizationId: Long): List<UketEvent>
+    fun findAllByOrganizationIdOrderByCreatedAtDesc(organizationId: Long): List<UketEvent>
 
-    @Query(
-        """
-            SELECT ue FROM UketEvent ue
-            WHERE ue.lastRoundDateTime >= :date
-            order by ue.firstRoundDateTime
-        """
-    )
-    fun findAllByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
+    fun findAllByOrderByCreatedAtDesc(): List<UketEvent>
 
     @Query(
         """
             SELECT ue FROM UketEvent ue
-            WHERE ue.lastRoundDateTime >= :date AND ue.eventType = "FESTIVAL"
+            WHERE ue.isVisible = true AND ue.eventType IN :eventTypes
             order by ue.firstRoundDateTime
         """
     )
-    fun findAllFestivalByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
-
-    @Query(
-        """
-            SELECT ue FROM UketEvent ue
-            WHERE ue.lastRoundDateTime >= :date AND ue.eventType = "PERFORMANCE"
-            order by ue.firstRoundDateTime
-        """
-    )
-    fun findAllPerformanceByLastRoundDateAfterOrderByFirstRoundDateTime(date: LocalDateTime): List<UketEvent>
+    fun findAllVisibleInEventTypesOrderByFirstRoundDateTime(eventTypes: List<EventType>): List<UketEvent>
 }

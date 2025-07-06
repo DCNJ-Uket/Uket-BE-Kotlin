@@ -5,18 +5,19 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.api.admin.dto.LiveEnterUserDto
 import uket.domain.reservation.dto.CreateTicketCommand
-import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.repository.TicketRepository
+import uket.uket.domain.reservation.repository.TicketJdbcRepository
+import uket.uket.modules.push.UserMessageTemplate
 import java.util.UUID
 
 @Service
 @Transactional(readOnly = true)
 class TicketService(
     private val ticketRepository: TicketRepository,
+    private val ticketJdbcRepository: TicketJdbcRepository,
 ) {
     fun getById(ticketId: Long): Ticket {
         val ticket = ticketRepository.findByIdOrNull(ticketId)
@@ -24,36 +25,36 @@ class TicketService(
         return ticket
     }
 
-    fun findAllByUserIdAndStatusNotWithEntryGroup(
-        userId: Long,
-        ticketStatus: TicketStatus,
-    ): List<Ticket> = ticketRepository.findAllByUserIdAndStatusNotWithEntryGroup(userId, ticketStatus)
+    fun findTicketsByEntryGroupIds(entryGroupIds: Set<Long>, pageable: Pageable): Page<Ticket> =
+        ticketRepository.findTicketsByEntryGroupIdIn(entryGroupIds, pageable)
 
-    fun findAllTicketsByUserId(userId: Long): List<Ticket> {
-        val excludedStatuses: List<TicketStatus> = listOf(TicketStatus.RESERVATION_CANCEL, TicketStatus.EXPIRED)
-        return ticketRepository.findValidTicketsByUserIdAndStatusNotIn(userId, excludedStatuses)
-    }
-
-    fun findLiveEnterTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserDto> {
-        return ticketRepository.findLiveEnterUserDtosByUketEventAndRoundId(organizationId, uketEventId, TicketStatus.FINISH_ENTER, pageable)
-    }
-
-    fun searchAllTickets(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<TicketSearchDto> {
-        return ticketRepository.findAllByOrganizationId(organizationId, uketEventId, pageable)
-    }
+    fun findTicketsByEntryGroupIdsAndStatus(entryGroupIds: Set<Long>, status: TicketStatus, pageable: Pageable): Page<Ticket> =
+        ticketRepository.findTicketsByEntryGroupIdInAndStatus(entryGroupIds, status, pageable)
 
     @Transactional
-    fun publishTicket(createTicketCommand: CreateTicketCommand): Ticket {
-        val ticket: Ticket = Ticket(
-            userId = createTicketCommand.userId,
-            entryGroupId = createTicketCommand.entryGroupId,
-            status = createTicketCommand.ticketStatus,
-            ticketNo = UUID.randomUUID().toString(),
-            enterAt = null,
-        )
+    fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
+        println(createTicketCommand.performerName)
+        val tickets = List(count) {
+            Ticket(
+                userId = createTicketCommand.userId,
+                entryGroupId = createTicketCommand.entryGroupId,
+                status = createTicketCommand.ticketStatus,
+                ticketNo = createTicketNo(),
+                performerName = createTicketCommand.performerName,
+                enterAt = null,
+            )
+        }
+        ticketJdbcRepository.saveAllBatch(tickets)
 
-        return ticketRepository.save(ticket)
+        val ticketNos = tickets.map { it.ticketNo }
+        return ticketRepository.findByTicketNoIn(ticketNos)
     }
+
+    private fun createTicketNo() = UUID
+        .randomUUID()
+        .toString()
+        .replace("-", "")
+        .substring(0, UserMessageTemplate.TEMPLATE_MAXIMUM_LENGTH)
 
     @Transactional
     fun updateTicket(ticket: Ticket) {
@@ -68,35 +69,31 @@ class TicketService(
     }
 
     @Transactional
-    fun cancelTicketByUserIdAndId(userId: Long, ticketId: Long) {
-        val ticket: Ticket = ticketRepository.findByUserIdAndId(userId, ticketId)
-            ?: throw IllegalStateException("해당 티켓을 찾을 수 없습니다.")
-
-        ticket.cancel()
-        ticket.updateDeletedAt()
-        ticketRepository.save(ticket)
-    }
-
-    @Transactional
     fun deleteAllByUserId(userId: Long) {
         ticketRepository.deleteAllByUserId(userId)
     }
 
-    fun validateTicketStatus(ticketId: Long) {
+    @Transactional(readOnly = true)
+    fun findAllByUserId(userId: Long): List<Ticket> = ticketRepository.findAllByUserId(userId)
+
+    fun findAllActiveByUserAndEventRound(userId: Long, entryGroupId: Long): List<Ticket> =
+        ticketRepository.findAllbyUserIdAndEventRoundIdAndStatusNot(
+            userId,
+            entryGroupId,
+            TicketStatus.notActiveStatuses
+        )
+
+    fun checkTicketOwner(userId: Long, ticketId: Long) {
         val ticket = this.getById(ticketId)
-
-        val ticketStatus: TicketStatus = ticket.status
-
-        if (ticketStatus === TicketStatus.FINISH_ENTER) {
-            throw IllegalStateException("입장이 이미 완료된 티켓입니다. 재입장은 담당자에게 문의 부탁드립니다.")
-        } else if (ticketStatus === TicketStatus.EXPIRED) {
-            throw IllegalStateException("이미 기간이 지난 티켓입니다. 날짜를 확인해주세요.")
+        check(ticket.userId == userId) {
+            throw IllegalArgumentException("유저가 소유한 티켓이 아닙니다.")
         }
     }
 
-    fun checkTicketOwner(userId: Long, ticketId: Long) {
-        if (java.lang.Boolean.FALSE == ticketRepository.existsByUserIdAndId(userId, ticketId)) {
-            throw IllegalStateException("해당 사용자는 해당 티켓을 소유하고 있지 않습니다.")
+    fun checkCancelTicketStatus(ticketId: Long) {
+        val ticket = getById(ticketId)
+        check(ticket.status in TicketStatus.cancelableStatuses) {
+            throw IllegalStateException("티켓 취소 가능한 상태가 아닙니다.")
         }
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.repository.EntryGroupRepository
-import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -21,6 +20,23 @@ class EntryGroupService(
     }
 
     @Transactional(readOnly = true)
+    fun getByIds(ids: Set<Long>): List<EntryGroup> {
+        return entryGroupRepository.findAllById(ids)
+    }
+
+    @Transactional(readOnly = true)
+    fun getEntryGroups(
+        organizationId: Long,
+        uketEventId: Long?,
+    ): List<EntryGroup> {
+        return if (uketEventId != null) {
+            entryGroupRepository.findIdsByOrganizationIdAndEventId(organizationId, uketEventId)
+        } else {
+            entryGroupRepository.findIdsByOrganizationId(organizationId)
+        }
+    }
+
+    @Transactional(readOnly = true)
     fun findAllValidByRoundIdAndStarDateAfter(uketEventRoundId: Long, date: LocalDateTime): List<EntryGroup> {
         val entryGroups = entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(
             uketEventRoundId,
@@ -30,17 +46,13 @@ class EntryGroupService(
     }
 
     @Transactional
-    fun increaseReservedCount(entryGroupId: Long) {
+    fun increaseReservedCount(entryGroupId: Long, count: Int) {
         val entryGroup = this.getById(entryGroupId)
-        val isSuccess: Boolean = entryGroup.increaseReservedCount()
-
-        if (java.lang.Boolean.FALSE == isSuccess) {
-            throw IllegalStateException("해당 입장 그룹의 예매 가능 인원이 없습니다.")
-        }
+        entryGroup.increaseReservedCount(count)
         entryGroupRepository.save(entryGroup)
     }
 
-    @DistributedLock(key = "#reservationId")
+    @Transactional
     fun decreaseReservedCount(entryGroupId: Long) {
         val entryGroup = this.getById(entryGroupId)
         val isSuccess: Boolean = entryGroup.decreaseReservedCount()
@@ -48,9 +60,22 @@ class EntryGroupService(
         check(isSuccess) {
             "예매된 티켓이 존재하지 않습니다."
         }
+        entryGroupRepository.save(entryGroup)
     }
 
     @Transactional(readOnly = true)
     fun findValidEntryGroup(uketEventRoundIds: List<Long>, at: LocalDateTime): List<EntryGroup> =
         entryGroupRepository.findByUketEventIdAndStartDateTimeAfterWithUketEventRound(uketEventRoundIds, at)
+
+    @Transactional
+    fun saveAll(entryGroups: List<EntryGroup>): List<EntryGroup> {
+        return entryGroupRepository.saveAll(entryGroups)
+    }
+
+    @Transactional
+    fun deleteAllByEventId(uketEventId: Long) {
+        val entryGroups = entryGroupRepository.findAllByUketEventId(uketEventId)
+
+        entryGroupRepository.deleteAllInBatch(entryGroups)
+    }
 }
