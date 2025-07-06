@@ -54,6 +54,7 @@ class TicketController(
             TicketingResponse(
                 ticketIds = tickets.map { it.id },
                 totalPrice = event.ticketPrice * tickets.size,
+                account = payment.account,
                 depositUrl = payment.depositLink,
                 bankCode = payment.account.bankCode
             )
