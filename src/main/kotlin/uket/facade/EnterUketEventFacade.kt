@@ -13,7 +13,9 @@ import uket.auth.jwt.JwtValues.JWT_PAYLOAD_VALUE_TICKET
 import uket.common.PublicException
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
+import uket.domain.uketevent.service.EntryGroupService
 import uket.domain.user.service.UserService
+import uket.facade.assembler.LiveEnterUserAssembler
 
 @Service
 class EnterUketEventFacade(
@@ -21,6 +23,8 @@ class EnterUketEventFacade(
     private val jwtTicketUtil: JwtTicketUtil,
     private val ticketService: TicketService,
     private val userService: UserService,
+    private val entryGroupService: EntryGroupService,
+    private val liveEnterUserAssembler: LiveEnterUserAssembler,
 ) {
     @Transactional
     fun enterUketEvent(ticketToken: String): EnterUketEventResponse {
@@ -42,8 +46,21 @@ class EnterUketEventFacade(
 
     @Transactional(readOnly = true)
     fun searchLiveEnterUsers(organizationId: Long, uketEventId: Long?, pageable: Pageable): Page<LiveEnterUserResponse> {
-        val liveEnterUserDto: Page<LiveEnterUserDto> = ticketService.findLiveEnterTickets(organizationId, uketEventId, pageable)
-        return liveEnterUserDto.map { dto -> LiveEnterUserResponse.from(dto) }
+        val entryGroups = entryGroupService.getEntryGroups(organizationId, uketEventId)
+        val entryGroupIds = entryGroups.map { it.id }.toSet()
+        val entryGroupMap = entryGroups.associateBy { it.id }
+
+        val tickets = ticketService.findTicketsByEntryGroupIdsAndStatus(entryGroupIds, TicketStatus.FINISH_ENTER,pageable)
+
+        val userMap = userService.findByIds(tickets.map { it.userId }.toSet()).associateBy { it.id }
+
+        return tickets.map { ticket ->
+            liveEnterUserAssembler.assemble(
+                ticket = ticket,
+                user = userMap[ticket.userId]!!,
+                entryGroup = entryGroupMap[ticket.entryGroupId]!!
+            )
+        }
     }
 
     private fun validateBeforePaymentTicket(status: TicketStatus) {

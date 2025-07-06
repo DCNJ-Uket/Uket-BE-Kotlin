@@ -82,7 +82,15 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         entryGroupIds: Set<Long>,
         pageable: Pageable,
     ): Page<Ticket>
-    /*
+
+
+    fun findTicketsByEntryGroupIdInAndStatus(
+        entryGroupIds: Set<Long>,
+        status: TicketStatus,
+        pageable: Pageable,
+    ) : Page<Ticket>
+
+
     @Query(
         """
     SELECT new uket.api.admin.dto.LiveEnterUserDto(
@@ -107,33 +115,6 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         @Param("status") status: TicketStatus,
         pageable: Pageable,
     ): Page<LiveEnterUserDto>
-
-    @Query(
-        """
-    SELECT new uket.domain.reservation.dto.TicketSearchDto(
-        t.id,
-        u.depositorName,
-        u.phoneNumber,
-        ur.eventRoundDateTime,
-        t.createdAt,
-        t.updatedAt,
-        t.status,
-        ''
-    )
-    FROM Ticket t
-    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
-    JOIN UketEvent e ON e.id = :uketEventId
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-    AND (:uketEventId IS NULL OR e.id = :uketEventId)
-"""
-    )
-    fun findAllByOrganizationId(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
-        pageable: Pageable,
-    ): Page<TicketSearchDto>
-     */
 
     @Query(
         """

@@ -37,6 +37,8 @@ class TicketService(
     fun findTicketsByEntryGroupIds(entryGroupIds: Set<Long>, pageable: Pageable): Page<Ticket> =
         ticketRepository.findTicketsByEntryGroupIdIn(entryGroupIds, pageable)
 
+    fun findTicketsByEntryGroupIdsAndStatus(entryGroupIds: Set<Long>, status: TicketStatus, pageable: Pageable): Page<Ticket> =
+        ticketRepository.findTicketsByEntryGroupIdInAndStatus(entryGroupIds, status, pageable)
     @Transactional
     fun publishTickets(createTicketCommand: CreateTicketCommand, count: Int): List<Ticket> {
         println(createTicketCommand.performerName)
