@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 data class ReservationInfoResponse(
     val eventRounds: List<EventRoundWithGroupResponse>,
     val ticketPrice: Long,
+    val buyTicketLimit: Int,
     val friend: String,
 ) {
     data class EventRoundWithGroupResponse(
@@ -36,6 +37,7 @@ data class ReservationInfoResponse(
         ): ReservationInfoResponse = ReservationInfoResponse(
             eventRounds = roundResponses,
             ticketPrice = uketEvent.ticketPrice,
+            buyTicketLimit = uketEvent.buyTicketLimit,
             friend = ""
         )
     }
