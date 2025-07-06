@@ -4,11 +4,11 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
-import uket.domain.reservation.dto.TicketSearchDto
+import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.repository.TicketRepository
 
 interface SearchTicket {
-    fun search(organizationId: Long, uketEventId: Long?, searchRequest: SearchRequest, pageable: Pageable): Page<TicketSearchDto>
+    fun search(organizationId: Long, uketEventId: Long?, searchRequest: SearchRequest, pageable: Pageable): Page<Ticket>
 }
 
 abstract class TicketSearcher(

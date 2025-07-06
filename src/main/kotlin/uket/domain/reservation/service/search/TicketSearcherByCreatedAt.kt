@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
-import uket.domain.reservation.dto.TicketSearchDto
+import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.repository.TicketRepository
 import java.time.LocalTime
 
@@ -24,13 +24,13 @@ class TicketSearcherByCreatedAt(
         uketEventId: Long?,
         searchRequest: SearchRequest,
         pageable: Pageable,
-    ): Page<TicketSearchDto> {
+    ): Page<Ticket> {
         val createdAt = searchRequest.createdAt
             ?: throw IllegalStateException("createdAt은 null일 수 없습니다.")
 
         val createStart = createdAt.toLocalDate().atTime(LocalTime.MIN)
         val createEnd = createdAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByCreatedAtBetween(organizationId, uketEventId, createStart, createEnd, pageable)
+        return ticketRepository.findByCreatedAtBetween(createStart, createEnd, pageable)
     }
 }

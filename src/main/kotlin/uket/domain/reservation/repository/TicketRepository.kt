@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import uket.api.admin.dto.LiveEnterUserDto
 import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
@@ -40,6 +39,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         pageable: Pageable,
     ): Page<TicketSearchDto>
 
+    /*
     @Query(
         """
     SELECT new uket.domain.reservation.dto.TicketSearchDto(
@@ -68,6 +68,18 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         @Param("endAt") endAt: LocalDateTime,
         pageable: Pageable,
     ): Page<TicketSearchDto>
+    */
+
+    @Query("""
+        SELECT t FROM Ticket t
+        WHERE t.createdAt BETWEEN :startAt AND :endAt
+    """
+    )
+    fun findByCreatedAtBetween(
+        @Param("startAt") startAt: LocalDateTime,
+        @Param("endAt") endAt: LocalDateTime,
+        pageable: Pageable,
+    ) : Page<Ticket>
 
     @Query(
         """
@@ -159,6 +171,11 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
 
     fun findAllByUserId(userId: Long): List<Ticket>
 
+    fun findTicketsByEntryGroupIdIn(
+        entryGroupIds: Set<Long>,
+        pageable: Pageable,
+    ): Page<Ticket>
+    /*
     @Query(
         """
     SELECT new uket.api.admin.dto.LiveEnterUserDto(
@@ -209,6 +226,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         @Param("uketEventId") uketEventId: Long?,
         pageable: Pageable,
     ): Page<TicketSearchDto>
+     */
 
     @Query(
         """

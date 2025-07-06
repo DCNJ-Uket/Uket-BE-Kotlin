@@ -2,11 +2,37 @@ package uket.domain.uketevent.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import uket.domain.uketevent.entity.EntryGroup
 import java.time.LocalDateTime
 
 interface EntryGroupRepository : JpaRepository<EntryGroup, Long> {
     fun findAllByUketEventId(uketEventId: Long): List<EntryGroup>
+
+    @Query(
+        """
+    SELECT eg.id
+    FROM EntryGroup eg
+    JOIN UketEvent ue ON eg.uketEventId = ue.id
+    WHERE ue.organizationId = :organizationId
+"""
+    )
+    fun findIdsByOrganizationId(
+        @Param("organizationId") organizationId: Long,
+    ): List<EntryGroup>
+
+    @Query(
+        """
+    SELECT eg.id
+    FROM EntryGroup eg
+    JOIN UketEvent ue ON eg.uketEventId = ue.id
+    WHERE ue.organizationId = :organizationId AND ue.id = :uketEventId
+"""
+    )
+    fun findIdsByOrganizationIdAndEventId(
+        @Param("organizationId") organizationId: Long,
+        @Param("uketEventId") uketEventId: Long,
+    ): List<EntryGroup>
 
     @Query(
         """
