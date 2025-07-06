@@ -15,7 +15,7 @@ import java.time.LocalTime
 class TicketSearcherByModifiedAt(
     ticketRepository: TicketRepository,
     entryGroupService: EntryGroupService,
-) : TicketSearcher(ticketRepository,entryGroupService) {
+) : TicketSearcher(ticketRepository, entryGroupService) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
         return searchType == TicketSearchType.MODIFIED_AT
     }
@@ -38,6 +38,6 @@ class TicketSearcherByModifiedAt(
             uketEventId = uketEventId
         ).map { it.id }.toSet()
 
-        return ticketRepository.findByUpdatedAtBetween(modifyStart, modifyEnd, entryGroupIds,pageable)
+        return ticketRepository.findByUpdatedAtBetween(modifyStart, modifyEnd, entryGroupIds, pageable)
     }
 }

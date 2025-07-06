@@ -9,13 +9,12 @@ import java.time.ZoneId
 
 @Component
 class LiveEnterUserAssembler {
-
     private val zoneId = ZoneId.of("Asia/Seoul")
 
     fun assemble(
         ticket: Ticket,
         user: User,
-        entryGroup: EntryGroup
+        entryGroup: EntryGroup,
     ): LiveEnterUserResponse {
         return LiveEnterUserResponse(
             enterTime = ticket.enterAt!!.atZone(zoneId),

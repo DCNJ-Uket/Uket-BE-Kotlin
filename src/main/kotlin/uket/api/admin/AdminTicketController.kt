@@ -33,12 +33,12 @@ import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
-import uket.facade.search.TicketSearcher
 import uket.domain.uketevent.service.UketEventService
 import uket.facade.EnterUketEventFacade
 import uket.facade.TicketEntryGroupUserFacade
 import uket.facade.UpdateTicketStatusFacade
 import uket.facade.assembler.TicketSearchAssembler
+import uket.facade.search.TicketSearcher
 
 @Tag(name = "어드민 티켓 관련 API", description = "어드민 티켓 관련 API 입니다.")
 @RestController

@@ -14,7 +14,7 @@ import uket.domain.uketevent.service.EntryGroupService
 class TicketSearcherByStatus(
     ticketRepository: TicketRepository,
     entryGroupService: EntryGroupService,
-) : TicketSearcher(ticketRepository,entryGroupService) {
+) : TicketSearcher(ticketRepository, entryGroupService) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
         return searchType == TicketSearchType.STATUS
     }

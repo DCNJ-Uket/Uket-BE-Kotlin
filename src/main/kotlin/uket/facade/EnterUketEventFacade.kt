@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uket.api.admin.dto.LiveEnterUserDto
 import uket.api.admin.response.EnterUketEventResponse
 import uket.api.admin.response.LiveEnterUserResponse
 import uket.auth.filter.TokenValidator
@@ -50,7 +49,7 @@ class EnterUketEventFacade(
         val entryGroupIds = entryGroups.map { it.id }.toSet()
         val entryGroupMap = entryGroups.associateBy { it.id }
 
-        val tickets = ticketService.findTicketsByEntryGroupIdsAndStatus(entryGroupIds, TicketStatus.FINISH_ENTER,pageable)
+        val tickets = ticketService.findTicketsByEntryGroupIdsAndStatus(entryGroupIds, TicketStatus.FINISH_ENTER, pageable)
 
         val userMap = userService.findByIds(tickets.map { it.userId }.toSet()).associateBy { it.id }
 

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uket.api.admin.enums.TicketSearchType
 import uket.api.admin.request.SearchRequest
-import uket.domain.reservation.dto.TicketSearchDto
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.repository.TicketRepository
 import uket.domain.uketevent.service.EntryGroupService
@@ -15,7 +14,7 @@ import uket.domain.uketevent.service.EntryGroupService
 class TicketSearcherByUserName(
     ticketRepository: TicketRepository,
     entryGroupService: EntryGroupService,
-) : TicketSearcher(ticketRepository,entryGroupService) {
+) : TicketSearcher(ticketRepository, entryGroupService) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
         return searchType == TicketSearchType.USER_NAME
     }

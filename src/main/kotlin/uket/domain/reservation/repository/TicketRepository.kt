@@ -23,7 +23,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         pageable: Pageable,
     ): Page<Ticket>
 
-    @Query("""
+    @Query(
+        """
         SELECT t FROM Ticket t
         WHERE t.createdAt BETWEEN :startAt AND :endAt
         AND t.entryGroupId IN :entryGroupIds
@@ -34,7 +35,7 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         @Param("endAt") endAt: LocalDateTime,
         @Param("entryGroupIds") entryGroupIds: Collection<Long>,
         pageable: Pageable,
-    ) : Page<Ticket>
+    ): Page<Ticket>
 
     @Query(
         """
@@ -66,7 +67,8 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         pageable: Pageable,
     ): Page<Ticket>
 
-    @Query("""
+    @Query(
+        """
         SELECT t FROM Ticket t
         WHERE t.entryGroupId IN :entryGroupIds
 """
@@ -83,38 +85,11 @@ interface TicketRepository : JpaRepository<Ticket, Long> {
         pageable: Pageable,
     ): Page<Ticket>
 
-
     fun findTicketsByEntryGroupIdInAndStatus(
         entryGroupIds: Set<Long>,
         status: TicketStatus,
         pageable: Pageable,
-    ) : Page<Ticket>
-
-
-    @Query(
-        """
-    SELECT new uket.api.admin.dto.LiveEnterUserDto(
-        t.enterAt,
-        u.depositorName,
-        ur.eventRoundDateTime,
-        u.phoneNumber,
-        t.status
-    )
-    FROM Ticket t
-    JOIN UketEventRound ur ON ur.uketEventId = :uketEventId
-    JOIN UketEvent e ON e.id = :uketEventId
-    JOIN User u ON u.id = t.userId
-    WHERE e.organizationId = :organizationId
-    AND (:uketEventId IS NULL OR e.id = :uketEventId)
-    AND t.status = :status
-"""
-    )
-    fun findLiveEnterUserDtosByUketEventAndRoundId(
-        @Param("organizationId") organizationId: Long,
-        @Param("uketEventId") uketEventId: Long?,
-        @Param("status") status: TicketStatus,
-        pageable: Pageable,
-    ): Page<LiveEnterUserDto>
+    ): Page<Ticket>
 
     @Query(
         """

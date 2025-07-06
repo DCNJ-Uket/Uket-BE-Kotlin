@@ -15,7 +15,7 @@ import java.time.LocalTime
 class TicketSearcherByCreatedAt(
     ticketRepository: TicketRepository,
     entryGroupService: EntryGroupService,
-) : TicketSearcher(ticketRepository,entryGroupService) {
+) : TicketSearcher(ticketRepository, entryGroupService) {
     override fun isSupport(searchType: TicketSearchType): Boolean {
         return searchType == TicketSearchType.CREATED_AT
     }
@@ -38,6 +38,6 @@ class TicketSearcherByCreatedAt(
         val createStart = createdAt.toLocalDate().atTime(LocalTime.MIN)
         val createEnd = createdAt.toLocalDate().atTime(LocalTime.MAX)
 
-        return ticketRepository.findByCreatedAtBetweenInEntryGroupIds(createStart, createEnd,entryGroupIds, pageable)
+        return ticketRepository.findByCreatedAtBetweenInEntryGroupIds(createStart, createEnd, entryGroupIds, pageable)
     }
 }
