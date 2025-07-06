@@ -36,7 +36,7 @@ class UketEventRound(
     @Column(name = "ticket_cancel_end_date_time")
     val ticketCancelEndDateTime: LocalDateTime? = null
 
-    fun isCancelable(at: LocalDateTime): Boolean = at <= ticketCancelEndDateTime
+    fun isCancelable(at: LocalDateTime): Boolean = ticketCancelEndDateTime?.let { at <= ticketCancelEndDateTime } ?: true
 
     fun isNowTicketing(at: LocalDateTime): Boolean =
         !(at.isBefore(this.ticketingStartDateTime) || at.isAfter(this.ticketingEndDateTime))
