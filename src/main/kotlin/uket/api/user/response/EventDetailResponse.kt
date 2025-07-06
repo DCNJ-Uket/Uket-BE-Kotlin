@@ -4,6 +4,7 @@ import uket.common.enums.EventType
 import uket.domain.admin.entity.Organization
 import uket.domain.uketevent.entity.Banner
 import uket.domain.uketevent.entity.UketEvent
+import uket.domain.uketevent.entity.UketEventRound
 import uket.domain.uketevent.enums.TicketingStatus
 import java.time.LocalDateTime
 
@@ -13,6 +14,8 @@ data class EventDetailResponse(
     val eventType: EventType,
     val firstRoundStartDateTime: LocalDateTime,
     val lastRoundStartDateTime: LocalDateTime,
+    val ticketingStartDateTime: LocalDateTime,
+    val ticketingEndDateTime: LocalDateTime,
     val information: String,
     val detailImageId: String,
     val banners: List<EventDetailBannerDto>,
@@ -37,6 +40,7 @@ data class EventDetailResponse(
     companion object {
         fun of(
             uketEvent: UketEvent,
+            uketEventRound: UketEventRound,
             organization: Organization,
             banners: List<Banner>,
             ticketingStatus: TicketingStatus,
@@ -46,6 +50,8 @@ data class EventDetailResponse(
             eventType = uketEvent.eventType,
             firstRoundStartDateTime = uketEvent.firstRoundDateTime,
             lastRoundStartDateTime = uketEvent.lastRoundDateTime,
+            ticketingStartDateTime = uketEventRound.ticketingStartDateTime,
+            ticketingEndDateTime = uketEventRound.ticketingEndDateTime,
             location = uketEvent.location,
             banners = banners.map { EventDetailBannerDto.from(it) },
             information = uketEvent.details.information,
