@@ -33,6 +33,12 @@ class UketEventService(
     }
 
     @Transactional(readOnly = true)
+    fun findAll(): List<EventNameDto> {
+        val events = uketEventRepository.findAllByOrderByCreatedAtDesc()
+        return events.map { event -> EventNameDto.of(event.organizationId, event) }
+    }
+
+    @Transactional(readOnly = true)
     fun findAllVisibleOrderedEventByEventTypes(eventTypes: List<EventType>): List<UketEvent> =
         uketEventRepository.findAllVisibleInEventTypesOrderByFirstRoundDateTime(eventTypes)
 

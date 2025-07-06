@@ -27,6 +27,8 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
 
     fun findAllByOrganizationIdOrderByCreatedAtDesc(organizationId: Long): List<UketEvent>
 
+    fun findAllByOrderByCreatedAtDesc(): List<UketEvent>
+
     @Query(
         """
             SELECT ue FROM UketEvent ue
