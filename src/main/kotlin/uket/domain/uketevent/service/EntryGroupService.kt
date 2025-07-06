@@ -20,6 +20,23 @@ class EntryGroupService(
     }
 
     @Transactional(readOnly = true)
+    fun getByIds(ids: Set<Long>): List<EntryGroup> {
+        return entryGroupRepository.findAllById(ids)
+    }
+
+    @Transactional(readOnly = true)
+    fun getEntryGroups(
+        organizationId: Long,
+        uketEventId: Long?,
+    ): List<EntryGroup> {
+        return if (uketEventId != null) {
+            entryGroupRepository.findIdsByOrganizationIdAndEventId(organizationId, uketEventId)
+        } else {
+            entryGroupRepository.findIdsByOrganizationId(organizationId)
+        }
+    }
+
+    @Transactional(readOnly = true)
     fun findAllValidByRoundIdAndStarDateAfter(uketEventRoundId: Long, date: LocalDateTime): List<EntryGroup> {
         val entryGroups = entryGroupRepository.findByUketEventRoundIdAndStartDateAfter(
             uketEventRoundId,

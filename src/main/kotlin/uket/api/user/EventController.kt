@@ -49,6 +49,10 @@ class EventController(
         @PathVariable("id") eventId: Long,
     ): ResponseEntity<EventDetailResponse> {
         val event = uketEventService.getDetailById(eventId)
+        val rounds = uketEventRoundService.getEventRoundsByEventId(eventId)
+        check(rounds.size > 0) {
+            throw IllegalStateException("해당 행사의 회차가 없습니다.")
+        }
         val organization = organizationService.getById(event.organizationId)
         val banners = bannerService.findAllByUketEventId(event.id)
         val ticketingStatus = uketEventFacade.getCurrentEventTicketingStatus(eventId, LocalDateTime.now())
@@ -56,6 +60,7 @@ class EventController(
         return ResponseEntity.ok(
             EventDetailResponse.of(
                 uketEvent = event,
+                uketEventRound = rounds.get(0),
                 organization = organization,
                 banners = banners,
                 ticketingStatus = ticketingStatus
