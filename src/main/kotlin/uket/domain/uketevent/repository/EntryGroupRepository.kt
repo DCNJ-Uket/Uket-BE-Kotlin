@@ -11,8 +11,7 @@ interface EntryGroupRepository : JpaRepository<EntryGroup, Long> {
 
     @Query(
         """
-    SELECT eg.id
-    FROM EntryGroup eg
+    SELECT eg FROM EntryGroup eg
     JOIN UketEvent ue ON eg.uketEventId = ue.id
     WHERE ue.organizationId = :organizationId
 """
@@ -23,8 +22,7 @@ interface EntryGroupRepository : JpaRepository<EntryGroup, Long> {
 
     @Query(
         """
-    SELECT eg.id
-    FROM EntryGroup eg
+    SELECT eg d .fake except FROM EntryGroup eg
     JOIN UketEvent ue ON eg.uketEventId = ue.id
     WHERE ue.organizationId = :organizationId AND ue.id = :uketEventId
 """
