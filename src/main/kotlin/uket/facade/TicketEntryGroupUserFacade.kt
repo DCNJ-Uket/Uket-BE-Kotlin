@@ -1,6 +1,7 @@
 package uket.facade
 
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -52,24 +53,24 @@ class TicketEntryGroupUserFacade(
 
         val tickets = ticketService.findTicketsByEntryGroupIds(entryGroupIds, pageable)
 
-        val userMap = userService.findByIds(tickets.map { it.userId }.toSet()).associateBy { it.id }
+        val userMap = userService.findByIds(tickets.content.map { it.userId }.toSet()).associateBy { it.id }
 
-        val resultDtos = tickets.map { ticket ->
-            val entryGroup = entryGroupMap[ticket.entryGroupId]
-            val user = userMap[ticket.userId]
+        val resultDtos = tickets.content.mapNotNull { ticket ->
+            val entryGroup = entryGroupMap[ticket.entryGroupId]  ?: return@mapNotNull null
+            val user = userMap[ticket.userId] ?: return@mapNotNull null
 
             TicketSearchDto(
                 ticketId = ticket.id,
-                depositorName = user!!.depositorName!!,
+                depositorName = user.depositorName!!,
                 telephone = user.phoneNumber!!,
-                showTime = entryGroup!!.entryStartDateTime,
+                showTime = entryGroup.entryStartDateTime,
                 orderDate = ticket.createdAt,
                 updatedDate = ticket.updatedAt,
                 ticketStatus = ticket.status,
-                performer = ticket.performerName ?: "",
+                performer = ticket.performerName,
             )
         }
 
-        return resultDtos
+        return PageImpl(resultDtos, pageable, tickets.totalElements)
     }
 }
