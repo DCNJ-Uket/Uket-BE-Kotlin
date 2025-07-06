@@ -25,7 +25,7 @@ interface UketEventRepository : JpaRepository<UketEvent, Long> {
     )
     fun findVisibleOneById(uketEventId: Long): UketEvent?
 
-    fun findAllByOrganizationId(organizationId: Long): List<UketEvent>
+    fun findAllByOrganizationIdOrderByCreatedAtDesc(organizationId: Long): List<UketEvent>
 
     @Query(
         """
