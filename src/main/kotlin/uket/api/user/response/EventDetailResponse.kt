@@ -45,7 +45,7 @@ data class EventDetailResponse(
             eventName = uketEvent.eventName,
             eventType = uketEvent.eventType,
             firstRoundStartDateTime = uketEvent.firstRoundDateTime,
-            lastRoundStartDateTime = uketEvent.firstRoundDateTime,
+            lastRoundStartDateTime = uketEvent.lastRoundDateTime,
             location = uketEvent.location,
             banners = banners.map { EventDetailBannerDto.from(it) },
             information = uketEvent.details.information,
