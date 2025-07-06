@@ -16,7 +16,7 @@ data class TicketSearchResponse(
     val orderDate: ZonedDateTime,
     val updatedDate: ZonedDateTime,
     val ticketStatus: String,
-    val friend: String,
+    val performer: String,
 ) {
     companion object {
         private val zoneId = ZoneId.of("Asia/Seoul")
@@ -29,7 +29,7 @@ data class TicketSearchResponse(
             orderDate = ticket.orderDate.atZone(zoneId),
             updatedDate = ticket.updatedDate.atZone(zoneId),
             ticketStatus = ticket.ticketStatus.value,
-            friend = ticket.friend
+            performer = ticket.performer
         )
 
         fun from(tickets: Page<TicketSearchDto>): Page<TicketSearchResponse> = tickets.map { from(it) }
