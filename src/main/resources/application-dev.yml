@@ -62,9 +62,9 @@ app:
     secret-key: ${JWT_SECRET_KEY}
     expiration:
       access-token-expiration: 7_200_000
-      refresh-token-expiration: 7_200_000
+      refresh-token-expiration: 21_600_000
       email-token-expiration: 864_000_000
-      ticket-token-expiration: 180_000
+      ticket-token-expiration: 300_000
   kakao:
     token_uri: https://kauth.kakao.com/oauth/token
     user-info-uri: https://kapi.kakao.com/v2/user/me
