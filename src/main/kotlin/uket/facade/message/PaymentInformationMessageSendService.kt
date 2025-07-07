@@ -13,7 +13,7 @@ class PaymentInformationMessageSendService(
 ) {
     fun send(
         eventName: String,
-        ticketPrice: Long,
+        totalPrice: Long,
         account: Payment.Account,
         userName: String,
         userPhoneNumber: String,
@@ -24,7 +24,7 @@ class PaymentInformationMessageSendService(
                     templateCode = UserMessageTemplate.결제안내알림톡.code,
                     command = UserMessageTemplate.결제안내알림톡.결제안내Command(
                         eventName = eventName,
-                        ticketPrice = ticketPrice.toString(),
+                        ticketPrice = totalPrice.toString(),
                         bankName = account.bankCode.name,
                         accountNumber = account.accountNumber,
                         depositorName = account.depositorName,

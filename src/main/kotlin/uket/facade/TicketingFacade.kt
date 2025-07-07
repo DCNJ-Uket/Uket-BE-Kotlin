@@ -69,7 +69,7 @@ class TicketingFacade(
             count = buyCount
         )
 
-        sendUserKakaoTalkMessage(tickets, user, event, entryGroup)
+        sendUserKakaoTalkMessage(tickets, user, event, entryGroup, buyCount)
 
         return tickets
     }
@@ -79,6 +79,7 @@ class TicketingFacade(
         user: User,
         event: UketEvent,
         entryGroup: EntryGroup,
+        buyCount: Int,
     ) {
         val ticket = tickets.get(0)
         if (ticket.status == TicketStatus.BEFORE_ENTER) {
@@ -95,7 +96,7 @@ class TicketingFacade(
             val payment = paymentService.getById(event.paymentId)
             paymentInformationMessageSendService.send(
                 eventName = event.eventName,
-                ticketPrice = event.ticketPrice,
+                totalPrice = event.ticketPrice * buyCount,
                 account = payment.account,
                 userName = user.name,
                 userPhoneNumber = user.phoneNumber!!
