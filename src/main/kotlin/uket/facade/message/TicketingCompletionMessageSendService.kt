@@ -30,6 +30,10 @@ class TicketingCompletionMessageSendService(
         val timeString = eventDate
             .format(timeFormatter)
 
+        val locationTokens = eventLocation.split(",")
+        val roadAddress = locationTokens[0]
+        val detailAddress = if (locationTokens.size > 1) locationTokens[1] else ""
+
         applicationEventPublisher
             .publishEvent(
                 UserMessageSendEvent(
@@ -41,7 +45,8 @@ class TicketingCompletionMessageSendService(
                         ticketNo = ticketNo,
                         행사일자 = dateString,
                         행사시간 = timeString,
-                        행사장소 = eventLocation
+                        도로명주소 = roadAddress,
+                        상세주소 = detailAddress
                     ),
                     receiverType = ReceiverType.PHONE_NUMBER,
                     receiverKey = userPhoneNumber

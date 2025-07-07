@@ -24,7 +24,8 @@ sealed class UserMessageTemplate(
                 "행사타입" to eventType,
                 "행사일자" to 행사일자,
                 "행사시간" to 행사시간,
-                "행사장소" to 행사장소,
+                "행사 도로명 주소 정보" to 도로명주소,
+                "행사 상세 주소 정보" to 상세주소,
                 "예매번호" to ticketNo,
                 LINK_CONTEXT_KEY to 예매내역목록_LINK_PATH
             )
@@ -37,7 +38,8 @@ sealed class UserMessageTemplate(
             val ticketNo: String,
             val 행사일자: String,
             val 행사시간: String,
-            val 행사장소: String,
+            val 도로명주소: String,
+            val 상세주소: String,
         ) : Command
     }
 
