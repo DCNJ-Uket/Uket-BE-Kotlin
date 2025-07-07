@@ -5,7 +5,6 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
-import uket.common.response.CustomPageResponse
 
 @Aspect
 @Component

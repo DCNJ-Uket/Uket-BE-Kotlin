@@ -1,6 +1,5 @@
 package uket.common.aop.masking
 
-import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 
