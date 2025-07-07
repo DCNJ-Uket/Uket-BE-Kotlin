@@ -1,6 +1,7 @@
 package uket.api.user.response
 
 import uket.domain.admin.entity.Organization
+import uket.domain.payment.entity.Payment
 import uket.domain.reservation.entity.Ticket
 import uket.domain.uketevent.entity.EntryGroup
 import uket.domain.uketevent.entity.UketEvent
@@ -26,6 +27,8 @@ data class UserTicketResponse(
 
     val backgroundImageId: String?,
     val isCancelable: Boolean,
+
+    val account: Payment.Account,
 ) {
     companion object {
         fun of(
@@ -35,6 +38,7 @@ data class UserTicketResponse(
             organization: Organization,
             event: UketEvent,
             isCancelable: Boolean,
+            payment: Payment,
         ): UserTicketResponse = UserTicketResponse(
             ticketId = ticket.id,
             userId = ticket.userId,
@@ -48,8 +52,9 @@ data class UserTicketResponse(
             enterStartDateTime = entryGroup.entryStartDateTime,
             ticketNo = ticket.ticketNo,
             reserveAt = ticket.createdAt,
-            backgroundImageId = null,
-            isCancelable = isCancelable
+            backgroundImageId = event.thumbnailImageId,
+            isCancelable = isCancelable,
+            account = payment.account,
         )
     }
 }

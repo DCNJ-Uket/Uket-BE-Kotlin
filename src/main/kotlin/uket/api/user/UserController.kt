@@ -126,7 +126,7 @@ class UserController(
         userId: Long,
     ): ResponseEntity<ListResponse<UserTicketResponse>> {
         val responses = findUserTicketsFacade.findUserTickets(userId, LocalDateTime.now())
-        return ResponseEntity.ok(ListResponse<UserTicketResponse>(responses))
+        return ResponseEntity.ok(ListResponse(responses))
     }
 
     @Operation(summary = "유저 회원 탈퇴", description = "유저가 회원 탈퇴를 진행합니다")

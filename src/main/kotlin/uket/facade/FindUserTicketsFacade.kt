@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service
 import uket.api.user.response.UserTicketResponse
 import uket.domain.admin.entity.Organization
 import uket.domain.admin.service.OrganizationService
+import uket.domain.payment.entity.Payment
+import uket.domain.payment.service.PaymentService
 import uket.domain.reservation.entity.Ticket
 import uket.domain.reservation.enums.TicketStatus
 import uket.domain.reservation.service.TicketService
@@ -24,7 +26,7 @@ class FindUserTicketsFacade(
     private val uketEventRoundService: UketEventRoundService,
     private val userService: UserService,
     private val organizationService: OrganizationService,
-
+    private val paymentService: PaymentService,
 ) {
     fun findUserTickets(userId: Long, at: LocalDateTime): List<UserTicketResponse> {
         val tickets = ticketService.findAllByUserId(userId)
@@ -36,19 +38,23 @@ class FindUserTicketsFacade(
         val eventRoundMap = getEventRoundMap(entryGroupMap)
         val eventMap = getEventMap(entryGroupMap)
         val organizationMap = getOrganizationMap(eventMap)
+        val paymentMap = getPaymentMap(eventMap)
 
         val responses = sortedTickets.map { ticket ->
             val entryGroup = entryGroupMap[ticket.entryGroupId]!!
             val eventRound = eventRoundMap[entryGroup.uketEventRoundId]!!
             val event = eventMap[entryGroup.uketEventId]!!
             val org = organizationMap[event.organizationId]!!
+            val payment = paymentMap[event.paymentId]!!
+
             UserTicketResponse.of(
                 ticket = ticket,
                 user = user,
                 entryGroup = entryGroup,
                 organization = org,
                 event = event,
-                isCancelable = eventRound.isCancelable(at)
+                isCancelable = eventRound.isCancelable(at),
+                payment = payment
             )
         }
 
@@ -77,6 +83,13 @@ class FindUserTicketsFacade(
         val entryGroupIds = sortedTickets.map { it.entryGroupId }.toSet()
         val entryGroupMap = entryGroupIds.map { entryGroupService.getById(it) }.associateBy { it.id }
         return entryGroupMap
+    }
+
+    private fun getPaymentMap(eventMap: Map<Long, UketEvent>): Map<Long, Payment> {
+        val paymentIds = eventMap.values.map { it.paymentId }.toSet()
+        return paymentIds
+            .map { paymentService.getByIdWithAccount(it) }
+            .associateBy { it.id }
     }
 
     private fun ticketSortComparator() = compareBy<Ticket> {
