@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import uket.api.admin.request.CheckRegisterExpiredRequest
 import uket.api.admin.request.EmailLoginRequest
 import uket.api.admin.request.RegisterAdminPasswordRequest
 import uket.api.admin.request.SendEmailRequest
@@ -65,9 +65,9 @@ class AdminController(
     @Operation(summary = "회원가입 링크 만료 여부 확인", description = "회원가입 링크의 토큰을 통해 링크 만료 여부를 확인합니다.")
     @GetMapping("/register-expired")
     fun checkTokenExpired(
-        @RequestBody request: CheckRegisterExpiredRequest,
+        @RequestParam("token") token: String,
     ): ResponseEntity<CheckRegisterExpiredResponse> {
-        val isExpired = adminAuthEmailFacade.checkEmailTokenExpired(request.token)
+        val isExpired = adminAuthEmailFacade.checkEmailTokenExpired(token)
         return ResponseEntity.ok(CheckRegisterExpiredResponse(isExpired))
     }
 
