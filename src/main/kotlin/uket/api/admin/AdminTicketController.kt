@@ -54,7 +54,7 @@ class AdminTicketController(
 ) {
     @SecurityRequirement(name = "JWT")
     @Operation(summary = "입장 확인 API", description = "QR code를 통한 Token값으로 입장 확인을 할 수 있습니다.")
-    @PostMapping("/{token}/enter")
+    @PostMapping("/tickets/{token}/enter")
     fun enterShow(
         @PathVariable("token") ticketToken: String,
     ): ResponseEntity<EnterUketEventResponse> {
