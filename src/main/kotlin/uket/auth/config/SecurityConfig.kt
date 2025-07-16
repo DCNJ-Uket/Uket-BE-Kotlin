@@ -101,11 +101,9 @@ class SecurityConfig(
                     .permitAll()
                     .requestMatchers("/auth/**")
                     .permitAll()
-                    .requestMatchers("/uket-events/*/rounds/**")
-                    .authenticated()
+            }.authorizeHttpRequests { registry ->
+                registry
                     .requestMatchers("/uket-events/*/reservation")
-                    .authenticated()
-                    .requestMatchers("/rounds/*/entry-groups/**")
                     .authenticated()
                     .requestMatchers("/uket-events/**")
                     .permitAll()
