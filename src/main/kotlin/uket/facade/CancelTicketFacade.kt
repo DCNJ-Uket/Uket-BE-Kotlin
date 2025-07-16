@@ -55,10 +55,10 @@ class CancelTicketFacade(
     private fun sendKakaoAlimtalk(
         ticket: Ticket,
         event: UketEvent,
-        userId: Long
+        userId: Long,
     ) {
         println(ticket.status)
-        when(ticket.status) {
+        when (ticket.status) {
             TicketStatus.REFUND_REQUESTED -> sendTicketCancelMessage(event, ticket, userId)
             TicketStatus.RESERVATION_CANCEL -> sendTicketCancel2Message(event, ticket, userId)
             else -> {}

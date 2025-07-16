@@ -9,9 +9,8 @@ import uket.uket.modules.push.UserMessageTemplate
 
 @Component
 class TicketCancel2MessageSendService(
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val applicationEventPublisher: ApplicationEventPublisher,
 ) {
-
     fun send(
         userName: String,
         eventType: EventType,
@@ -33,5 +32,4 @@ class TicketCancel2MessageSendService(
             )
         )
     }
-
 }
