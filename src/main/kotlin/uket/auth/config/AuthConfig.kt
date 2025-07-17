@@ -25,13 +25,13 @@ class AuthConfig(
             .excludePathPatterns("/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs", "/error")
             .excludePathPatterns("/admin/users/login")
             .excludePathPatterns("/auth/**")
-            .addPathPatterns("/uket-events/*/rounds/**")
-            .addPathPatterns("/uket-events/*/reservation")
-            .addPathPatterns("/rounds/*/entry-groups/**")
-            .excludePathPatterns("/uket-events/**")
             .excludePathPatterns("/users/register")
-            .excludePathPatterns("/terms/**")
             .excludePathPatterns("/image/*")
+            .excludePathPatterns("/uket-events/**")
+
+        registry
+            .addInterceptor(loginInterceptor)
+            .addPathPatterns("/uket-events/*/reservation")
     }
 
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
