@@ -28,6 +28,7 @@ class AuthConfig(
             .excludePathPatterns("/users/register")
             .excludePathPatterns("/image/*")
             .excludePathPatterns("/uket-events/**")
+            .excludePathPatterns("/terms/**")
 
         registry
             .addInterceptor(loginInterceptor)
