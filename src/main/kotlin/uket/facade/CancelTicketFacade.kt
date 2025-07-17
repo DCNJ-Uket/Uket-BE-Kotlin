@@ -14,17 +14,19 @@ import uket.domain.uketevent.service.PerformerService
 import uket.domain.uketevent.service.UketEventRoundService
 import uket.domain.uketevent.service.UketEventService
 import uket.domain.user.service.UserService
-import uket.facade.message.TicketCancelMessageSendService
+import uket.facade.messNage.TicketCancelMessageSendService
+import uket.facade.message.TicketCancel2MessageSendService
 import java.time.LocalDateTime
 
 @Service
 class CancelTicketFacade(
-    val ticketService: TicketService,
-    val entryGroupService: EntryGroupService,
-    val uketEventRoundService: UketEventRoundService,
-    val uketEventService: UketEventService,
-    val performerService: PerformerService,
+    private val ticketService: TicketService,
+    private val entryGroupService: EntryGroupService,
+    private val uketEventRoundService: UketEventRoundService,
+    private val uketEventService: UketEventService,
+    private val performerService: PerformerService,
     private val ticketCancelMessageSendService: TicketCancelMessageSendService,
+    private val ticketCancel2MessageSendService: TicketCancel2MessageSendService,
     private val userService: UserService,
     private val organizationService: OrganizationService,
 ) {
@@ -45,11 +47,22 @@ class CancelTicketFacade(
         entryGroup.decreaseReservedCount();
         reducePerformerTicketCount(ticket, eventRound)
 
-        if (ticket.status == TicketStatus.REFUND_REQUESTED) {
-            sendTicketCancelMessage(event, ticket, userId)
-        }
+        sendKakaoAlimtalk(ticket, event, userId)
 
         return ticket
+    }
+
+    private fun sendKakaoAlimtalk(
+        ticket: Ticket,
+        event: UketEvent,
+        userId: Long,
+    ) {
+        println(ticket.status)
+        when (ticket.status) {
+            TicketStatus.REFUND_REQUESTED -> sendTicketCancelMessage(event, ticket, userId)
+            TicketStatus.RESERVATION_CANCEL -> sendTicketCancel2Message(event, ticket, userId)
+            else -> {}
+        }
     }
 
     private fun sendTicketCancelMessage(
@@ -66,6 +79,21 @@ class CancelTicketFacade(
             event.eventType,
             ticket.ticketNo,
             organization.name
+        )
+    }
+
+    private fun sendTicketCancel2Message(
+        event: UketEvent,
+        ticket: Ticket,
+        userId: Long,
+    ) {
+        val user = userService.getById(userId)
+        ticketCancel2MessageSendService.send(
+            user.name,
+            event.eventType,
+            event.eventName,
+            ticket.ticketNo,
+            user.phoneNumber!!,
         )
     }
 

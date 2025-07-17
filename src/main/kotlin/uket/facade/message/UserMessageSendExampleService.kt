@@ -16,8 +16,8 @@ class UserMessageSendExampleService(
     fun send() {
         applicationEventPublisher.publishEvent(
             UserMessageSendEvent(
-                templateCode = UserMessageTemplate.티켓취소알림톡.code,
-                command = UserMessageTemplate.티켓취소알림톡.티켓취소알림Command(
+                templateCode = UserMessageTemplate.티켓취소알림톡_예매완료.code,
+                command = UserMessageTemplate.티켓취소알림톡_예매완료.티켓취소알림_예매완료Command(
                     userName = "홍길동",
                     eventName = "소리터",
                     organizationName = "소리터",
@@ -33,8 +33,8 @@ class UserMessageSendExampleService(
     fun sendBulk() {
         applicationEventPublisher.publishEvent(
             UserMessageBulkSendEvent(
-                templateCode = UserMessageTemplate.티켓취소알림톡.code,
-                command = UserMessageTemplate.티켓취소알림톡.티켓취소알림Command(
+                templateCode = UserMessageTemplate.티켓취소알림톡_예매완료.code,
+                command = UserMessageTemplate.티켓취소알림톡_예매완료.티켓취소알림_예매완료Command(
                     userName = "홍길동",
                     eventName = "소리터",
                     organizationName = "소리터",
