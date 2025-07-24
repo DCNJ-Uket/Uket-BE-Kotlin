@@ -7,7 +7,7 @@ spring:
       mode: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/uket?useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    url: ${LOCAL_MYSQL_URL}
     username: ${LOCAL_MYSQL_USERNAME}
     password: ${LOCAL_MYSQL_PASSWORD}
     hikari:
@@ -16,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -45,8 +45,8 @@ spring:
       auth-code-expiration-millis: 180000
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${LOCAL_REDIS_AUTH_HOST}
+      port: ${LOCAL_REDIS_AUTH_PORT}
   cloud:
     aws:
       s3:

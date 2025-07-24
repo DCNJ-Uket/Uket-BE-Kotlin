@@ -36,7 +36,7 @@ class TicketingFacade(
 ) {
     private final val NO_TICKET_LIMIT = 0;
 
-    @DistributedLock(key = "'ticketing' + #entryGroupId")
+//    @DistributedLock(key = "'ticketing' + #entryGroupId")
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
