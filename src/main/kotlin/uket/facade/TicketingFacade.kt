@@ -19,7 +19,6 @@ import uket.domain.user.entity.User
 import uket.domain.user.service.UserService
 import uket.facade.message.PaymentInformationMessageSendService
 import uket.facade.message.TicketingCompletionMessageSendService
-import uket.modules.redis.aop.DistributedLock
 import java.time.LocalDateTime
 
 @Service

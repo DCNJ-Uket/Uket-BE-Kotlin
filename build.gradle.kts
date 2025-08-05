@@ -85,6 +85,11 @@ dependencies {
 
     // ratelimit
     implementation("com.bucket4j:bucket4j-core:8.3.0")
+
+    // Actuator: 애플리케이션의 내부 상태를 외부로 노출
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    // Micrometer: Actuator가 노출한 메트릭을 Prometheus가 이해할 수 있는 포맷으로 변환
+    implementation("io.micrometer:micrometer-registry-prometheus")
 }
 dependencyManagement {
     imports {

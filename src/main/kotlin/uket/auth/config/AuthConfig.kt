@@ -18,6 +18,8 @@ class AuthConfig(
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry
             .addInterceptor(loginInterceptor)
+            .excludePathPatterns("/actuator")
+            .excludePathPatterns("/actuator/**")
             .excludePathPatterns("/api/v1/dev/**")
             .excludePathPatterns("/api/v1/email/**")
             .excludePathPatterns("/api/v1/auth/**")
