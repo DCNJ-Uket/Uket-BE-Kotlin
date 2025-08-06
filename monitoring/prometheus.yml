@@ -6,4 +6,4 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       # host.docker.internal 대신, 서비스 이름을 직접 사용!
-      - targets: ['uket-app:8080']
+      - targets: ['host.docker.internal:8080']
