@@ -10,8 +10,6 @@ spring:
     url: ${LOCAL_MYSQL_URL}
     username: ${LOCAL_MYSQL_USERNAME}
     password: ${LOCAL_MYSQL_PASSWORD}
-    hikari:
-      maximum-pool-size: 40
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
