@@ -1,5 +1,6 @@
 package uket.facade
 
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import uket.common.ErrorLevel
 import uket.common.PublicException
@@ -36,6 +37,7 @@ class TicketingFacade(
     private final val NO_TICKET_LIMIT = 0;
 
 //    @DistributedLock(key = "'ticketing' + #entryGroupId")
+    @Transactional
     fun ticketing(userId: Long, entryGroupId: Long, buyCount: Int, pName: String, at: LocalDateTime): List<Ticket> {
         validateTicketCount(buyCount)
 
